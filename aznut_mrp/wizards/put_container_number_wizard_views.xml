@@ -3,23 +3,23 @@
         <field name="name">aznut_mrp.put.container.number.wizard</field>
         <field name="model">put.container.number.wizard</field>
         <field name="arch" type="xml">
-            <style>
-                .put_container_number_form {
-                    button {
-                        font-size: 20px;
-                        width: 100%;
-                        height: 60px
-                    }
-                }
-            </style>
-            <script>
-                document.querySelectorAll('.modal-dialog').forEach(parent => {
-                if (parent.querySelector('.put_container_number_form')) {
-                parent.style.maxWidth ='60%';
-                }
-                });
-            </script>
             <form class="put_container_number_form">
+                <style>
+                    .put_container_number_form {
+                        button {
+                            font-size: 20px;
+                            width: 100%;
+                            height: 60px
+                        }
+                    }
+                </style>
+                <script>
+                    document.querySelectorAll('.modal-dialog').forEach(parent => {
+                    if (parent.querySelector('.put_container_number_form')) {
+                    parent.style.maxWidth ='60%';
+                    }
+                    });
+                </script>
                 <sheet>
                     <div class="oe_title" style=" text-align: center;margin: 10px auto 0;">
                         <h1>
