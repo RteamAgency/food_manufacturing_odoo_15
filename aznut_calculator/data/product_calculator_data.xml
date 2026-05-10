@@ -8,7 +8,7 @@
             <field name="readonly_active_ingredients_quantity">52</field>
             <field name="bacteria_gram_base">10</field>
             <field name="bacteria_gram_exponent">10</field>
-            <field name="auto_adjusted_base_ingredients_ids" model="product.product" eval="[(4, obj().search([('name','=','Premix Base')], limit=1).id)]"/>
+            <field name="auto_adjusted_base_ingredients_ids" model="product.product" eval="[(4, p.id) for p in obj().search([('name','=','Premix Base')], limit=1)]"/>
         </record>
 
         <record id="powder_calculator_settings_main" model="powder.calculator.settings">
