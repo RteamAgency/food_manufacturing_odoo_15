@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="action_internal_pickings_receiving_operator" model="ir.actions.act_window">
+        <field name="name">Internal Transfers</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="domain" eval="[('picking_type_id','=',ref('stock.picking_type_internal'))]"/>
+        <field name="context">{'contact_display': 'partner_address',
+                               'default_company_id': allowed_company_ids[0]}</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No transfer found. Let's create one!
+            </p>
+            <p>
+                Transfers allow you to move products from one location to another.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_receipts_receiving_operator" model="ir.actions.act_window">
+        <field name="name">Receipts</field>
+        <field name="res_model">stock.picking</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,kanban,form,calendar</field>
+        <field name="domain" eval="[('picking_type_id','=',ref('stock.picking_type_in'))]"/>
+        <field name="context">{'contact_display': 'partner_address',
+                               'default_company_id': allowed_company_ids[0]}</field>
+        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No transfer found. Let's create one!
+            </p>
+            <p>
+                Transfers allow you to move products from one location to another.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_internal_pickings_receiving_operator"
+              name="Internal Transfer"
+              parent="stock.menu_stock_warehouse_mgmt"
+              action="aznut_purchase.action_internal_pickings_receiving_operator"
+              sequence="1"/>
+
+    <menuitem id="menu_receipts_receiving_operator"
+              name="Receipts"
+              parent="stock.menu_stock_warehouse_mgmt"
+              action="action_receipts_receiving_operator"
+              sequence="2"/>
+</odoo>

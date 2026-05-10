@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_workorder_batch_view_tree" model="ir.ui.view">
+        <field name="name">mrp.workorder.batch.view.tree</field>
+        <field name="model">mrp.workorder.batch</field>
+        <field name="arch" type="xml">
+            <tree string="Workorder Batches" editable="top" create="0">
+                <field name="name" readonly="1"/>
+                <field name="production_id"/>
+                <field name="workorder_id" readonly="1"/>
+                <field name="time_start" readonly="1"/>
+                <field name="time_finish" readonly="1"/>
+                <field name="time_actual" widget="float_time" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

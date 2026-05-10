@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_report_pivot_view" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.report.view.pivot</field>
+        <field name="model">mrp.report</field>
+        <field name="inherit_id" ref="mrp_account_enterprise.mrp_report_pivot_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='qty_produced']" position="after">
+                <field name="total_ordered" type="measure" string="Total Ordered"/>
+                <field name="margin_percent" widget="percentage" string="Margin Percent"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

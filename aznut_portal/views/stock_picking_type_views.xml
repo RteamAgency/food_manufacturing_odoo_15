@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="stock_picking_type_kanban" model="ir.ui.view">
+        <field name="name">aznut_portal.stock.picking.type.kanban</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <field name="count_picking_ready" position="after">
+                <field name="count_picking_confirmed_by_client"/>
+            </field>
+            <xpath expr="//button[@name='get_action_picking_tree_ready']" position="after">
+                <button t-if="record.count_picking_confirmed_by_client.raw_value &gt; 0" class="btn btn-primary mt-1"
+                        name="get_action_confirmed_by_client_shipping" type="object">
+                    <span><t t-esc="record.count_picking_confirmed_by_client.value"/> To Ship</span>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

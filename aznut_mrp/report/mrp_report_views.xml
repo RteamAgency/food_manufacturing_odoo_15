@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_lot_label" model="report.paperformat">
+            <field name="name">A4 Lot Label</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+
+        <record id="action_report_production_order_current_qty" model="ir.actions.report">
+            <field name="name">Current QTY</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">aznut_mrp.report_mrporder_current_qty</field>
+            <field name="report_file">aznut_mrp.report_mrporder_current_qty</field>
+            <field name="print_report_name">'Production Order Current QTY - %s' % object.name</field>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="mrp.action_report_production_order" model="ir.actions.report">
+            <field name="report_name">aznut_mrp.aznut_report_mrporder_inherited</field>
+            <field name="report_file">aznut_mrp.report.mrp_production_templates</field>
+        </record>
+
+        <record id="action_report_lot_label_inherited" model="ir.actions.report">
+            <field name="name">Lot/Serial Number PDF</field>
+            <field name="model">stock.production.lot</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="paperformat_id" ref="aznut_mrp.paperformat_lot_label"/>
+            <field name="report_name">aznut_mrp.report_lot_label_inherited</field>
+            <field name="report_file">aznut_mrp.report_lot_label_inherited</field>
+            <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
+        </record>
+
+        <record id="action_report_production_order_cleaning" model="ir.actions.report">
+            <field name="name">Cleaning Check</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">aznut_mrp.aznut_report_mrp_order_cleaning</field>
+            <field name="report_file">aznut_mrp.aznut_report_mrp_order_cleaning</field>
+            <field name="print_report_name">'Production Order Cleaning - %s' % object.name</field>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_type">report</field>
+        </record>
+
+          <record id="action_report_containers_labels" model="ir.actions.report">
+            <field name="name">Containers Labels PDF</field>
+            <field name="model">mrp.workorder</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="paperformat_id" ref="aznut_mrp.paperformat_lot_label"/>
+            <field name="report_name">aznut_mrp.report_containers_labels</field>
+            <field name="report_file">aznut_mrp.report_containers_labels</field>
+            <field name="print_report_name">'Containers Labels - %s' % object.name</field>
+        </record>
+    </data>
+</odoo>

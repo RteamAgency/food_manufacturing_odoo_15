@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_product_vendor_quality_check_product" model="product.product">
+            <field name="name">Vendor Quality Check Product</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="detailed_type">service</field>
+            <field name="description">Vendor Quality Check Product</field>
+            <field name="base_unit_count">1</field>
+        </record>
+    </data>
+</odoo>

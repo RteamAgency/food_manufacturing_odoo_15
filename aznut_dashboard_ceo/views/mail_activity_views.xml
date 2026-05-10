@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_view_form_popup_dashboard" model="ir.ui.view">
+        <field name="name">mail.activity.view.form.popup.dashboard</field>
+        <field name="model">mail.activity</field>
+        <field name="priority" eval="1000"/>
+        <field name="arch" type="xml">
+            <form string="Log an Activity" create="false" class="dashboard-activity">
+                <sheet string="Activity">
+                    <group invisible="1">
+                        <field name="activity_category" invisible="1"/>
+                        <field name="res_model" invisible="1"/>
+                        <field name="res_model_id" invisible="1"/>
+                        <field name="res_id" invisible="1" widget="integer"/>
+                        <field name="chaining_type" invisible="1"/>
+                        <field name="activity_type_id" invisible="1"/>
+                        <field name="user_id" invisible="1" force_save="1"/>
+                        <field name="date_deadline" invisible="1" force_save="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="user_id" required="1" domain="[('employee_ids', '!=', False)]"/>
+                        </group>
+                        <group>
+                            <field nolabel="1" name="importance_level" required="1" widget="selection_badge" class="activity_importance"/>
+                        </group>
+                    </group>
+                    <field name="note" class="oe-bordered-editor" placeholder="Log a note..."/>
+                    <footer>
+                        <button string="Shedule" name="action_schedule_dashboard_activity" type="object" class="btn-primary" data-hotkey="x"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                        <field name="dashboard_attachment_ids" widget="many2many_binary"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="stock_scrap_form_view2" model="ir.ui.view">
+        <field name="name">aznut_mrp.stock.scrap.form2</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lot_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('product_id', '=', False), ('tracking', '=', 'none'),
+                                                       ('location_id', '=', False)],
+                                         'required': [('tracking', '!=', 'none')]}
+                </attribute>
+                <attribute name="options">{'no_create_edit':True,'no_create':True,'no_open':True}</attribute>
+                <attribute name="domain">[('id','in',allowed_lot_ids)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lot_id']" position="after">
+                <field name="allowed_lot_ids" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

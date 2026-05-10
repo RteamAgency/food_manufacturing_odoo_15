@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="complaint_claim_form" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.complaint.claim.form</field>
+        <field name="model">complaint.claim</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="row o_website_sale_image_modal">
+                        <div class="col-md-6 col-xl-5">
+                            <label for="order_id"/>
+                            <h2><field name="order_id"/></h2>
+                            <label for="complaint_claim_source_id"/><br/>
+                            <field name="complaint_claim_source_id" style="width:100%!important;"/><br/>
+                            <label for="description"/><br/>
+                            <field name="description"/><br/>
+                            <label for="create_uid"/><br/>
+                            <field name="create_uid"/><br/>
+                            <label for="create_date"/><br/>
+                            <field name="create_date"/>
+                        </div>
+                        <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
+                            <div class="row">
+                                <div class="col">
+                                    <field name="image" widget="image"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page name="signature_line" string="Signatures">
+                            <field name="signature_line_ids">
+                                <tree editable="top">
+                                    <field name="can_sign" invisible="1"/>
+                                    <field name="user_id"/>
+                                    <field name="signature" attrs="{'readonly':[('can_sign','=',False)]}"
+                                           widget="signature" options="{'size': [150,150]}" force_save="1"/>
+                                    <field name="sign_date" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="complaint_claim_kanban" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.complaint.claim.kanban</field>
+        <field name="model">complaint.claim</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="order_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <div class="d-flex justify-content-between">
+                                    <h3 t-esc="record.name.raw_value"/>
+                                    <h2><field name="order_id"/></h2>
+                                </div>
+                                <p t-esc="record.description.raw_value"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="complaint_claim_source_form" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.complaint.claim.source.form</field>
+        <field name="model">complaint.claim.source</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="complaint_claim_source_tree" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.complaint.claim.source.tree</field>
+        <field name="model">complaint.claim.source</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_complaint_claim" model="ir.actions.act_window">
+        <field name="name">Complaint Claim</field>
+        <field name="res_model">complaint.claim</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="aznut_complaint_claim.complaint_claim_kanban"/>
+        <field name="help" type="html">
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No complaint claims!
+                </p>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_complaint_claim_source" model="ir.actions.act_window">
+        <field name="name">Complaint Claim Source</field>
+        <field name="res_model">complaint.claim.source</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="aznut_complaint_claim.complaint_claim_source_tree"/>
+        <field name="help" type="html">
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No complaint claims!
+                </p>
+            </field>
+        </field>
+    </record>
+
+
+    <menuitem name="Complaint Claim"
+              id="menu_complaint_claim_main"
+              web_icon="aznut_complaint_claim,static/description/icon.png"
+              action="aznut_complaint_claim.action_complaint_claim"/>
+
+    <menuitem name="Source"
+              id="menu_complaint_claim_main_source"
+              parent="aznut_complaint_claim.menu_complaint_claim_main"
+              action="aznut_complaint_claim.action_complaint_claim_source"/>
+</odoo>

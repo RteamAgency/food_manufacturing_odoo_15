@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_calculator_settings_form_view" model="ir.ui.view">
+        <field name="name">product.calculator.settings.form</field>
+        <field name="model">product.calculator.settings</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="one_batch_lb"/>
+                            <field name="base_ingredients_quantity"/>
+                            <field name="readonly_active_ingredients_quantity"/>
+                            <field name="flavour_category_id" options="{'no_create_edit':True,'no_create':True}"/>
+                            <field name="dog_treats_packaging_materials_category_id"
+                                   options="{'no_create_edit':True,'no_create':True}"/>
+                            <field name="jar_products_ids" options="{'no_create_edit':True,'no_create':True}"
+                                   domain="[('categ_id','=',dog_treats_packaging_materials_category_id)]"
+                                   widget="many2many_tags"/>
+                            <field name="calculator_product_category_id"
+                                   options="{'no_create_edit':True,'no_create':True}"/>
+                        </group>
+                        <group>
+                            <field name="bacteria_gram_base"/>
+                            <field name="bacteria_gram_exponent"/>
+                        </group>
+                    </group>
+                    <h3>Preset values</h3>
+                    <group>
+                        <group>
+                            <field name="box_preset"/>
+                            <field name="label_preset"/>
+                            <field name="shipping_cost"/>
+                        </group>
+                        <group>
+                            <field name="shrink_preset"/>
+                            <field name="monthly_expenses_preset"/>
+                            <field name="jar_per_months_preset"/>
+                            <field name="profit"/>
+                            <field name="taxes"/>
+                        </group>
+                    </group>
+                    <h3>Base ingredients</h3>
+                    <group>
+                        <label style="opacity: 1;" for="auto_adjusted_base_ingredients_ids"
+                               class="oe_inline font-weight-bold"/>
+                        <div class="o_row">
+                            <field name="auto_adjusted_base_ingredients_ids" widget="many2many_tags" nolabel="1"
+                                   options="{'no_create_edit':True,'no_create':True}"/>
+                        </div>
+                    </group>
+                    <field name="base_ingredient_ids" widget='one2many'>
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id"/>
+                            <field name="quantity" sum="Total Quantity"/>
+                            <field name="uom_id"/>
+                            <field name="total_cost" sum="Total Cost"/>
+                            <field name="cost_per_lb" readonly="0"/>
+                        </tree>
+                    </field>
+                    <h3>Lead Time</h3>
+                    <field name="lead_time"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_calculator_shape_tree_view" model="ir.ui.view">
+        <field name="name">product.calculator.settings.shape.tree</field>
+        <field name="model">product.calculator.settings.shape</field>
+        <field name="arch" type="xml">
+            <tree string="Shape" editable="bottom">
+                <field name="name"/>
+                <field name="cost"/>
+                <field name="color" widget="color_picker"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_calculator_profit_group_form_view" model="ir.ui.view">
+        <field name="name">product.calculator.profit.group.form.view</field>
+        <field name="model">product.calculator.profit.group</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="users_ids" widget="many2many_tags_avatar"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="calculator_profit" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_calculator_profit_group_tree_view" model="ir.ui.view">
+        <field name="name">product.calculator.profit.group.tree.view</field>
+        <field name="model">product.calculator.profit.group</field>
+        <field name="arch" type="xml">
+            <tree string="Commission">
+                <field name="name"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="users_ids" widget="many2many_tags_avatar"/>
+                <field name="calculator_profit" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_calculator_moq_dicount_tree_view" model="ir.ui.view">
+        <field name="name">product.calculator.moq.dicount.tree.view</field>
+        <field name="model">product.calculator.moq.discount</field>
+        <field name="arch" type="xml">
+            <tree string="MOQ Discount" class="moq_discount" editable="bottom">
+                <field name="divider"/>
+                <field name="moq_discount"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_product_calculator_settings" model="ir.actions.act_window">
+        <field name="name">Chews Calculator Settings</field>
+        <field name="res_model">product.calculator.settings</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="aznut_calculator.product_calculator_settings_main"/>
+        <field name="view_id" ref="aznut_calculator.product_calculator_settings_form_view"/>
+    </record>
+
+    <record id="action_product_calculator_settings_shape" model="ir.actions.act_window">
+        <field name="name">Calculator Shape</field>
+        <field name="res_model">product.calculator.settings.shape</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="aznut_calculator.product_calculator_shape_tree_view"/>
+    </record>
+
+    <record id="action_product_calculator_profit_group" model="ir.actions.act_window">
+        <field name="name">Calculator Commission Group</field>
+        <field name="res_model">product.calculator.profit.group</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_product_calculator_moq_discount" model="ir.actions.act_window">
+        <field name="name">Chews Calculator MOQ Discount</field>
+        <field name="res_model">product.calculator.moq.discount</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="aznut_calculator.product_calculator_moq_dicount_tree_view"/>
+    </record>
+
+    <menuitem id="menu_product_calculator_settings"
+              name="Settings"
+              sequence="3"
+              parent="aznut_calculator.menu_product_calculator_main"
+              groups="aznut_calculator.group_calculator_manager"/>
+
+    <menuitem id="menu_product_calculator_settings_base"
+              action="aznut_calculator.action_product_calculator_settings"
+              name="Chews Calculator Settings"
+              sequence="1"
+              parent="aznut_calculator.menu_product_calculator_settings"/>
+
+    <menuitem id="menu_product_calculator_settings_shape"
+              action="aznut_calculator.action_product_calculator_settings_shape"
+              name="Chews Calculator Settings Shape"
+              parent="aznut_calculator.menu_product_calculator_settings"/>
+
+    <menuitem id="menu_product_calculator_profit_group"
+              action="aznut_calculator.action_product_calculator_profit_group"
+              name="Calculator Settings Commission Group"
+              parent="aznut_calculator.menu_product_calculator_settings"/>
+    <menuitem id="menu_product_calculator_moq_discount"
+              action="aznut_calculator.action_product_calculator_moq_discount"
+              name="Chews Calculator Settings MOQ Discount"
+              parent="aznut_calculator.menu_product_calculator_settings"/>
+</odoo>

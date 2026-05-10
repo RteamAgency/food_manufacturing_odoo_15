@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_calculator_tree_view" model="ir.ui.view">
+        <field name="name">product.calculator.tree</field>
+        <field name="model">product.calculator</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0" delete="0">
+                <field name="display_name" string="Name"/>
+                <field name="jar_weight"/>
+                <field name="discount_amount" widget="monetary"/>
+                <field name="ready_jar_cost" widget="monetary"/>
+                <field name="count_of_jars"/>
+                <field name="net_cost" groups="aznut_calculator.group_calculator_manager" widget="monetary"/>
+                <field name="operating_expenses" groups="aznut_calculator.group_calculator_manager" widget="monetary"/>
+                <field name="profit" groups="aznut_calculator.group_calculator_manager" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_product_tree_calculator" model="ir.ui.view">
+        <field name="name">product.product.tree.calculator</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0" delete="0">
+                <field name="display_name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_product_tree_calculator_flavour" model="ir.ui.view">
+        <field name="name">product.product.tree.calculator.flavour</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0" delete="0">
+                <field name="display_name"/>
+                <field name="standard_price"/>
+                <field name="qty_available"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="main_product_calculator_tree_view" model="ir.ui.view">
+        <field name="name">main.product.calculator.tree</field>
+        <field name="model">main.product.calculator</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="display_name"/>
+                <field name="partner_id"/>
+                <field name="products_ids" widget="many2many_tags"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_calculator_form_view" model="ir.ui.view">
+        <field name="name">product.calculator.form</field>
+        <field name="model">product.calculator</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <field name="is_calculator_administrator" invisible="1"/>
+                    <field name="is_calculator_salesperson" invisible="1"/>
+                    <field name="is_user_calculator_procurement" invisible="1"/>
+                    <field name="is_calculator_manager" invisible="1"/>
+                    <div>
+                        <h3>Product Name</h3>
+                        <hr/>
+                        <h3>
+                            <field name="product_name"/>
+                        </h3>
+                    </div>
+                    <notebook>
+                        <page string="Base ingredients"
+                              attrs="{'invisible': [('is_calculator_salesperson', '=', True)]}">
+
+                            <h3>Base ingredients</h3>
+                            <div attrs="{'invisible':[('is_calculator_administrator','=',False),('is_user_calculator_procurement','=',False)]}">
+                                <field name="base_ingredient_ids" widget='one2many'>
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="seq_number"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="product_id" options="{'no_create_edit':True,'no_create':True}"
+                                               context="{'tree_view_ref':'aznut_calculator.product_product_tree_calculator' if parent.is_calculator_salesperson else ''}"/>
+                                        <field name="quantity"/>
+                                        <field name="uom_id" string=" "/>
+                                        <field name="forecast_availability" widget="forecast_widget" string=" "/>
+                                        <field name="free_qty" string="Free Quantity"/>
+                                        <field name="product_uom_id" string=" "/>
+                                        <field name="total_cost" widget="monetary"/>
+                                        <field name="cost_per_lb" widget="monetary"/>
+                                    </tree>
+                                </field>
+                            </div>
+                            <div class="user_base_ingredients_view"
+                                 attrs="{'invisible':['|',('is_calculator_administrator','=',True),('is_user_calculator_procurement','=',True)],'readonly':[('is_user_calculator_procurement','=',True)]}">
+                                <field name="base_ingredient_ids" widget='one2many'>
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="seq_number"/>
+                                        <field name="currency_id" invisible="1"/>
+
+                                        <field name="product_id" options="{'no_create_edit':True,'no_create':True}"
+                                               context="{'tree_view_ref':'aznut_calculator.product_product_tree_calculator' if parent.is_calculator_salesperson else ''}"/>
+                                        <field name="quantity" groups="aznut_calculator.group_calculator_manager"/>
+                                        <field name="uom_id" groups="aznut_calculator.group_calculator_manager"/>
+                                        <field name="forecast_availability" widget="forecast_widget" string=" "
+                                               groups="aznut_calculator.group_calculator_manager"/>
+                                        <field name="free_qty" string="Free Quantity"
+                                               groups="aznut_calculator.group_calculator_manager"/>
+                                        <field name="product_uom_id" string=" "
+                                               groups="aznut_calculator.group_calculator_manager"/>
+                                        <field name="total_cost" widget="monetary"
+                                               attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False)]}"/>
+                                        <field name="cost_per_lb" widget="monetary"
+                                               attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False)]}"/>
+                                    </tree>
+                                </field>
+                            </div>
+                            <div class="row"
+                                 groups="aznut_calculator.group_calculator_manager,aznut_calculator.group_calculator_procurement">
+                                <div class="col-5 offset-7 col-md-3 offset-md-9"
+                                     style="padding:0 25px !important;">
+                                    <div class="total" style="padding:0 5x">
+                                        <table class="w-100">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="o_td_label">
+                                                        <span class="o_form_label o_tax_total_label">
+                                                            Total Base in a batch (lb):
+                                                        </span>
+                                                    </td>
+                                                    <td style="text-align:end;">
+                                                        <div>
+                                                            <span name="Total Quantity"
+                                                                  style="white-space: nowrap; font-weight: bold;">
+                                                                <field name="base_ingredients_total_quantity"/>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top">
+                                                    <td class="o_td_label">
+                                                        <span class="o_form_label o_tax_total_label">
+                                                            Total Base in a batch (%):
+                                                        </span>
+                                                    </td>
+                                                    <td style="text-align:end;">
+                                                        <div>
+                                                            <span name="Total Quantity"
+                                                                  style="white-space: nowrap; font-weight: bold;">
+                                                                <field name="base_ingredients_total_quantity_percent"
+                                                                       widget="percentage"/>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top"
+                                                    groups="aznut_calculator.group_calculator_administrator,aznut_calculator.group_calculator_procurement">
+                                                    <td class="o_td_label">
+                                                        <span class="o_form_label o_tax_total_label">
+                                                            Base Ingredients
+                                                            <br/>
+                                                            Total Cost:
+                                                        </span>
+                                                    </td>
+                                                    <td style="text-align:end;">
+                                                        <span name="Total Cost"
+                                                              style="white-space: nowrap; font-weight: bold;">
+                                                            <field name="base_ingredients_total_cost"
+                                                                   widget="monetary"/>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+                        <page string="Active Ingredients" >
+                            <h3>Active Ingredients</h3>
+                            <field name="active_ingredient_ids" widget='one2many'>
+                                <tree editable="bottom" decoration-info="color == 'blue'"
+                                      decoration-danger="color == 'red'" decoration-success="color == 'green'"
+                                      decoration-warning="color == 'yellow'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="seq_number"/>
+                                    <field name="color" invisible="1"/>
+                                    <field name="product_id" options="{'no_create_edit':True,'no_create':True}"
+                                           context="{'tree_view_ref':'aznut_calculator.product_product_tree_calculator' if parent.is_calculator_salesperson else ''}"/>
+                                    <field name="quantity" string="Quantity"/>
+                                    <field name="active_ingredient_uom_id" string=" "/>
+                                    <field name="forecast_availability" widget="forecast_widget" string=" "/>
+                                    <field name="free_qty" string="Free Quantity"
+                                           attrs="{'column_invisible':[('parent.is_calculator_salesperson','=',True)]}"/>
+                                    <field name="product_uom_id" string=" "
+                                           attrs="{'column_invisible':[('parent.is_calculator_salesperson','=',True)]}"/>
+                                    <field name="cost_per_lb" widget="monetary"
+                                           attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_manager','=',False),('parent.is_calculator_salesperson','=',False)]}"/>
+                                    <field name="ingredient_cost_per_jar" widget="monetary"
+                                           attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False),('parent.is_calculator_salesperson','=',False)]}"/>
+                                    <field name="readonly_quantity"
+                                           attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_manager','=',False)]}"
+                                           string="Active Quantity"/>
+                                    <field name="uom_id" string=" "
+                                           attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_manager','=',False)]}"/>
+                                    <field name="total_cost" widget="monetary"
+                                           attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False),('parent.is_calculator_salesperson','=',False)]}"/>
+                                    <field name="calculator_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                            <div class="row">
+                                <div class="col-5 offset-7 col-md-3 offset-md-9"
+                                     style="padding:0 25px !important;">
+                                    <table class="w-100">
+                                        <tbody>
+                                            <tr style="font-weight: bold;">
+                                                <td>
+                                                    <span>Total Formula (mg): </span>
+                                                </td>
+                                                <td style="text-align: end;">
+                                                    <field name="active_ingredients_total_quantity"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top"
+                                                attrs="{'invisible':[('is_calculator_salesperson','=',True)]}">
+                                                <td class="o_td_label">
+                                                    <span class="o_form_label o_tax_total_label">
+                                                        Total Active in a batch (lb):
+                                                    </span>
+                                                </td>
+                                                <td style="text-align:end;">
+                                                    <div>
+                                                        <span name="Total Quantity"
+                                                              style="white-space: nowrap; font-weight: bold; ">
+                                                            <field name="readonly_active_ingredients_total_quantity"/>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top"
+                                                attrs="{'invisible':[('is_user_calculator_procurement','=',False),('is_calculator_administrator','=',False),('is_calculator_salesperson','=',False)]}">
+                                                <td class="o_td_label">
+                                                    <span class="o_form_label o_tax_total_label" style="color:red;"
+                                                          attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&lt;',0.3)]}">
+                                                        Total Active in a batch (%):
+                                                    </span>
+                                                    <span class="o_form_label o_tax_total_label"
+                                                          attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&gt;=',0.3)]}">
+                                                        Total Active in a batch (%):
+                                                    </span>
+                                                </td>
+                                                <td style="text-align:end;">
+                                                    <span name="Total Quantity %"
+                                                          style="white-space: nowrap; font-weight: bold;">
+                                                        <field name="readonly_active_ingredients_total_quantity_percent"
+                                                               widget="percentage" style="color:red;"
+                                                               attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&lt;',0.3)]}"/>
+                                                        <field name="readonly_active_ingredients_total_quantity_percent"
+                                                               widget="percentage"
+                                                               attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&gt;=',0.3)]}"/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="border-top"
+                                                attrs="{'invisible':[('is_user_calculator_procurement','=',False),('is_calculator_administrator','=',False),('is_calculator_salesperson','=',False)]}">
+                                                <td class="o_td_label">
+                                                    <span class="o_form_label o_tax_total_label">
+                                                        Total Active Cost:
+                                                    </span>
+                                                </td>
+                                                <td style="text-align:end;">
+                                                    <span name="Total Cost"
+                                                          style="white-space: nowrap; font-weight: bold;">
+                                                        <field name="readonly_active_ingredients_total_cost"
+                                                               widget="monetary"/>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </page>
+                        <page string="Procurement" name="procurement_support">
+                            <group>
+                                <field name="procurement_partner_id" readonly="1"/>
+                            </group>
+                            <h3 attrs="{'invisible':[('procurement_partner_id','=',False)]}">
+                                Replies
+                            </h3>
+                            <field name="procurement_reply"
+                                   attrs="{'invisible':[('procurement_partner_id','=',False)]}"/>
+                        </page>
+                        <page string="Manufacturing" name="manufacturing_support"
+                              groups="aznut_calculator.group_calculator_user" attrs="{'invisible':[('is_calculator_salesperson','=',True)]}">
+                            <group>
+                                <field name="manufacturing_partner_id" readonly="1"/>
+                            </group>
+                            <h3 attrs="{'invisible':[('manufacturing_partner_id','=',False)]}">
+                                Replies
+                            </h3>
+                            <field name="manufacturing_reply"
+                                   attrs="{'invisible':[('manufacturing_partner_id','=',False)]}"/>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="main_product_calculator_form_view" model="ir.ui.view">
+        <field name="name">main.product.calculator.form</field>
+        <field name="model">main.product.calculator</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="show_approval_button" invisible="1"/>
+                <field name="approval_email_sent" invisible="1"/>
+                <field name="approval_partner_id" invisible="1"/>
+                <sheet>
+                    <div class="oe_button_box" name="button_box" groups="aznut_calculator.group_calculator_user">
+                        <button name="%(action_report_main_product_calculator)d" string="Print" type="action"
+                                icon="fa-print" class="oe_stat_button"
+                                attrs="{'invisible':[('approval_email_sent','=',True)]}"/>
+                        <button name="create_bom" string="Create BOM" type="object"
+                                icon="fa-flask" class="oe_stat_button"
+                                attrs="{'invisible':['|',('lead_id', '=', False),('is_calculator_salesperson','=',True)]}"
+                                groups="aznut_calculator.group_calculator_manager"/>
+                        <button name="send_by_email" string="Send Quote" type="object" icon="fa-envelope-o"
+                                class="oe_stat_button"
+                                attrs="{'invisible':['|','|',('lead_id', '=', False),('approval_email_sent','=',True),('is_calculator_salesperson','=',True)]}"/>
+                        <button class="oe_stat_button" type="object" name="show_lead" icon="fa-handshake-o"
+                                attrs="{'invisible':['|',('lead_id','=',False),('is_calculator_salesperson','=',True)]}">
+                            <span>Opportunity</span>
+                        </button>
+                        <!--                        <button class="oe_stat_button" type="object" name="manage_custom_calculator"-->
+                        <!--                                attrs="{'invisible':[('custom_calculator_id','!=',False)]}" icon="fa-calculator"-->
+                        <!--                                context="{'create_custom_calculator':True}">-->
+                        <!--                            <span>Create Custom Calculator</span>-->
+                        <!--                        </button>-->
+                        <!--                        <button class="oe_stat_button" type="object" name="manage_custom_calculator"-->
+                        <!--                                attrs="{'invisible':[('custom_calculator_id','=',False)]}" icon="fa-calculator"-->
+                        <!--                                context="{'delete_custom_calculator':True}">-->
+                        <!--                            <span>Delete Custom Calculator</span>-->
+                        <!--                        </button>-->
+                        <button class="oe_stat_button" type="object" name="show_boms" icon="fa-list"
+                                attrs="{'invisible':[('bom_count','&lt;',1)]}">
+                            <field string="BoMs" name="bom_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" string='Submit To Manager'
+                                name="create_opportunity" icon="fa-share-square"
+                                attrs="{'invisible':[('lead_id', '!=', False)]}"/>
+                    </div>
+                    <field name="state" invisible="1"/>
+                    <field name="lead_id" invisible="1"/>
+                    <field name="custom_calculator_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <div class="container-fluid padding-0">
+                        <div class="row main_row">
+                            <div class="col-lg-4 col-12 ps-0 required_label">
+                                <h3>Customer Contact</h3>
+                                <hr/>
+                                <group>
+                                    <field name="partner_id"
+                                           attrs="{'readonly':['|',('state','!=','draft'),('is_user_calculator_procurement','=',True)]}"/>
+                                    <field name="allowed_partner_ids" invisible="1"/>
+                                    <field name="is_calculator_administrator" invisible="1"/>
+                                    <field name="is_calculator_salesperson" invisible="1"/>
+                                    <field name="is_user_calculator_procurement" invisible="1"/>
+                                    <field name="is_calculator_manager" invisible="1"/>
+                                </group>
+                            </div>
+                            <div class="col-lg-4 col-12">
+                                <h3>Products</h3>
+                                <hr/>
+                                <group>
+                                    <field name="calculator_product_category_id" invisible="1"/>
+                                    <field name="products_ids"
+                                           context="{'default_list_price': ready_jar_cost,
+                                           'default_categ_id':calculator_product_category_id,
+                                           'default_detailed_type':'product',
+                                           'default_sale_ok':True,
+                                           'default_invoice_policy':'order',
+                                           'calculator_products':True,
+                                           }"
+                                           widget="many2many_tags"
+                                           domain="[('detailed_type', '=','product')]"
+                                           attrs="{'readonly':[('is_user_calculator_procurement','=',True)]}"/>
+                                </group>
+                            </div>
+                            <div class="col-lg-4 col-12 ps-0">
+                                <h3>Chews Calculators</h3>
+                                <hr/>
+                                <group>
+                                    <field name="calculator_ids" widget="many2many_tags"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-fluid padding-0">
+                        <div class="row main_row">
+                            <div class="col-lg-4 col-12 ps-0">
+                                <hr/>
+                                <group>
+                                    <field name="create_date"/>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+                    <separator/>
+                    <group>
+                        <group>
+                            <field name="allowed_calculators_ids" invisible="1"/>
+                            <label for="active_calculator_id" style="font-size: calc(1.10583333rem + 0.19vw)"
+                                   string="Active Calculator:"/>
+                            <field name="active_calculator_id" domain="[('id','in',allowed_calculators_ids)]"
+                                   widget="selection"
+                                   class="h2" nolabel="1"/>
+                        </group>
+                        <div class="mt-2"
+                             style="display: flex !important; width:100%">
+                            <button groups="aznut_calculator.group_calculator_user" name="copy_child_calculator"
+                                    type="object" string=" Copy Calculator "
+                                    class="btn-primary" icon="fa-files-o" style="width: 33%!important;"
+                                    attrs="{'invisible':[('active_calculator_id','=',False)]}"/>
+                            <button groups="aznut_calculator.group_calculator_user" name="action_open_compare_wizard"
+                                    type="object" string=" Compare Calculator "
+                                    class="btn-primary  ml-4" icon="fa-calculator" style="width: 33%!important;"
+                                    attrs="{'invisible':[('active_calculator_id','=',False)]}"/>
+                            <button groups="aznut_calculator.group_calculator_administrator" name="action_open_calculators_costs"
+                                    type="object" string=" Show Calculators Costs "
+                                    class="btn-primary  ml-4" icon="fa-usd" style="width: 33%!important;"
+                                    attrs="{'invisible':[('active_calculator_id','=',False)]}"/>
+                        </div>
+                    </group>
+                    <div attrs="{'invisible':[('active_calculator_id','=',False)]}"
+                         options="{'no_create_edit':True,'no_create':True,'no_open':True}">
+                        <br/>
+                        <div>
+                            <h3>Product Name</h3>
+                            <hr/>
+                            <div class="d-flex mb-2" style="align-items: center">
+                                <h3 class="m-0">
+                                    <field name="product_name" class="m-0"/>
+                                </h3>
+                                <button groups="aznut_calculator.group_calculator_user"
+                                        name="action_approve_calculator"
+                                        type="object" string=" Approve "
+                                        class="btn-primary ml-5" style="width: 25%!important;"
+                                        attrs="{'invisible':[('show_approval_button','=',False)]}"/>
+                                <button groups="aznut_calculator.group_calculator_user"
+                                        name="action_send_approval_mail"
+                                        type="object" string=" Send Approval Mail "
+                                        class="btn-primary ml-5" style="width: 25%!important;"
+                                        attrs="{'invisible':['|','|',('moq','&lt;',5000),('approval_email_sent','=',True),('approval_partner_id','=',False)]}"/>
+                            </div>
+                        </div>
+                        <div class="material_options" groups="aznut_calculator.group_calculator_user">
+                            <h3>Material options</h3>
+                            <hr/>
+                            <group>
+                                <group>
+                                    <field name="label_exist" widget="boolean_toggle"/>
+                                    <field name="label_finish"
+                                           attrs="{'invisible': [('label_exist', '=', False)]}"/>
+                                </group>
+                                <group>
+                                    <field name="jar_products_ids" invisible="1"/>
+                                    <field name="jar_exist" widget="boolean_toggle"/>
+                                    <field name="jar_product_id" widget="selection"
+                                           domain="[('id','in',jar_products_ids)]"
+                                           attrs="{'invisible': [('jar_exist', '=', False)]}"/>
+                                    <field name="jar_products_ids" invisible="1"/>
+                                    <field class="mt-3" name="lid_exist" widget="boolean_toggle"/>
+                                    <field name="lid_product_id" widget="selection"
+                                           domain="[('id','in',jar_products_ids)]"
+                                           attrs="{'invisible': [('lid_exist', '=', False)]}"/>
+                                </group>
+                            </group>
+                        </div>
+                        <div groups="aznut_calculator.group_calculator_user">
+                            <separator/>
+                            <h3>Chews</h3>
+                            <hr/>
+                            <ul class="grid_table grid_table-mini">
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="chews_per_jar"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="chews_per_jar"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="chew_size"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="chew_size"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="portion_grams"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="portion_grams"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="jar_weight"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="jar_weight" force_save="1"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="moq"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="moq"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="count_of_jars"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="count_of_jars"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="flavour_ids"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="flavour_ids" widget="many2many_tags" context="{'tree_view_ref':'aznut_calculator.product_product_tree_calculator_flavour' if is_calculator_salesperson else ''}"
+                                               options="{'color_field': 'color','no_create':True}"/>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="cell_head required_back">
+                                        <label for="shape_ids"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="shape_ids" widget="many2many_tags"
+                                               options="{'color_field': 'color','no_create':True}"/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div groups="aznut_calculator.group_calculator_user">
+                            <separator/>
+                            <h3>Jar Cost</h3>
+                            <hr/>
+                            <ul class="grid_table grid_with_flex">
+                                <li>
+                                    <div class="cell_head">
+                                        <label for="ready_jar_cost"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="ready_jar_cost" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="net_cost"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="net_cost" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="active_cost"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="active_cost" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="base_cost"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="base_cost" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="total_cost"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="total_cost" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="shipping"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="shipping" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="taxes"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="taxes" widget="monetary"/>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="grid_table_package grid_table">
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="jar_price"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="jar_price" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="lid_price"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="lid_price" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_manager">
+                                    <div class="cell_head">
+                                        <label for="box_price"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="box_product_id"
+                                               options="{'no_create_edit':True,'no_create':True,'no_open':True}"/> -
+                                        <field name="box_price" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_administrator">
+                                    <div class="cell_head">
+                                        <label for="label_price"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="label_price" widget="monetary"/>
+                                    </div>
+                                </li>
+                                <li groups="aznut_calculator.group_calculator_manager">
+                                    <div class="cell_head">
+                                        <label for="shrink_price"/>
+                                    </div>
+                                    <div class="cell_content">
+                                        <field name="shrink_product_id"
+                                               options="{'no_create_edit':True,'no_create':True,'no_open':True}"/> -
+                                        <field name="shrink_price" widget="monetary"/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <separator/>
+                        <div class="container-fluid padding-0" groups="aznut_calculator.group_calculator_user">
+                            <div class="row overhead_calc">
+                                <div class="col-lg-7 col-xl-6 col-12 ps-0">
+                                    <h3>Overhead
+                                        <button name="action_add_moq_discount" type="object" string=" Add MOQ Discount "
+                                                class="btn-secondary ml-3 py-0" icon="fa-percent"
+                                                attrs="{'invisible':[('active_calculator_id','=',False)]}"
+                                                groups="aznut_calculator.group_calculator_manager"/>
+                                    </h3>
+                                    <hr/>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class='required_header'>
+                                                <th class="th20"
+                                                    groups="aznut_calculator.group_calculator_administrator">
+                                                    <label for="monthly_exp"/>
+                                                </th>
+                                                <th class="th20"
+                                                    groups="aznut_calculator.group_calculator_administrator">
+                                                    <label for="jars_per_month"/>
+                                                </th>
+                                                <th class="th15"
+                                                    groups="aznut_calculator.group_calculator_administrator">
+                                                    <label for="operating_expenses"/>
+                                                </th>
+                                                <th class="th15"
+                                                    groups="aznut_calculator.group_calculator_manager">
+                                                    <label for="discount_amount"/>
+                                                </th>
+                                                <th class="th15"
+                                                    groups="aznut_calculator.group_calculator_administrator">
+                                                    <label for="profit"/>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td groups="aznut_calculator.group_calculator_administrator">
+                                                    <field name="monthly_exp"/>
+                                                </td>
+                                                <td groups="aznut_calculator.group_calculator_administrator">
+                                                    <field name="jars_per_month"/>
+                                                </td>
+                                                <td groups="aznut_calculator.group_calculator_administrator">
+                                                    <field name="operating_expenses" widget="monetary"/>
+                                                </td>
+                                                <td groups="aznut_calculator.group_calculator_manager">
+                                                    <field name="discount_amount" widget="monetary"/>
+                                                </td>
+                                                <td groups="aznut_calculator.group_calculator_administrator">
+                                                    <field name="profit" widget="monetary"/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-5 col-xl-6 col-12 pe-0">
+                                    <h3>Probiotic calculator</h3>
+                                    <hr/>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr class="probiotic_header">
+                                                <th class="th30">
+                                                    <label for="bacteria_gram"/>
+                                                </th>
+                                                <th class="th30">
+                                                    <label for="cfu_portion"/>
+                                                </th>
+                                                <th class="th40">
+                                                    <label for="probiotic_portion"/>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="bacteria_input">
+                                                    <field name="bacteria_gram"/>
+                                                    <span class="bacteria_input_pow">x <field name="bacteria_gram_base"
+                                                                                              readonly="1"/>
+                                                        <sup>
+                                                            <field name="bacteria_gram_exponent" readonly="1"/>
+                                                        </sup>
+                                                    </span>
+                                                </td>
+                                                <td class="uom_input">
+                                                    <field name="cfu_portion"/>
+                                                    <field name="cfu_portion_uom"/>
+                                                </td>
+                                                <td>
+                                                    <field name="probiotic_portion"/>
+                                                    <span style="margin-left: 5px;">mg</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <notebook>
+                            <page string="Base ingredients"
+                                  attrs="{'invisible': [('is_calculator_salesperson', '=', True)]}">
+                                <h3>Base ingredients</h3>
+                                <group groups="aznut_calculator.group_calculator_user">
+                                    <field name="use_manual_report_base"/>
+                                    <field name="report_base_ingredients"/>
+                                    <field name="manual_report_base_ingredients"
+                                           attrs="{'invisible': [('use_manual_report_base', '=', False)]}"/>
+                                </group>
+                                <div attrs="{'invisible':[('is_calculator_administrator','=',False),('is_user_calculator_procurement','=',False)]}">
+                                    <field name="base_ingredient_ids" widget='one2many'>
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="seq_number"/>
+                                            <field name="currency_id" invisible="1"/>
+                                            <field name="product_id" options="{'no_create_edit':True,'no_create':True}"
+                                                   context="{'tree_view_ref':'aznut_calculator.product_product_tree_calculator' if parent.is_calculator_salesperson else ''}"/>
+                                            <field name="quantity"/>
+                                            <field name="uom_id" string=" "/>
+                                            <field name="forecast_availability" widget="forecast_widget" string=" "/>
+                                            <field name="free_qty" string="Free Quantity"/>
+                                            <field name="product_uom_id" string=" "/>
+                                            <field name="total_cost" widget="monetary"/>
+                                            <field name="cost_per_lb" widget="monetary"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                                <div class="user_base_ingredients_view"
+                                     attrs="{'invisible':['|',('is_calculator_administrator','=',True),('is_user_calculator_procurement','=',True)],'readonly':[('is_user_calculator_procurement','=',True)]}">
+                                    <field name="base_ingredient_ids" widget='one2many'>
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="seq_number"/>
+                                            <field name="currency_id" invisible="1"/>
+
+                                            <field name="product_id" options="{'no_create_edit':True,'no_create':True}"
+                                                   context="{'tree_view_ref':'aznut_calculator.product_product_tree_calculator' if parent.is_calculator_salesperson else ''}"/>
+                                            <field name="quantity" groups="aznut_calculator.group_calculator_manager"/>
+                                            <field name="uom_id" groups="aznut_calculator.group_calculator_manager"/>
+                                            <field name="forecast_availability" widget="forecast_widget" string=" "
+                                                   groups="aznut_calculator.group_calculator_manager"/>
+                                            <field name="free_qty" string="Free Quantity"
+                                                   groups="aznut_calculator.group_calculator_manager"/>
+                                            <field name="product_uom_id" string=" "
+                                                   groups="aznut_calculator.group_calculator_manager"/>
+                                            <field name="total_cost" widget="monetary"
+                                                   attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False)]}"/>
+                                            <field name="cost_per_lb" widget="monetary"
+                                                   attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False)]}"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                                <div class="row"
+                                     groups="aznut_calculator.group_calculator_manager,aznut_calculator.group_calculator_procurement">
+                                    <div class="col-5 offset-7 col-md-3 offset-md-9"
+                                         style="padding:0 25px !important;">
+                                        <div class="total" style="padding:0 5x">
+                                            <table class="w-100">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="o_td_label">
+                                                            <span class="o_form_label o_tax_total_label">
+                                                                Total Base in a batch (lb):
+                                                            </span>
+                                                        </td>
+                                                        <td style="text-align:end;">
+                                                            <div>
+                                                                <span name="Total Quantity"
+                                                                      style="white-space: nowrap; font-weight: bold;">
+                                                                    <field name="base_ingredients_total_quantity"/>
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="border-top">
+                                                        <td class="o_td_label">
+                                                            <span class="o_form_label o_tax_total_label">
+                                                                Total Base in a batch (%):
+                                                            </span>
+                                                        </td>
+                                                        <td style="text-align:end;">
+                                                            <div>
+                                                                <span name="Total Quantity"
+                                                                      style="white-space: nowrap; font-weight: bold;">
+                                                                    <field name="base_ingredients_total_quantity_percent"
+                                                                           widget="percentage"/>
+                                                                </span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="border-top"
+                                                        groups="aznut_calculator.group_calculator_administrator,aznut_calculator.group_calculator_procurement">
+                                                        <td class="o_td_label">
+                                                            <span class="o_form_label o_tax_total_label">
+                                                                Base Ingredients
+                                                                <br/>
+                                                                Total Cost:
+                                                            </span>
+                                                        </td>
+                                                        <td style="text-align:end;">
+                                                            <span name="Total Cost"
+                                                                  style="white-space: nowrap; font-weight: bold;">
+                                                                <field name="base_ingredients_total_cost"
+                                                                       widget="monetary"/>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                            <page string="Active Ingredients" attrs="{'invisible':[('id','=', False)]}">
+                                <h3>Active Ingredients</h3>
+                                <field name="active_ingredient_ids" widget='one2many'
+                                       context="{'default_calculator_id':active_calculator_id}">
+                                    <tree editable="bottom" decoration-info="color == 'blue'"
+                                          decoration-danger="color == 'red'" decoration-success="color == 'green'"
+                                          decoration-warning="color == 'yellow'">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="seq_number"/>
+                                        <field name="color" invisible="1"/>
+                                        <field name="product_id" options="{'no_create_edit':True,'no_create':True}"
+                                               context="{'tree_view_ref':'aznut_calculator.product_product_tree_calculator' if parent.is_calculator_salesperson else ''}"/>
+                                        <field name="quantity" string="Quantity"/>
+                                        <field name="active_ingredient_uom_id" string=" "/>
+                                        <field name="forecast_availability" widget="forecast_widget" string=" "/>
+                                        <field name="free_qty" string="Free Quantity"
+                                               attrs="{'column_invisible':[('parent.is_calculator_salesperson','=',True)]}"/>
+                                        <field name="product_uom_id" string=" "
+                                               attrs="{'column_invisible':[('parent.is_calculator_salesperson','=',True)]}"/>
+                                        <field name="cost_per_lb" widget="monetary"
+                                               attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_manager','=',False),('parent.is_calculator_salesperson','=',False)]}"/>
+                                        <field name="ingredient_cost_per_jar" widget="monetary"
+                                               attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False),('parent.is_calculator_salesperson','=',False)]}"/>
+                                        <field name="readonly_quantity"
+                                               attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_manager','=',False)]}"
+                                               string="Active Quantity"/>
+                                        <field name="uom_id" string=" "
+                                               attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_manager','=',False)]}"/>
+                                        <field name="total_cost" widget="monetary"
+                                               attrs="{'column_invisible':[('parent.is_user_calculator_procurement','=',False),('parent.is_calculator_administrator','=',False),('parent.is_calculator_salesperson','=',False)]}"/>
+                                        <field name="calculator_id" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                                </field>
+                                <div class="row">
+                                    <div class="col-5 offset-7 col-md-3 offset-md-9"
+                                         style="padding:0 25px !important;">
+                                        <table class="w-100">
+                                            <tbody>
+                                                <tr style="font-weight: bold;">
+                                                    <td>
+                                                        <span>Total Formula (mg): </span>
+                                                    </td>
+                                                    <td style="text-align: end;">
+                                                        <field name="active_ingredients_total_quantity"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top"
+                                                    attrs="{'invisible':[('is_calculator_salesperson','=',True)]}">
+                                                    <td class="o_td_label">
+                                                        <span class="o_form_label o_tax_total_label">
+                                                            Total Active in a batch (lb):
+                                                        </span>
+                                                    </td>
+                                                    <td style="text-align:end;">
+                                                        <div>
+                                                            <span name="Total Quantity"
+                                                                  style="white-space: nowrap; font-weight: bold; ">
+                                                                <field name="readonly_active_ingredients_total_quantity"/>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top"
+                                                    attrs="{'invisible':[('is_user_calculator_procurement','=',False),('is_calculator_manager','=',False),('is_calculator_salesperson','=',False)]}">
+                                                    <td class="o_td_label">
+                                                        <span class="o_form_label o_tax_total_label" style="color:red;"
+                                                              attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&lt;',0.3)]}">
+                                                            Total Active in a batch (%):
+                                                        </span>
+                                                        <span class="o_form_label o_tax_total_label"
+                                                              attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&gt;=',0.3)]}">
+                                                            Total Active in a batch (%):
+                                                        </span>
+                                                    </td>
+                                                    <td style="text-align:end;">
+                                                        <span name="Total Quantity %"
+                                                              style="white-space: nowrap; font-weight: bold;">
+                                                            <field name="readonly_active_ingredients_total_quantity_percent"
+                                                                   widget="percentage" style="color:red;"
+                                                                   attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&lt;',0.3)]}"/>
+                                                            <field name="readonly_active_ingredients_total_quantity_percent"
+                                                                   widget="percentage"
+                                                                   attrs="{'invisible':[('readonly_active_ingredients_total_quantity_percent','&gt;=',0.3)]}"/>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-top"
+                                                    attrs="{'invisible':[('is_user_calculator_procurement','=',False),('is_calculator_administrator','=',False),('is_calculator_salesperson','=',False)]}">
+                                                    <td class="o_td_label">
+                                                        <span class="o_form_label o_tax_total_label">
+                                                            Total Active Cost:
+                                                        </span>
+                                                    </td>
+                                                    <td style="text-align:end;">
+                                                        <span name="Total Cost"
+                                                              style="white-space: nowrap; font-weight: bold;">
+                                                            <field name="readonly_active_ingredients_total_cost"
+                                                                   widget="monetary"/>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </page>
+                            <page string="Note" groups="aznut_calculator.group_calculator_user">
+                                <group>
+                                    <field name="note" class="oe-bordered-editor" nolabel="1"
+                                           placeholder="Calculator Note"/>
+                                </group>
+                            </page>
+                            <page string="GPT" name="ask_gpt_session" groups="aznut_calculator.group_calculator_user">
+                                <button name="action_generate_ask_gpt_session" type="object"
+                                        string="Generate GPT Session"
+                                        class="btn-primary" attrs="{'invisible':[('ask_gpt_session_id','!=',False)]}"/>
+                                <h3>
+                                    <field name="ask_gpt_session_id" readonly="1" options="{'no_open':True}"/>
+                                </h3>
+                                <button name="action_open_ask_gpt_session" type="object" string="Open GPT Session"
+                                        class="btn-primary" attrs="{'invisible':[('ask_gpt_session_id','=',False)]}"/>
+
+                            </page>
+                            <page string="Procurement" name="procurement_support">
+                                <group>
+                                    <field name="procurement_partner_id"
+                                           attrs="{'readonly':[('is_user_calculator_procurement','=',True)]}"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                </group>
+                                <h3 attrs="{'invisible':[('procurement_partner_id','=',False)]}">
+                                    Replies
+                                </h3>
+                                <field name="procurement_reply"
+                                       attrs="{'invisible':[('procurement_partner_id','=',False)]}"/>
+                                <button name="action_send_procurement_mail" type="object" string="Ask Procurement"
+                                        class="btn-primary" groups="aznut_calculator.group_calculator_user"
+                                        attrs="{'invisible':[('procurement_partner_id','=',False)]}"/>
+                            </page>
+                            <page string="Manufacturing" name="manufacturing_support"
+                                  groups="aznut_calculator.group_calculator_user" attrs="{'invisible':[('is_calculator_salesperson','=',True)]}">
+                                <group>
+                                    <field name="manufacturing_partner_id"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                </group>
+                                <h3 attrs="{'invisible':[('manufacturing_partner_id','=',False)]}">
+                                    Replies
+                                </h3>
+                                <field name="manufacturing_reply"
+                                       attrs="{'invisible':[('manufacturing_partner_id','=',False)]}"/>
+                                <button name="action_send_manufacturing_mail" type="object" string="Ask Manufacturing"
+                                        class="btn-primary" groups="aznut_calculator.group_calculator_user"
+                                        attrs="{'invisible':[('manufacturing_partner_id','=',False)]}"/>
+                            </page>
+                        </notebook>
+                    </div>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="main_product_calculator_search_view" model="ir.ui.view">
+        <field name="name">main.product.calculator.search</field>
+        <field name="model">main.product.calculator</field>
+        <field name="arch" type="xml">
+            <search string="Main Chews Calculator">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="create_uid"/>
+                <group expand="1" string="Group By">
+                    <filter string="Customer" name="group_by_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Create Date" name="group_by_create_date"
+                            context="{'group_by':'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_main_product_calculator_tree" model="ir.actions.act_window">
+        <field name="name">List of Chews Calculators</field>
+        <field name="res_model">main.product.calculator</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="aznut_calculator.main_product_calculator_tree_view"/>
+        <field name="context">{'search_default_group_by_create_date': 1,
+                               'search_default_group_by_partner_id': 2, }
+        </field>
+        <field name="search_view_id" ref="aznut_calculator.main_product_calculator_search_view"/>
+    </record>
+
+    <menuitem name="Calculator"
+              id="menu_product_calculator_main"
+              web_icon="aznut_calculator,static/description/icon.png"
+              action="aznut_calculator.action_main_product_calculator_tree"
+              groups="aznut_calculator.group_calculator_user,aznut_calculator.group_calculator_procurement"/>
+
+    <menuitem name="Calculators"
+              id="menu_calculators"
+              parent="aznut_calculator.menu_product_calculator_main"
+              sequence="2"/>
+
+    <menuitem name="Chews Calculators"
+              id="menu_product_calculators"
+              parent="aznut_calculator.menu_calculators"
+              action="aznut_calculator.action_main_product_calculator_tree"
+              sequence="1"/>
+</odoo>

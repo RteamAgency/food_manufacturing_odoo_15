@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="StockSourceTags">
+        <div t-attf-class="stock_custom_tag w-100 #{isListView ? 'stock_list_tags' : ''}">
+            <t t-if="field_values">
+                <t t-foreach="field_values" t-as="el">
+                    <div t-if="el" class="badge badge-pill">
+                        <t t-esc="el"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

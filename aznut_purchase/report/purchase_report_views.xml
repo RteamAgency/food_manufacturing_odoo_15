@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_report_view_tree" model="ir.ui.view">
+        <field name="name">aznut_purchase.purchase.report.view.tree</field>
+        <field name="model">purchase.report</field>
+        <field name="inherit_id" ref="purchase.purchase_report_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="actual_lead_time"/>
+                <field name="supplier_price"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

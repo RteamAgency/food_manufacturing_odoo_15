@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="aznut_delivery_transfer_email" model="mail.template">
+            <field name="name">Delivery Transfer: Send by email</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="subject">{{ object.partner_id.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{object.partner_id.email_formatted}}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <t t-set="qty_done" t-value="sum(object.move_line_ids_without_package.mapped('qty_done'))"/>
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello, <strong t-out="object.partner_id.display_name or ''"/>
+                        <br/><br/>
+                        Your delivery order <strong t-out="object.display_name or ''"/> Qty <strong t-out="qty_done or ''"/> 
+                        has been delivered.<br/>
+                        Thank you for your trust!
+                        <br/>
+                        <br/>
+                        Do not hesitate to contact us if you have any questions.
+                        <br/><br/>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <record id="aznut_store_product_email" model="mail.template">
+            <field name="name">Store Transfer: Send by email</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="subject">{{ object.partner_id.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{object.partner_id.email_formatted}}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <t t-set="qty_done" t-value="sum(object.move_line_ids_without_package.mapped('qty_done'))"/>
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello, <strong t-out="object.partner_id.display_name or ''"/>
+                        <br/><br/>
+                        <t t-set="products" t-value="object.move_ids_without_package.product_id.mapped('name')"/>
+                        <t t-set="products_name" t-value="', '.join(products)"></t>
+                        Your product <strong t-out="products_name or ''"/> has been finished<br/>
+                        Thank you for your trust!
+                        <br/>
+                        <br/>
+                        Do not hesitate to contact us if you have any questions.
+                        <br/><br/>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>

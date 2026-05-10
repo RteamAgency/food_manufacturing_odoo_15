@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="purchase_order_view_tree" model="ir.ui.view">
+        <field name="name">aznut_purchase.purchase.order.view.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <field position="before" name="amount_total">
+                <field name="qty_ordered"/>
+                <field name="qty_received" attrs="{'invisible':[('state','not in',['done','purchase'])]}"/>
+            </field>
+            <field name="date_order" position="after">
+                <field name="seven_days_notice_display"
+                       attrs="{'invisible':[('seven_days_notice_display','not in',[1,10])]}" widget="color_picker"/>
+                <field name="request_for_vendor_access_token" invisible="1"/>
+            </field>
+            <field name="origin" position="after">
+                <field name="date_planned" optional="show"/>
+            </field>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="shipping_information" widget="badge"
+                       decoration-muted="shipping_information == 'waiting_for_shipping_information'"
+                       decoration-success="shipping_information == 'in_transit'"
+                       decoration-warning="shipping_information == 'ready_to_schedule_shipments'"/>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_run_ingredients_reordering_rule" type="object"
+                        string="Run Reordering" groups="purchase.group_purchase_manager" class="btn-secondary"
+                        attrs="{'header_visible_button': True}"/>
+                <button name="action_request_for_vendor" type="object"
+                        string="Request For Vendor" groups="purchase.group_purchase_manager" class="btn-secondary"
+                        attrs="{'header_visible_button': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="supplier_confirmation_status" widget="badge"
+                       decoration-danger="supplier_confirmation_status == 'not_in_stock'"
+                       decoration-success="supplier_confirmation_status == 'confirmed_by_supplier'"
+                       decoration-warning="supplier_confirmation_status == 'waiting_for_confirmation'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_kpis_tree" model="ir.ui.view">
+        <field name="name">aznut_purchase.purchase.order.inherit.purchase.order.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">supplier_confirmation_status,date_order desc</attribute>
+            </xpath>
+            <field name="date_order" position="after">
+                <field name="seven_days_notice_display"
+                       attrs="{'invisible':[('seven_days_notice_display','not in',[1,10])]}" widget="color_picker"/>
+            </field>
+            <field name="origin" position="after">
+                <field name="date_planned" optional="show"/>
+            </field>
+            <field position="before" name="amount_total">
+                <field name="qty_ordered"/>
+                <field name="qty_received" attrs="{'invisible':[('state','not in',['done','purchase'])]}"/>
+            </field>
+            <xpath expr="//header" position="inside">
+                <button name="action_run_ingredients_reordering_rule" type="object"
+                        string="Run Reordering" groups="purchase.group_purchase_manager" class="btn-secondary"
+                        attrs="{'header_visible_button': True}"/>
+                <button name="action_request_for_vendor" type="object"
+                        string="Request For Vendor" groups="purchase.group_purchase_manager" class="btn-secondary"
+                        attrs="{'header_visible_button': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="shipping_information" widget="badge"
+                       decoration-muted="shipping_information == 'waiting_for_shipping_information'"
+                       decoration-success="shipping_information == 'in_transit'"
+                       decoration-warning="shipping_information == 'ready_to_schedule_shipments'"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="supplier_confirmation_status" widget="badge"
+                       decoration-danger="supplier_confirmation_status == 'not_in_stock'"
+                       decoration-success="supplier_confirmation_status == 'confirmed_by_supplier'"
+                       decoration-warning="supplier_confirmation_status == 'waiting_for_confirmation'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_form" model="ir.ui.view">
+        <field name="name">aznut_purchase.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="attrs">{'invisible': [('hide_for_receiving_operator', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="after">
+                <div class="ribbon ribbon-top-right"
+                     attrs="{'invisible': [('supplier_confirmation_status', '!=', 'confirmed_by_supplier')]}">
+                    <span style="font-size: 14px" class="bg-success">Confirmed By Supplier</span>
+                </div>
+                <div class="ribbon ribbon-top-right"
+                     attrs="{'invisible': [('supplier_confirmation_status', '!=', 'waiting_for_confirmation')]}">
+                    <span style="font-size: 14px" class="bg-warning">Waiting For Confirmation</span>
+                </div>
+                <div class="ribbon ribbon-top-right"
+                     attrs="{'invisible': [('supplier_confirmation_status', '!=', 'not_in_stock')]}">
+                    <span style="font-size: 14px" class="bg-danger">Not In Stock</span>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_open_parent_order"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        type="object"
+                        attrs="{'invisible':[('parent_order_id','=',False)]}"
+                        string="Parent Order">
+                </button>
+                <button name="action_open_child_orders"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        type="object"
+                        attrs="{'invisible':[('child_orders_ids','=',[])]}"
+                        string="Child Orders">
+                </button>
+                <button name="action_open_alternative_order"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        type="object"
+                        attrs="{'invisible':[('alternative_orders_ids','=',[])]}"
+                        string="Alternative Orders">
+                </button>
+                <button name="action_open_linked_order"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        type="object"
+                        attrs="{'invisible':[('linked_orders_ids','=',[])]}"
+                        string="Linked Orders">
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='print_quotation']" position="after">
+                <button name="action_send_availability_confirmation"
+                        attrs="{'invisible':['|',('supplier_mails_state', '!=', False),('state','not in',['draft','sent','to_approve'])]}"
+                        string="Send Availability Confirmation" type="object" class="oe_highlight"/>
+                <button name="action_send_shipping_information_request"
+                        attrs="{'invisible':['|','|',('supplier_mails_state', '!=', 'availability_confirmation_mail_sent'),('state','not in',['done','purchase']),('shipping_information','!=','waiting_for_shipping_information')]}"
+                        string="Send Shipping Information Request" type="object" class="oe_highlight"/>
+                <button name="action_send_confirmation_to_supplier"
+                        attrs="{'invisible':['|',('supplier_mails_state', '!=','shipping_information_request_mail_sent'),('state','not in',['done','purchase'])]}"
+                        string="Send Confirmation To Supplier" type="object" class="oe_highlight"/>
+            </xpath>
+            <field name="company_id" position="after">
+                <field name="hide_for_receiving_operator" invisible="1"/>
+                <field name="supplier_mails_state" invisible="1"/>
+                <field name="parent_order_id" invisible="1"/>
+                <field name="alternative_orders_ids" invisible="1"/>
+                <field name="linked_orders_ids" invisible="1"/>
+                <field name="child_orders_ids" invisible="1"/>
+                <field name="supplier_confirmation_status" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="shipping_information" widget="selection_badge"
+                       decoration-muted="shipping_information == 'waiting_for_shipping_information'"
+                       decoration-success="shipping_information == 'scheduled'"
+                       decoration-warning="shipping_information == 'ready_to_schedule_shipments'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_filter" model="ir.ui.view">
+        <field name="name">aznut_purchase.request.quotation.select</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='late_rfqs']" position="after">
+                <filter name="waiting_for_shipping_information" string="Waiting For Shipping Information"
+                        domain="[('shipping_information', '=', 'waiting_for_shipping_information')]"/>
+                <filter name="ready_to_schedule_shipments" string="Ready To Schedule Shipments"
+                        domain="[('shipping_information', '=', 'ready_to_schedule_shipments')]"/>
+                <filter name="shipping_information_in_transit" string="In Transit"
+                        domain="[('shipping_information', '=', 'in_transit')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_purchase_manager_review" model="ir.actions.server">
+        <field name="name">Manager Review</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_manager_review()
+        </field>
+    </record>
+
+    <record id="action_send_availability_confirmation" model="ir.actions.server">
+        <field name="name">Send Availability Confirmation</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_send_availability_confirmation_mass()
+        </field>
+    </record>
+
+    <record id="purchase_rfq_receiving_operator" model="ir.actions.act_window">
+        <field name="name">Requests for Quotation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="purchase_order_kpis_tree"/>
+        <field name="domain">[('state', 'not in', ['done', 'purchase'])]</field>
+        <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="context">{'quotation_only': True, 'edit': False, 'create': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No request for quotation found.
+            </p>
+        </field>
+    </record>
+
+    <record id="purchase_rfq_receiving_operator_buttons" model="ir.actions.act_window">
+        <field name="name">Requests for Quotation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">main</field>
+        <field name="view_id" ref="purchase_order_kpis_tree"/>
+        <field name="domain">[('state', 'not in', ['done', 'purchase'])]</field>
+        <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+        <field name="context">{'quotation_only': True, 'edit': False, 'create': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No request for quotation found.
+            </p>
+        </field>
+    </record>
+
+    <record id="purchase_form_action_receiving_operator" model="ir.actions.act_window">
+        <field name="name">Purchase Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="purchase_order_view_tree"/>
+        <field name="domain">[('state', 'in', ('purchase', 'done')), ('picking_ids', '!=', []),
+                              ('is_shipped', '=', False)]</field>
+        <field name="search_view_id" ref="purchase.purchase_order_view_search"/>
+        <field name="context">{'create': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No purchase order found. Let's create one!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_purchase_rfq_receiving_operator"
+              name="Requests For Quotation"
+              parent="purchase.menu_procurement_management"
+              action="aznut_purchase.purchase_rfq_receiving_operator"
+              sequence="1"/>
+
+    <menuitem action="purchase_form_action_receiving_operator" id="menu_purchase_form_action_receiving_operator"
+              parent="purchase.menu_procurement_management"
+              sequence="2"/>
+
+</odoo>

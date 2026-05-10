@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_compare_calculator_wizard_form" model="ir.ui.view">
+        <field name="name">aznut_calculator.product.compare.calculator.wizard.form</field>
+        <field name="model">product.compare.calculator.wizard</field>
+        <field name="arch" type="xml">
+            <form class="compare_calculator_form">
+                <script>
+                    document.querySelectorAll('.modal-dialog').forEach(parent => {
+                    if (parent.querySelector('.compare_calculator_form')) {
+                    parent.style.maxWidth ='90%';
+                    }
+                    });
+                </script>
+                <sheet>
+                    <field name="calculators_ids" invisible="1"/>
+                    <field name="main_calculator_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <group>
+                        <group>
+                            <div>
+                                <h3>
+                                    <field name="calculator_first"
+                                           domain="[('id','in',calculators_ids),('id','!=',calculator_second)]"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                </h3>
+                                <div class="mt-4">
+                                    <h3>Chews</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare">
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="chew_size_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="chew_size_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="chew_size_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="chew_size_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="portion_grams_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="portion_grams_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="jar_weight_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="jar_weight_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="moq_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="moq_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="count_of_jars_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="count_of_jars_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="first_flavour_ids"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="first_flavour_ids" widget="many2many_tags"
+                                                       options="{'color_field': 'color','no_create':True}"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="first_shape_ids"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="first_shape_ids" widget="many2many_tags"
+                                                       options="{'color_field': 'color','no_create':True}"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Jar Cost</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare"
+                                        style="grid-template-columns: repeat(1, minmax(max-content, auto));">
+                                        <li>
+                                            <div class="cell_head" style="background-color: rgba(182, 215, 168, 0.2);">
+                                                <label for="ready_jar_cost_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="ready_jar_cost_first" widget="monetary"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Active Ingredients</h3>
+                                    <hr/>
+                                    <field name="first_active_ingredient_ids" readonly="0" class="tree_compare"
+                                           widget="one2many" options="{'unlink': False}">
+                                        <tree editable="top" decoration-info="color == 'blue'"
+                                              decoration-danger="color == 'red'" decoration-success="color == 'green'"
+                                              decoration-warning="color == 'yellow'">
+                                            <field name="product_id" readonly="1"
+                                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                            <field name="quantity" string="Quantity" readonly="1"/>
+                                            <field name="cost_per_lb" widget="monetary" string="Cost Per Lb"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="ingredient_cost_per_jar" widget="monetary"
+                                                   string="Cost Ingredient Per Jar"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="readonly_quantity"
+                                                   groups="aznut_calculator.group_calculator_administrator"
+                                                   string="Active Quantity"/>
+                                            <field name="total_cost" widget="monetary" string="Total Cost"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="color"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </group>
+                        <group>
+                            <div>
+                                <h3>
+                                    <field name="calculator_second"
+                                           domain="[('id','in',calculators_ids),('id','!=',calculator_first)]"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                </h3>
+                                <div class="mt-4">
+                                    <h3>Chews</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare">
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="chew_size_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="chew_size_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="chew_size_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="chew_size_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="portion_grams_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="portion_grams_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="jar_weight_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="jar_weight_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="moq_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="moq_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="count_of_jars_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="count_of_jars_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="second_flavour_ids"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="second_flavour_ids" widget="many2many_tags"
+                                                       options="{'color_field': 'color','no_create':True}"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="second_shape_ids"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="second_shape_ids" widget="many2many_tags"
+                                                       options="{'color_field': 'color','no_create':True}"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Jar Cost</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare"
+                                        style="grid-template-columns: repeat(1, minmax(max-content, auto));">
+                                        <li>
+                                            <div class="cell_head" style="background-color: rgba(182, 215, 168, 0.2);">
+                                                <label for="ready_jar_cost_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="ready_jar_cost_second" widget="monetary"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Active Ingredients</h3>
+                                    <hr/>
+                                    <field name="second_active_ingredient_ids" readonly="0" class="tree_compare"
+                                           widget="one2many" options="{'unlink': False}">
+                                        <tree editable="top" decoration-info="color == 'blue'"
+                                              decoration-danger="color == 'red'" decoration-success="color == 'green'"
+                                              decoration-warning="color == 'yellow'">
+                                            <field name="product_id" readonly="1"
+                                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                            <field name="quantity" string="Quantity" readonly="1"/>
+                                            <field name="cost_per_lb" widget="monetary" string="Cost Per Lb"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="ingredient_cost_per_jar" widget="monetary"
+                                                   string="Cost Ingredient Per Jar"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="readonly_quantity"
+                                                   groups="aznut_calculator.group_calculator_administrator"
+                                                   string="Active Quantity"/>
+                                            <field name="total_cost" widget="monetary" string="Total Cost"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="color"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="powder_compare_calculator_wizard_form" model="ir.ui.view">
+        <field name="name">aznut_calculator.powder.compare.calculator.wizard.form</field>
+        <field name="model">powder.compare.calculator.wizard</field>
+        <field name="arch" type="xml">
+            <form class="compare_calculator_form">
+                <script>
+                    document.querySelectorAll('.modal-dialog').forEach(parent => {
+                    if (parent.querySelector('.compare_calculator_form')) {
+                    parent.style.maxWidth ='90%';
+                    }
+                    });
+                </script>
+                <sheet>
+                    <field name="calculators_ids" invisible="1"/>
+                    <field name="main_calculator_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <group>
+                        <group>
+                            <div>
+                                <h3>
+                                    <field name="calculator_first"
+                                           domain="[('id','in',calculators_ids),('id','!=',calculator_second)]"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                </h3>
+                                <div class="mt-4">
+                                    <h3>Size for Scoop &amp; Jar</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare"
+                                        style="grid-template-columns: repeat(3, minmax(max-content, auto));">
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="scoop_grams_jar_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="scoop_grams_jar_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="ordered_jars_number_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="ordered_jars_number_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="jar_size_gr_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="jar_size_gr_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="jar_size_oz_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="jar_size_oz_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="moq_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="moq_first"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="count_of_jars_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="count_of_jars_first"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Jar Cost</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare"
+                                        style="grid-template-columns: repeat(1, minmax(max-content, auto));">
+                                        <li>
+                                            <div class="cell_head" style="background-color: rgba(182, 215, 168, 0.2);">
+                                                <label for="price_per_jar_first"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="price_per_jar_first" widget="monetary"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Ingredients</h3>
+                                    <hr/>
+                                    <field name="first_active_ingredient_ids" class="tree_compare"
+                                           widget="one2many">
+                                        <tree editable="top" decoration-info="color == 'blue'" delete="0"
+                                              decoration-danger="color == 'red'" decoration-success="color == 'green'"
+                                              decoration-warning="color == 'yellow'">
+                                            <field name="product_id" readonly="1"
+                                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                            <field name="quantity" string="Quantity" readonly="1"/>
+                                            <field name="cost_per_lb" widget="monetary" string="Cost per Lb"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="cost_per_scoop"
+                                                   string="Cost per Scoop"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="total_bom_lb"
+                                                   groups="aznut_calculator.group_calculator_administrator"
+                                                   string="Total BoM Lb"/>
+                                            <field name="color"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </group>
+                        <group>
+                            <div>
+                                <h3>
+                                    <field name="calculator_second"
+                                           domain="[('id','in',calculators_ids),('id','!=',calculator_first)]"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                </h3>
+                                <div class="mt-4">
+                                    <h3>Size for Scoop &amp; Jar</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare"
+                                        style="grid-template-columns: repeat(3, minmax(max-content, auto));">
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="scoop_grams_jar_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="scoop_grams_jar_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="ordered_jars_number_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="ordered_jars_number_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="jar_size_gr_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="jar_size_gr_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="jar_size_oz_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="jar_size_oz_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="moq_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="moq_second"/>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="cell_head required_back">
+                                                <label for="count_of_jars_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="count_of_jars_second"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Jar Cost</h3>
+                                    <hr/>
+                                    <ul class="grid_table_compare"
+                                        style="grid-template-columns: repeat(1, minmax(max-content, auto));">
+                                        <li>
+                                            <div class="cell_head" style="background-color: rgba(182, 215, 168, 0.2);">
+                                                <label for="price_per_jar_second"/>
+                                            </div>
+                                            <div class="cell_content">
+                                                <field name="price_per_jar_second" widget="monetary"/>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mt-4">
+                                    <h3>Ingredients</h3>
+                                    <hr/>
+                                    <field name="second_active_ingredient_ids" class="tree_compare"
+                                           widget="one2many">
+                                        <tree editable="top" decoration-info="color == 'blue'" delete="0"
+                                              decoration-danger="color == 'red'" decoration-success="color == 'green'"
+                                              decoration-warning="color == 'yellow'">
+                                            <field name="product_id" readonly="1"
+                                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                            <field name="quantity" string="Quantity" readonly="1"/>
+                                            <field name="cost_per_lb" widget="monetary" string="Cost per Lb"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="cost_per_scoop"
+                                                   string="Cost per Scoop"
+                                                   groups="aznut_calculator.group_calculator_administrator"/>
+                                            <field name="total_bom_lb"
+                                                   groups="aznut_calculator.group_calculator_administrator"
+                                                   string="Total Bom Lb"/>
+                                            <field name="color"/>
+                                            <field name="currency_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

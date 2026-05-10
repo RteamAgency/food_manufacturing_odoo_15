@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_workorder_view_form_tablet_inherit" model="ir.ui.view">
+        <field name="name">aznut.mrp.quality.video.workorder.iew.orm.ablet.nherit</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="last_time_video_record" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

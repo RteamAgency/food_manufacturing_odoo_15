@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_purchase_inherited" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.purchase.inherited</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='po_double_validation']//.." position="inside">
+                <h2>Purchase Dashboard</h2>
+                <div class="row mt16 o_settings_container" name="matrix_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box" id="product_matrix"
+                         title="If installed, the product variants will be added to purchase orders through a grid entry.">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="purchase_jars_forecast_ratio"/>
+                            <div class="content-group">
+                                <field name="purchase_jars_forecast_ratio" widget="percentage" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container" name="matrix_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="total_jars_report_products"/>
+                            <div class="content-group">
+                                <field name="total_jars_report_products" widget="many2many_tags" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container" name="vendor_availability_email_template">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="vendor_availability_email_template"/>
+                            <div class="content-group">
+                                <field widget="html" style="width: 100%!important;"
+                                       name="vendor_availability_email_template" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container" name="shipping_information_request_email_template">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="shipping_information_request_email_template"/>
+                            <div class="content-group">
+                                <field widget="html" style="width: 100%!important;"
+                                       name="shipping_information_request_email_template" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="row mt16 o_settings_container" name="confirmation_to_supplier_email_template">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="confirmation_to_supplier_email_template"/>
+                            <div class="content-group">
+                                <field widget="html" style="width: 100%!important;"
+                                       name="confirmation_to_supplier_email_template" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container" name="request_for_vendor_email_template">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="request_for_vendor_email_template"/>
+                            <div class="content-group">
+                                <field widget="html" style="width: 100%!important;"
+                                       name="request_for_vendor_email_template" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

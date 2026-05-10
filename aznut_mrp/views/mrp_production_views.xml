@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_production_form_view_inherit" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.production.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@widget='mrp_should_consume']" position="attributes">
+                <attribute name="sum">Total</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="create_backorder"
+                        type="object"
+                        string="Create backorder"
+                        attrs="{'invisible': ['|', ('state', 'not in', ['confirmed', 'progress']), ('qty_producing', '=', 0)]}"
+                />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_production_cleaning" type="object"
+                        attrs="{'invisible': [('production_cleaning_order_id', '=', False)]}" icon="fa-gears">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Production</span>
+                        <span class="o_stat_text">Cleaning</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" name="action_view_packaging_cleaning" type="object" icon="fa-gears"
+                        attrs="{'invisible': [('packaging_cleaning_order_id', '=', False)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Packaging</span>
+                        <span class="o_stat_text">Cleaning</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" name="action_view_store_pickings" type="object" icon="fa-truck"
+                        attrs="{'invisible': ['|',('store_picking_id', '=', False),('state','!=','done')]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Store Trasfer</span>
+                    </div>
+                </button>
+            </xpath>
+            <field name="user_id" position="after">
+                <field name="store_picking_id" invisible="1"/>
+                <field name="production_cleaning_order_id" invisible="1"/>
+                <field name="packaging_cleaning_order_id" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='move_raw_ids']//button" position="before">
+                <field name="onhand_deficit" widget="deficit_widget"/>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//field[@name='forecast_availability']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.state', 'in', ('draft', 'done'))],
+                                         'invisible': [('state', '=', 'done'),
+                                                       ('parent.state', '!=', 'done')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//tree" position="attributes">
+                <attribute name="decoration-warning">state=='done' and parent.state != 'done'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//field[@name='location_id']" position="attributes">
+                <attribute name="attrs">{
+                    'readonly': [('state', '=', 'done'), ('parent.state', '!=', 'done')]}</attribute>
+                <attribute name="class" add="text-field" separator=" "/>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//field[@widget='mrp_should_consume']" position="attributes">
+                <attribute name="attrs">                {
+                    'readonly': ['|', '&amp;', ('state', '=', 'done'), ('parent.state', '!=', 'done'), '&amp;',
+                                 ('parent.state', '!=', 'draft'), '|', '&amp;',
+                                 ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')),
+                                 ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}</attribute>
+                <attribute name="class" add="text-field" separator=" "/>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//field[@name='bom_line_id']" position="attributes">
+                <attribute name="attrs">{
+                    'readonly': [('state', '=', 'done'), ('parent.state', '!=', 'done')]}</attribute>
+                <attribute name="class" add="text-field" separator=" "/>
+            </xpath>
+            <field name="user_id" position="after">
+                <field name="aznut_priority" force_save="1"/>
+            </field>
+            <xpath position="attributes" expr="//header">
+                <attribute name="groups">mrp.group_mrp_user</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="attributes">
+                <attribute name="groups">mrp.group_mrp_user</attribute>
+            </xpath>
+            <field position="attributes" name="priority">
+                <attribute name="groups">mrp.group_mrp_user</attribute>
+            </field>
+            <xpath expr="//button[@name='action_generate_serial']" position="attributes">
+                <attribute name="groups">mrp.group_mrp_user</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_kanban_view" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.production.kanban</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by">aznut_priority</attribute>
+                <attribute name="quick_create">0</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_top')]/.." position="attributes">
+                <attribute name="t-attf-style">
+                    border-color:#{ (record.mrp_color.raw_value == '1'
+                            ? '#cdb832'
+                            : (record.mrp_color.raw_value == '2'
+                                ? '#C4A484'
+                                : (record.mrp_color.raw_value == '3'
+                                    ? 'red'
+                                    : (record.mrp_color.raw_value == '4'
+                                        ? '#000000'
+                                        : 'none')))) };border-width: 3px;margin-bottom:3px;
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_planned_start']" position="after">
+                <field name="components_availability"/>
+                <field name="components_availability_state"/>
+                <field name="batches_count"/>
+                <field name="aznut_priority"/>
+                <field name="reservation_state"/>
+                <field name="mrp_color"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_bottom')]" position="after">
+                <div class="o_kanban_record_bottom">
+                    <div class="oe_kanban_bottom_left text-muted" t-if='record.components_availability.raw_value'>
+                        <span t-esc="record.components_availability.raw_value"
+                              t-attf-class="badge #{['available'].indexOf(record.components_availability_state.raw_value) > -1 ? 'badge-success' : ['expected'].indexOf(record.components_availability_state.raw_value) > -1 ? 'badge-warning' : ['late'].indexOf(record.components_availability_state.raw_value) > -1 ? 'badge-danger' : 'badge-primary'}"/>
+                    </div>
+                    <div class="oe_kanban_bottom_right" t-if="record.batches_count.raw_value">
+                        <span>
+                            Number Of Batches: <t t-esc="record.batches_count.raw_value"/>
+                        </span>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_tree_view" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.production.tree</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom_id']" position="after">
+                <field name="batches_count" sum="Total"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_set_scheduled_date" model="ir.actions.server">
+        <field name="name">Set Scheduled Date</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+suitable_mos = records.filtered(lambda rec: rec.state not in ['done', 'cancel'])
+action = suitable_mos.action_set_scheduled_date()
+        </field>
+    </record>
+
+    <record id="action_recalculate_production_margin" model="ir.actions.server">
+        <field name="name">Recalculate Production Margin</field>
+        <field name="model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+records.update_product_standard_cost()
+        </field>
+    </record>
+
+    <record id="mrp.mrp_production_action" model="ir.actions.act_window">
+        <field name="context">
+            {'color_sorting': True, 'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}
+        </field>
+    </record>
+
+    <menuitem id="mrp.menu_mrp_root"
+              name="Manufacturing"
+              groups="aznut_mrp.group_workcenter_operator"
+              web_icon="mrp,static/description/icon.png"
+              sequence="145"/>
+
+    <menuitem id="mrp.mrp_planning_menu_root"
+              groups="aznut_mrp.group_workcenter_operator"
+              name="Planning"
+              parent="mrp.menu_mrp_root"
+              sequence="15"/>
+
+    <menuitem id="mrp.menu_mrp_bom"
+              name="Products"
+              parent="mrp.menu_mrp_root"
+              groups="aznut_mrp.group_workcenter_operator"
+              sequence="20"/>
+</odoo>

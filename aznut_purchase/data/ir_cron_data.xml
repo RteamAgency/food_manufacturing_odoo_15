@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="ingredients_reordering_rule_cron" model="ir.cron">
+            <field name="name">Purchase: Create New Purchase Orders (Ingredients Reordering Rule)</field>
+            <field name="model_id" ref="model_product_category"/>
+            <field name="state">code</field>
+            <field name="numbercall">-1</field>
+            <field name="code">model._cron_create_purchase_orders_for_ingredients_reordering_rule()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record id="calculate_product_quantities_cron" model="ir.cron">
+            <field name="name">Purchase: Calculate Product Quantities</field>
+            <field name="model_id" ref="model_product_product"/>
+            <field name="state">code</field>
+            <field name="numbercall">-1</field>
+            <field name="code">model._cron_calculate_product_quantities()</field>
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+</odoo>

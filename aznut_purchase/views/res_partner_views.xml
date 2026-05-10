@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_partner_form_vendor_inherited" model="ir.ui.view">
+        <field name="name">view.partner.form.vendor.inherited</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="purchase_stock.res_partner_view_purchase_buttons_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='on_time_rate']//..//..//..//.." position="after">
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_average_lead_time"
+                        icon="fa-calendar"
+                        id="avg_lead_time_button"
+                        string="Average Lead Time">
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

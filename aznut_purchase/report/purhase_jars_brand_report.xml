@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_jars_brand_report_tree" model="ir.ui.view" >
+        <field name="name">view.purchase.jars.brand.report.tree</field>
+        <field name="model">purchase.jars.brand.report</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="product_id"/>
+                <field name="avg_qty_produced_per_month"/>
+                <field name="uom_id"/>
+                <field name="total_percent" widget="percentage"/>
+                <field name="avg_unit_price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_jars_brand_report_search_view" model="ir.ui.view">
+        <field name="name">purchase.jars.brand.report.search.view</field>
+        <field name="model">purchase.jars.brand.report</field>
+        <field name="arch" type="xml">
+            <search string="Average Forecast Production of 3 month by Brands">
+                <field name="product_id"/>
+                <field name="brand_name"/>
+            </search>
+        </field>
+    </record>
+</odoo>

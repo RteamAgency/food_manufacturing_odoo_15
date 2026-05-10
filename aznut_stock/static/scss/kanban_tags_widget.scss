@@ -1,0 +1,17 @@
+.stock_custom_tag {
+    margin-top: 2px;
+    width: 100%;
+    .badge {
+        max-width: 100%;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+    }
+}
+.stock_list_tags {
+    margin-top: 0;
+    display: flex;
+    flex-flow: row wrap;
+    .badge {
+        font-size: 12px;
+    }
+}

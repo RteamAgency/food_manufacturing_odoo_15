@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <record id="crm_mail_awaiting_cron" model="ir.cron">
+            <field name="name">CRM: Mail Awaiting Cron</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="numbercall">-1</field>
+            <field name="code">model._cron_mail_awaiting()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record id="zoom_synchronization_cron" model="ir.cron">
+            <field name="name">Zoom: Synchronization Cron</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="state">code</field>
+            <field name="numbercall">-1</field>
+            <field name="code">model._cron_zoom_synchronization()</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <record id="fireflies_synchronization_cron" model="ir.cron">
+            <field name="name">Fireflies: Synchronization Cron</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="state">code</field>
+            <field name="numbercall">-1</field>
+            <field name="code">model._cron_fireflies_synchronization()</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+</odoo>

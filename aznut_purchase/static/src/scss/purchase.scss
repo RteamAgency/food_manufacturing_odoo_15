@@ -1,0 +1,32 @@
+.purchase_dasboard_div {
+  text-align: center;
+  vertical-align: middle;
+  border-top: 1px solid $o-view-background-color;
+  background-color: $o-brand-primary;
+  width: 31%;
+
+  > a:hover {
+    text-decoration: none;
+    color: white;
+  }
+
+  &.aznut_clickable:hover {
+    background-color: darken($o-brand-primary, 10%);
+  }
+
+  > a {
+    color: white;
+  }
+
+}
+
+td.product_forecast_link {
+  color: #007bff;
+}
+
+div[name='request_for_vendor_wizard_line_ids'] {
+  th[data-name="order_id"] {
+    width: 75px !important;
+    text-align: center !important;
+  }
+}

@@ -1,0 +1,36 @@
+{
+    'name': "Aznut CEO Dashboard",
+    'version': '15.0.0.0.1',
+    'summary': """Aznut CEO Dashboard""",
+    'description': """Aznut CEO Dashboard""",
+    'author': 'Odoo-art',
+    'depends': ['base', 'web', 'mrp', 'account', 'crm', 'aznut_mrp'],
+    'data': [
+        "security/res_groups.xml",
+        "security/ir.model.access.csv",
+        "views/dashboard_view.xml",
+        "views/mail_activity_views.xml",
+        "views/mrp_workorder_batch_views.xml",
+        "views/dashboard_mail_activity_views.xml",
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'aznut_dashboard_ceo/static/src/js/ceo_dashboard.js',
+            'aznut_dashboard_ceo/static/src/scss/ceo_dashboard.scss',
+            'aznut_dashboard_ceo/static/src/models/attachment_list.js',
+            'aznut_dashboard_ceo/static/src/models/activity.js',
+            'aznut_dashboard_ceo/static/src/models/attachment.js',
+            'aznut_dashboard_ceo/static/src/js/action_dialog.js',
+            'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700',
+            'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js',
+        ],
+        'web.assets_qweb': [
+            'aznut_dashboard_ceo/static/src/xml/dynamic_dashboard_template.xml',
+            'aznut_dashboard_ceo/static/src/components/activity/activity.xml',
+        ],
+    },
+    'license': "AGPL-3",
+    'installable': True,
+    'application': True,
+    'post_load': 'post_load_hook',
+}

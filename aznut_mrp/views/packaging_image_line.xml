@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="packaging_image_line_kanban_view_form" model="ir.ui.view">
+        <field name="name">packaging.image.line.view.form</field>
+        <field name="model">packaging.image.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="image" widget="image"/>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_calculator_settings_form_view" model="ir.ui.view">
+        <field name="name">aznut_calculator_sign_quote.product.calculator.settings.form</field>
+        <field name="model">product.calculator.settings</field>
+        <field name="inherit_id" ref="aznut_calculator.product_calculator_settings_form_view"/>
+        <field name="arch" type="xml">
+                <field position="before" name="profit">
+                    <field name="commission"/>
+                </field>
+        </field>
+    </record>
+
+    <record id="product_calculator_settings_sign_form_view" model="ir.ui.view">
+        <field name="name">product.calculator.settings.sign.form</field>
+        <field name="model">product.calculator.settings.sign</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h3>Settings for quote signing</h3>
+                    <hr/>
+                    <group>
+                        <field name="company_signature" widget="signature" options="{'size': [400,400],}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_product_calculator_settings_sign" model="ir.actions.act_window">
+        <field name="name">Calculator Sign</field>
+        <field name="res_model">product.calculator.settings.sign</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="aznut_calculator_sign_quote.product_calculator_settings_sign_form_view"/>
+        <field name="res_id" ref="aznut_calculator_sign_quote.product_calculator_settings_sign"/>
+    </record>
+
+    <menuitem id="menu_product_calculator_settings_sign"
+      action="aznut_calculator_sign_quote.action_product_calculator_settings_sign"
+      name="Calculator Settings Sign"
+      parent="aznut_calculator.menu_product_calculator_settings"/>
+</odoo>

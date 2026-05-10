@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="quality_check_premix_line_tree" model="ir.ui.view">
+        <field name="name">quality.check.premix.line.tree</field>
+        <field name="model">quality.check.premix.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="component_id"/>
+                <field name="quantity"/>
+                <field name="is_checked"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="AznutPortal.follow_up_button">
+        <button type="button" class="btn btn-secondary o_button_follow_up">
+            Follow Up
+        </button>
+    </t>
+
+    <t t-extend="KanbanView.buttons" t-name="AznutPortalKanbanView.buttons">
+        <t t-jquery="button" t-operation="after">
+            <t t-call="AznutPortal.follow_up_button"/>
+        </t>
+    </t>
+     <t t-extend="LeadMiningRequestKanbanView.buttons" t-inherit-mode="extension">
+        <t t-jquery="t[t-call='LeadMiningRequest.generate_leads_button']" t-operation="after">
+            <t t-call="AznutPortal.follow_up_button"/>
+        </t>
+    </t>
+</templates>

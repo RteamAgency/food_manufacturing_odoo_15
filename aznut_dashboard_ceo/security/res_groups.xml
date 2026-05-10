@@ -1,0 +1,14 @@
+<odoo>
+    <data noupdate="0">
+        <record id="category_ceo_dashboard" model="ir.module.category">
+            <field name="name">CEO Dashboard</field>
+            <field name="sequence">65</field>
+        </record>
+
+        <record id="group_ceo_dashboard_administrator" model="res.groups">
+            <field name="name">CEO</field>
+            <field name="category_id" ref="aznut_dashboard_ceo.category_ceo_dashboard"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_erp_manager'))]"/>
+        </record>
+    </data>
+</odoo>

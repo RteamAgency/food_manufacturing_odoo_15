@@ -1,0 +1,172 @@
+.media_recorder_dialog {
+    height: 100vh!important;
+    .modal-content {
+        height: 100%;
+    }
+    #video_block {
+        margin-top: 15px;
+        height: 60%;
+        video {
+            width: 100%;
+            height: 90%;
+        }
+        
+    }
+    .video_hold {
+        height: 80%;
+        background-color: black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: #9d9d9d;
+        .danger_icon {
+            color: #ffb13a;
+            font-size: 120px;
+        }
+        .danger_text {
+            color: #ffb13a;
+            margin-top: 20px;
+            font-size: 34px;
+        }
+        .regular_text {
+            font-size: 26px;
+            text-align: center;
+        }
+    }
+    .record_btn_wrap {
+        height: 170px;
+        width: 100%;
+        position: relative;
+    }
+    .video_tabs {
+        height: 100%;
+        .tab-pane {
+            height: 100%;
+        }
+    }
+    #videoReviewContainer {
+        video {
+            width: 100%;
+            height: 75%;
+        }
+    }
+    .review_result, .fail_buttons {
+        margin-top: 15px;
+        a {
+            width: 49%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            text-transform: none;
+        }
+    }
+    .fail_buttons {
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &-hidden {
+            display: none;
+        }
+    }
+}
+
+span[name='google_drive_video_access_token'], span[name='google_drive_video_refresh_token'] {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+span[name='onedrive_access_token'], span[name='onedrive_refresh_token'] {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+#pills-tab {
+    li {
+        width: 50%;
+        a {
+            height: 50px;
+            display: flex;
+            align-items: center;
+        
+        }
+    }
+}
+
+
+@media (min-width: 992px) {
+    .media_recorder_dialog.modal-lg.modal-xl {
+        max-width: 980px;
+    }
+    .media_recorder_dialog.modal-lg {
+        max-width: 1200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .media_recorder_dialog {
+        margin: 0;
+        top: 0;
+        bottom: 0;
+        position: fixed;
+        width: 100%;
+        height: calc(100vh + 150px)!important;
+        background: white;
+        overflow: hidden;
+        .video_hold {
+            .danger_icon {
+                font-size: 90px;
+            }
+            .danger_text {
+                font-size: 24px;
+                text-align: center;
+            }
+            .regular_text {
+                font-size: 16px;
+                text-align: center;
+            }
+        }
+        #video_block {
+            height: 50%;
+            aspect-ratio: 9 / 16;
+            width: 100%;
+            margin-bottom: 15px;
+            #quality_video, #current_snapshot {
+                object-fit: cover; 
+                height:90%!important;
+            }
+        }
+        .record_btn_wrap {
+            height: 80px;
+            width: 100%;
+            position: relative;
+        }
+        .modal-footer {
+            display: none;
+        }
+        #videoReviewContainer {
+            height: 50%;
+            aspect-ratio: 9 / 16;
+            width: 100%;
+            margin-bottom: 15px;
+            video {
+                object-fit: cover; 
+                height:90%!important;
+            }
+        }
+    }
+    #pills-tab {
+        li {
+            width: 50%;
+            a {
+                height: 30px;
+                display: flex;
+                align-items: center;
+            
+            }
+        }
+    }
+}

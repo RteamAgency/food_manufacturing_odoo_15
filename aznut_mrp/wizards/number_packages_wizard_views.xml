@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="number_packages_wizard_form" model="ir.ui.view">
+        <field name="name">aznut_mrp.number.packages.wizard.form</field>
+        <field name="model">number.packages.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="number_of_packages"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"/>
+                    <button special="cancel" data-hotkey="z" string='Cancel' class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

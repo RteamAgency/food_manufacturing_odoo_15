@@ -1,0 +1,279 @@
+<odoo>
+    <template id="portal_my_home_purchase_inherited" inherit_id="purchase.portal_my_home_purchase">
+        <xpath expr="//t[@t-value=&quot;'/my/rfq'&quot;]//.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//t[@t-value=&quot;'/my/purchase'&quot;]//.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_project_inherited" inherit_id="project.portal_my_home">
+        <xpath expr="//t[@t-value=&quot;'/my/projects'&quot;]//.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//t[@t-value=&quot;'/my/tasks'&quot;]//.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_timesheet_inherited" inherit_id="hr_timesheet.portal_my_home_timesheet">
+        <xpath expr="//t[@t-value=&quot;'/my/timesheets'&quot;]//.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+    </template>
+
+    <template id="azn_sale_order_portal_content_inherit_sale_stock"
+              inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
+        <xpath expr="//t[@t-foreach='delivery_orders']//span[@t-esc='i.name']//..//.." position="after">
+            <t t-set='order_url' t-value='sale_order.get_portal_url()'/>
+            <t t-set='checks' t-value="i.check_ids.filtered(lambda rec: rec.quality_state != 'none')"/>
+            <div t-if='order_url and checks' class="mr-5">
+                <t t-set='report_url' t-value="'%s&amp;out_pdf=%s' % (order_url, i.id)"/>
+                <a t-att-href="report_url" class="worksheer_download">
+                    <span class="small badge orders_label_text_align"><i class="fa fa-fw fa fa-download"/><b>Download
+                        Report</b></span>
+                </a>
+            </div>
+            <t t-else=''>
+                <div class="mr-5" style="visibility: hidden">
+                    <a class="worksheer_download">
+                        <span class="small badge orders_label_text_align"><i class="fa fa-fw fa fa-download"/><b>
+                            Download
+                            Report</b></span>
+                    </a>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_sale_stock_picking')]//div" position="attributes">
+            <attribute name="class" add="delivery_w33" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="sale_order_portal_content_inherited" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//th[hasclass('text-right')]" position="after">
+            <th style='text-align: right;'>Shipped</th>
+        </xpath>
+        <xpath expr="//section[@id='details']//th[hasclass('text-right')][2]" position="before">
+            <th style='text-align: right;'>On hand</th>
+        </xpath>
+        <xpath expr="//div[@t-field='line.price_unit']//.." position="before">
+            <td style="text-align: right;">
+                <span t-field="line.qty_delivered"/><br/>
+                <span t-field="line.product_uom"/>
+            </td>
+        </xpath>
+        <xpath expr="//td[hasclass('text-right')][2]" position="before">
+            <td>
+                <span t-field="line.available_qty"/>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_quotes" name="Show Appointments" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">New formula Chews Quote</t>
+                <t t-set="url" t-value="'/my/quotes_calc'"/>
+                <t t-set="placeholder_count" t-value="'quotes_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">New formula Powder Quote</t>
+                <t t-set="url" t-value="'/my/powder_quotes_calc'"/>
+                <t t-set="placeholder_count" t-value="'powder_quotes_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_quotes" name="My Quotes">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-if="quotes._name=='main.powder.calculator'">
+                    <t t-set="title">New formula Powder Quotes</t>
+                </t>
+                <t t-else="">
+                    <t t-set="title">New formula Chews Quotes</t>
+                </t>
+            </t>
+            <t t-if="not quotes">
+                <p>There are currently no quotes for your account.</p>
+            </t>
+            <t t-if="quotes" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <t t-if="quotes._name=='main.powder.calculator'">
+                            <th class="w-30">Powder Quote #</th>
+                            <th class="text-left w-30">Powder Quote Date</th>
+                        </t>
+                        <t t-else="">
+
+                            <th class="w-30">Chews Quote #</th>
+                            <th class="text-left w-30">Chews Quote Date</th>
+                        </t>
+                        <th class="text-center w-20"/>
+                        <th class="text-right w-20">Total</th>
+                    </tr>
+                </thead>
+                <t t-foreach="quotes" t-as="quote">
+                    <tr>
+                        <td><a t-att-href="quote.get_portal_url()"><t t-esc="quote.display_name"/></a></td>
+                        <td class="text-left"><span t-field="quote.create_date"/></td>
+                        <td class="text-center">
+                            <span t-if="quote.signature" class="badge badge-pill badge-success"><i
+                                    class="fa fa-fw fa-check"/> Signed</span>
+                            <span t-else="" class="badge badge-pill badge-secondary"><i class="fa fa-fw fa-clock-o"/>
+                                Not Signed</span>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="quote.currency_id.symbol"/>
+                            <span t-field="quote.total_price"/>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_home_menu_quotes" name="Portal layout : sales menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'Quote' or (quote and quote._name == 'main.product.calculator')"
+                t-attf-class="breadcrumb-item #{'active ' if not quote else ''}">
+                <a t-if="quote" t-attf-href="/my/quotes_calc">New formula Chews Quotes</a>
+                <t t-else="">New formula Chews Quotes</t>
+            </li>
+            <li t-if="page_name == 'Powder Quote' or (quote and quote._name=='main.powder.calculator')"
+                t-attf-class="breadcrumb-item #{'active ' if not quote else ''}">
+                <a t-if="quote" t-attf-href="/my/powder_quotes_calc">New formula Powder Quotes</a>
+                <t t-else="">New formula Powder Quotes</t>
+            </li>
+            <li t-if="quote" class="breadcrumb-item active">
+                <t t-esc="quote.get_breadcrumb_quote_name()"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="calculator_quote_portal_template" name="Product Calculator Quote Portal Template"
+              inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <div class="row mt16 o_portal_sale_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+
+                    <t t-set="title">
+                        <h2 class="mb-0"><b t-field="quote.currency_id.symbol"/> <b t-field="quote.total_price"
+                                                                                    data-id="total_price"/></h2>
+                    </t>
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item flex-grow-1">
+                                <a t-if="not quote.signature and quote.partner_id.id == user_id.partner_id.id"
+                                   role="button" class="btn btn-primary btn-block mb8" data-toggle="modal"
+                                   data-target="#modalaccept" href="#">
+                                    <i class="fa fa-check"/> Accept &amp; Sign
+                                </a>
+                                <span t-if="quote.signature" class="btn btn-primary btn-block mb8 button_signed"
+                                      href="">
+                                    <i class="fa fa-check"/> Already signed
+                                </span>
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn"
+                                           t-att-href="quote.get_portal_url(report_type='pdf', download=True)"
+                                           title="Download"><i class="fa fa-download"/> Download</a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print"
+                                           t-att-href="quote.get_portal_url(report_type='pdf')"
+                                           id="print_invoice_report" title="Print" target="_blank"><i
+                                                class="fa fa-print"/> Print</a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="navspy list-group-item pl-0 flex-grow-1" t-ignore="true" role="complementary">
+                                <ul class="nav flex-column bs-sidenav"></ul>
+                            </li>
+
+                            <li t-if="quote.user_id" class="list-group-item flex-grow-1">
+                                <div class="small mb-1"><strong class="text-muted">Salesperson</strong></div>
+                                <div class="row flex-nowrap">
+                                    <div class="col flex-grow-0 pr-2">
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img"
+                                             t-att-src="image_data_uri(quote.user_id.avatar_1024)" alt="Contact"/>
+                                    </div>
+                                    <div class="col pl-0" style="min-width: 150px">
+                                        <span t-field="quote.user_id"
+                                              t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                        <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send
+                                            message</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+
+                <!-- Page content -->
+                <div id="quote_content" class="col-12 col-lg justify-content-end">
+
+                    <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissable d-print-none"
+                         role="status">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                        <strong>Thank You!</strong><br/>
+                        <t t-if="message == 'sign_ok'">Your Quote has been signed.</t>
+                    </div>
+                    <div role="dialog" class="modal fade" id="modalaccept">
+                        <div class="modal-dialog" t-if="not quote.signature">
+                            <form id="accept" method="POST" t-att-data-order-id="quote.id"
+                                  t-att-data-token="quote.access_token"
+                                  class="js_accept_json modal-content js_website_submit_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Sign Quote</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        ×</button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <p>
+                                        <span>By signing this proposal, I agree to the following terms:</span>
+                                        <ul>
+                                            <li><span>Accepted on the behalf of:</span> <b
+                                                    t-field="quote.partner_id.commercial_partner_id"/></li>
+                                            <li><span>For an amount of:</span> <b data-id="price_total"
+                                                                                  t-field="quote.total_price"/></li>
+                                        </ul>
+                                    </p>
+                                    <t t-call="portal.signature_form">
+                                        <t t-set="call_url" t-value="quote.get_portal_url(suffix='/accept')"/>
+                                        <t t-set="default_name" t-value="quote.partner_id.name"/>
+                                    </t>
+                                </main>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- main content -->
+                    <div class="card pb-5" id="portal_sale_content">
+                        <div class="quote_header pb-2 pt-3 card-header bg-white">
+                            <t t-if="quote._name=='main.powder.calculator'">
+                                <t t-call="aznut_calculator_sign_quote.portal_powder_quote_report_template"/>
+                            </t>
+                            <t t-else="">
+                                <t t-call="aznut_calculator_sign_quote.portal_quote_report_template"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div id="sale_order_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="quote"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

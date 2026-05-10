@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form_inherited" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherited</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='integration']" position="after">
+                    <h2>Video Recording</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="quality_video_delay"/>
+                                <div class="text-muted">
+                                    Set delay for showing the video modal window (format: hh:mm)
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="quality_video_delay" widget="float_time"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="quality_video_max_duration"/>
+                                <div class="text-muted">
+                                    Set maximum duration of video recording (format: mm:ss)
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="quality_video_max_duration" widget="float_time"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="quality_video_alert_team"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="quality_video_alert_team"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="store_video_on"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="store_video_on" widget="selection"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Video Google Drive Recording</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="google_drive_video_client_secret"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="google_drive_video_client_secret"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="google_drive_video_client_id"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="google_drive_video_client_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="google_drive_video_access_token"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <button class="btn btn-link"
+                                                name="action_get_gdrive_auth_code"
+                                                type="object">
+                                            <i class="fa fa-arrow-right"/>
+                                            Setup Token
+                                        </button>
+                                    </div>
+                                    <div class="mt8">
+                                        <field name="google_drive_video_access_token" readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="google_drive_video_refresh_token"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="google_drive_video_refresh_token" readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="google_drive_video_folder_id"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="google_drive_video_folder_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2>Video One Drive Recording</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="onedrive_client_key"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="onedrive_client_key"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="onedrive_client_secret"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="onedrive_client_secret"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="onedrive_tenant_id"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="onedrive_tenant_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="onedrive_access_token"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <button class="btn btn-link"
+                                                name="action_get_onedrive_auth_code"
+                                                type="object">
+                                            <i class="fa fa-arrow-right"/>
+                                            Setup Token
+                                        </button>
+                                    </div>
+                                    <div class="mt8">
+                                        <field name="onedrive_access_token" readonly="1"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="one_drive_video_drive_id"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="one_drive_video_drive_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_right_pane">
+                                <label for="one_drive_video_folder_id"/>
+                                <div class="content-group">
+                                    <div class="mt8">
+                                        <field name="one_drive_video_folder_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

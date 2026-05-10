@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_order_view_tree_inherited" model="ir.ui.view">
+        <field name="name">purchase.order.view.tree.inherited</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                <field name="receive_status"
+                       widget="badge"
+                       decoration-success="receive_status == 'received'" 
+                       decoration-info="receive_status == 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_view_search_inherited" model="ir.ui.view">
+        <field name="name">purchase.order.view.search.inherited</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='starred']" position="after">
+                <filter string="Fully Received"
+                        name="receive_status" 
+                        domain="[('receive_status', '=', 'received')]"/>
+                <filter string="To Receive"
+                        name="receive_status" 
+                        domain="[('receive_status', '=', 'to_receive')]"/>
+            </xpath>
+            <xpath expr="//group//filter[@name='vendor']" position="before">
+                <filter string="Receive Status"
+                    name="receive_status"
+                    domain="[]" 
+                    context="{'group_by': 'receive_status'}"/>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

@@ -1,0 +1,161 @@
+<odoo>
+    <template id="availability_confirmation" name="My Custom Page">
+        <t t-call="website.layout">
+            <style>
+                .w-15 {
+                    width: 15% !important;
+                }
+
+                .w-40 {
+                    width: 40% !important;
+                }
+
+                .is-invalid {
+                    border: 1px solid #dc3545;
+                }
+            </style>
+            <div class="container mt-4 mb-4">
+                <form id="availability-form" action="/confirm/availability" method="POST">
+                    <div class="mb-4" style="display: flex;justify-content:space-between;">
+                        <h2>Availability Confirmation <b t-esc="order.display_name"/></h2>
+                        <button type="button" style="font-size: 24px;display: none;"
+                                class="w-30 btn btn-primary aznut_purchase-submit">Confirm</button>
+                    </div>
+                    <input type="hidden" name="order_id" t-att-value="order.id"/>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="w-40">Product</th>
+                                <th class="w-15">Availability</th>
+                                <th class="w-15">Quantity</th>
+                                <th class="w-15">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="aznut_website">
+                            <t t-foreach="order.order_line" t-as="line">
+                                <tr t-att-data-line-id="line.id">
+                                    <td><span t-esc="line.product_id.display_name"/></td>
+                                    <td>
+                                        <select class="form-control aznut_purchase-status">
+                                            <option value="in">In Stock</option>
+                                            <option value="out">Not in Stock</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number"
+                                               class="form-control aznut_purchase-quantity"
+                                               t-att-value="'%.2f' % line.product_qty"
+                                               t-att-data-original-qty="line.product_qty"/>
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control aznut_purchase-date"/>
+                                    </td>
+                                </tr>
+                                <tr class="aznut_purchase-remainder-row"
+                                    t-att-data-line-id="'remainder-' + str(line.id)" style="display: none;">
+                                    <td class="text-right"><strong>Remaining:</strong></td>
+                                    <td>
+                                        <select class="form-control aznut_purchase-remainder-status">
+                                            <option value="in">In Stock</option>
+                                            <option value="out">Not in Stock</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control aznut_purchase-remainder-qty"
+                                               readonly="true"/>
+                                    </td>
+                                    <td>
+                                        <input type="date" class="form-control aznut_purchase-remainder-date"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div style="display: flex; justify-content: end;">
+                        <textarea class="aznut_purchase-comments"
+                                  style="width: 60%!important; height: 80px!important; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px; padding: 8px"
+                                  placeholder="Comments"/>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="availability_confirmation_not_found" name="Availability Confirmation Not Found">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5 text-center">
+                <h2>Order Not Found/Cancelled</h2>
+                <p>The link you followed is invalid or has expired.</p>
+                <a href="/" class="btn btn-primary mt-3">Go to Homepage</a>
+            </div>
+        </t>
+    </template>
+
+    <template id="availability_confirmation_done" name="Availability Confirmation Not Found">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5 text-center">
+                <h2 class="text-success">Order Confirmed</h2>
+                <a href="/" class="btn btn-primary mt-3">Go to Homepage</a>
+            </div>
+        </t>
+    </template>
+
+    <template id="request_for_vendor_not_found" name="Request For Vendor Not Found"
+              inherit_id="availability_confirmation_not_found"/>
+
+    <template id="request_for_vendor_done" name="Request For Vendor">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5 text-center">
+                <h2 class="text-success">ETA For This Order is Confirmed</h2>
+                <a href="/" class="btn btn-primary mt-3">Go to Homepage</a>
+            </div>
+        </t>
+    </template>
+
+    <template id="request_for_vendor_main" name="Request For Vendor">
+        <t t-call="website.layout">
+            <style>
+                .is-invalid {
+                    border: 1px solid #dc3545;
+                }
+            </style>
+            <div class="container mt-4 mb-4">
+                <form id="request-for-vendor-form" action="/confirm/request_for_vendor" method="POST">
+                    <div class="mb-4" style="display: flex;justify-content:space-between;">
+                        <h2>Request For Vendor <b t-esc="order.display_name"/></h2>
+                        <button type="button" style="font-size: 24px;display: none"
+                                class="w-30 btn btn-primary request-for-vendor-submit">Confirm</button>
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    </div>
+                    <input type="hidden" name="order_id" t-att-value="order.id"/>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="w-30">Product</th>
+                                <th class="w-30">Quantity</th>
+                                <th class="w-30">Confirmed ETA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="order.order_line.filtered(lambda pol: pol.quantity_to_receive > 0)"
+                               t-as="line">
+                                <tr t-att-data-line-id="line.id">
+                                    <td><span t-esc="line.product_id.display_name"/></td>
+                                    <td><span t-esc="'%.2f' % line.quantity_to_receive"/></td>
+                                    <td>
+                                        <input type="date"
+                                               t-att-name="'date_%s' % line.id"
+                                               t-att-value="line.date_planned.strftime('%Y-%m-%d') if line.date_planned else ''"
+                                               class="form-control request-for-vendor-date"/>
+                                        <input type="hidden" name="line_ids" t-att-value="line.id"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_orders_inherit" name="My Sales Orders Inherit" inherit_id="sale.portal_my_orders">
+        <xpath expr="//th[hasclass('text-center')]" position="before">
+            <th class="text-center">Overdue</th>
+        </xpath>
+        <xpath expr="//span[@t-if=&quot;order.state == 'done'&quot;]/.." position="before">
+            <td class="text-center">
+                <div t-if="order.is_overdue" style="font-size: 16px">
+                    <span class="badge badge-danger">Overdue 30 days</span>
+                </div>
+            </td>
+        </xpath>
+        <xpath expr="//span[hasclass('d-md-none')]/.." position="after">
+            <th class="text-center">Tags</th>
+            <th class="text-center">Ordered</th>
+            <th class="text-center">Actual <br/> Manufacturer</th>
+            <th class="text-right">Sent</th>
+            <th class="text-right">On Hand</th>
+            <th class="text-right">Scheduled <br/>Pick Up Date</th>
+        </xpath>
+        <xpath expr="//span[@t-field='order.date_order']/.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='order.date_order']/.." position="after">
+            <td class="text-right">
+                <span t-field="order.date_order" t-options="{'widget': 'date'}"/><br/>
+                <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
+            </td>
+        </xpath>
+        <xpath expr="//t[@t-esc='order.name']/../.." position="after">
+            <td class="text-center">
+                <div t-foreach='order.sudo().tag_ids' t-as='tag' style="max-width: 80px;">
+                    <span class="badge badge-info"
+                          t-esc="tag.name"
+                          t-att-style="'background-color: %s; display: inline-block; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' % order._get_tag_color(tag)"/>
+                </div>
+
+            </td>
+
+            <td class="text-center">
+                <span t-esc="order.ordered_qty"/>
+            </td>
+            <td class="text-center">
+                <span t-esc="order.real_manufactured_qty"/>
+            </td>
+            <td class="text-right">
+                <span t-esc="order.delivered_qty"/>
+            </td>
+            <td class="text-right">
+                <span t-esc="order.free_qty"/>
+            </td>
+            <td class="text-right">
+                <span t-field="order.scheduled_pick_up_date" t-options="{'widget': 'date'}"/><br/>
+                <span class='d-none d-md-inline' t-field="order.scheduled_pick_up_date"
+                      t-options="{'time_only': True}"/>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="sale_order_portal_content_inherit_sale_stock_aznut_portal" name="Orders Shipping Followup Inherit"
+              inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
+        <xpath expr="//t[@t-if='delivery_orders']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_sale_stock_picking')]//span[hasclass('badge-info')]" position="after">
+            <span style="font-size: 14px" class="text-muted ml-2" t-field="i.ready_quantity"/>
+        </xpath>
+        <xpath expr="//t[@t-foreach='delivery_orders']//span[hasclass('badge-info')]/b" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='delivery_orders']//span[hasclass('badge-info')]" position="attributes">
+            <attribute name="class" add="mr-auto" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-foreach='delivery_orders']//span[hasclass('badge-danger')]" position="attributes">
+            <attribute name="class" add="mr-auto" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-foreach='delivery_orders']//span[hasclass('badge-success')]" position="attributes">
+            <attribute name="class" add="mr-auto" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-foreach='delivery_orders']//span[hasclass('badge-info')]/b" position="after">
+            <b> Ready To Ship</b>
+        </xpath>
+        <xpath expr="//t[@t-set='delivery_orders']" position="attributes">
+            <attribute name="t-value">sale_order.picking_ids.filtered(
+                lambda picking: picking.picking_type_id.code == 'outgoing' and picking.state not in ['done',
+                                                                                                     'cancel'])</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('delivery_w33')]" position="attributes">
+            <attribute name="style">margin-right:7%</attribute>
+        </xpath>
+    </template>
+
+
+    <template inherit_id="sale.sale_order_portal_template" id="sale_order_portal_template_inherit"
+              name="Sales Order Portal Template Inherit">
+        <xpath expr="//t[@t-if='sale_order.transaction_ids']" position="before">
+            <div t-if="message == 'duplicate_done'" class="alert alert-success alert-dismissable d-print-none"
+                 role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                This order was duplicated.
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_download_pdf')]" position="after">
+            <div id="print_production_order">
+                <t t-set='groups'
+                   t-value="request.env['procurement.group'].sudo().search([('sale_id', '=', sale_order.id)])"/>
+                <t t-set='mos'
+                   t-value="(groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | groups.mrp_production_ids).filtered( lambda mo: mo.state=='done' and all(item is False for item in mo.mapped('workorder_ids.workcenter_id.production_area_cleaning_station')) and all(item is False for item in mo.mapped('workorder_ids.workcenter_id.packaging_area_cleaning_station')))"/>
+                <div t-if="mos" class="btn-group flex-grow-1 mb-1 w-100">
+                    <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print"
+                       t-att-href="sale_order.get_portal_url(report_type='pdf')+'&amp;mo_ids=%s' % mos.ids"
+                       title="Print"
+                       target="_blank">
+                        <i
+                                class="fa fa-file-text-o"/>
+                        Production Order
+                    </a>
+                </div>
+            </div>
+
+            <div id="print_delivery_document" class="o_download_pdf btn-toolbar flex-sm-nowrap"
+                 style="max-width: 275px">
+                <t t-set='checks'
+                   t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_code == 'outgoing').check_ids.filtered(lambda check: check.test_type_id == request.env.ref('quality_control_worksheet.test_type_worksheet') and check.worksheet_template_id.id == 3)"/>
+                <div t-if="checks" class="btn-group flex-grow-1 mr-1">
+                    <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print"
+                       t-att-href="sale_order.get_portal_url(report_type='pdf')+'&amp;check_ids=%s' % checks.ids"
+                       title="Print"
+                       target="_blank">
+                        <i class="fa fa-truck"/>
+                        Delivery Document
+                    </a>
+                </div>
+                <t t-set='attachment'
+                   t-value="request.env['ir.attachment'].sudo().search([('res_id','=',sale_order.id),('res_model','=','sale.order'),('name','like','wo')],order='create_date desc', limit=1)"/>
+                <div t-if="attachment" class="btn-group flex-grow-1">
+                    <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print"
+                       t-att-href="sale_order.get_portal_url(report_type='pdf')+'&amp;attachment_id=%s' % attachment.id"
+                       title="Print"
+                       target="_blank">
+                        <i class="fa fa-flask"/>
+                        Laboratory Test
+                    </a>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//li[@t-if='sale_order.user_id']" position="after">
+            <li t-if="sale_order.customer_service_id or sale_order.user_id" class="list-group-item flex-grow-1">
+                <div class="row justify-content-between" style="font-size: 13.5px">
+                    <div class="col-md-6 d-flex flex-column align-items-center text-center p-0"
+                         t-if="sale_order.customer_service_id">
+                        <strong t-if="sale_order.customer_service_id" class="text-muted">Customer Service</strong>
+                        <img class="rounded-circle mb-1 mt-1 o_portal_contact_img" style="font-size: 18px"
+                             t-att-src="image_data_uri(sale_order.customer_service_id.avatar_1024)" alt="Contact"/>
+                        <span t-field="sale_order.customer_service_id" style="font-size: 16px"
+                              t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                    </div>
+                    <div class="col-md-6 d-flex flex-column align-items-center text-center p-0"
+                         t-if="sale_order.user_id">
+                        <strong t-if="sale_order.user_id" class="text-muted">Salesperson</strong>
+
+                        <img class="rounded-circle mb-1 mt-1 o_portal_contact_img" style="font-size: 18px"
+                             t-att-src="image_data_uri(sale_order.user_id.avatar_1024)" alt="Contact"/>
+                        <span t-field="sale_order.user_id" style="font-size: 16px"
+                              t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                    </div>
+                </div>
+
+                <div class="text-center" style="font-size: 16px">
+                    <a href="#discussion">
+                        <i class="fa fa-comment"></i>
+                        Send message
+                    </a>
+                </div>
+            </li>
+        </xpath>
+        <xpath expr="//li[@t-if='sale_order.user_id']" position="attributes">
+            <attribute name="t-if">sale_order.user_id and False</attribute>
+        </xpath>
+    </template>
+
+    <template id="aznut_portal_portal_content" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='so_date']" position="inside">
+            <div t-if="sale_order.is_overdue" class="mb-3 col-6 text-right">
+                <span class="badge badge-danger">Overdue 30 days</span>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-set='delivery_orders']" position="before">
+            <div id="aznut_upload_reserve">
+                <style>
+                    .custom_upload {
+                        display: none;
+                    }
+
+                    .custom-file-upload {
+                        position: relative;
+                        display: block;
+                        text-align: center;
+                    }
+
+                    .custom-file-upload .btn-custom {
+                        background-color: #685563;
+                        border-color: #685563;
+                        color: #fff;
+                        padding: 10px 15px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        border: 1px solid;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+                        display: inline-block;
+                    }
+
+                    .file-name {
+                        font-size: 12px;
+                        color: #6c757d;
+                    }
+                </style>
+                <div t-if="sale_order.client_available_sale_orders._get_available_quantity(sale_order.order_line)"
+                     class="p-3 mb-3" style="font-size: 1rem;">
+                    <div class="p-2"
+                         t-if="sale_order.client_available_sale_orders._get_available_quantity(sale_order.order_line)">
+                        <input type="hidden" name="order_id" t-att-value="sale_order.id" id="order_input"/>
+                        <table class="table-bordered table" style="border: none">
+                            <thead>
+                                <tr>
+                                    <th style="border-right: 1px black solid !important;">Tag</th>
+                                    <th>Lot#</th>
+                                    <th>Order#</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="sale_order.client_available_sale_orders._get_available_quantity(sale_order.order_line).items()"
+                                   t-as="order_vals">
+                                    <t t-set="client_so" t-value="request.env['sale.order'].browse(order_vals[0])"/>
+                                    <t t-foreach="order_vals[1]" t-as="vals">
+                                        <tr>
+                                            <td class="text-center"
+                                                style="border-right: 1px black solid !important;">
+                                                <div t-foreach='client_so.sudo().tag_ids' t-as='tag'>
+                                                    <span class="badge badge-info" t-esc="tag.name"
+                                                          t-att-style="'background-color: %s;' % client_so._get_tag_color(tag)"/>
+                                                </div>
+                                            </td>
+                                            <td t-esc="vals.get('lot_name')"/>
+                                            <td t-esc="client_so.display_name"/>
+                                            <td class="available-quantity"
+                                                t-att-data-available-quantity="vals.get('quantity')"
+                                                t-esc="vals.get('quantity')"/>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div id="client_so_total" class="mt-2" name="total">
+                            <label class="form-label">Quantity To Ship (<t
+                                    t-esc="sale_order._get_total_available_quantity(sale_order.order_line)"/>)</label>
+                            <div class="row pl-3 justify-content-between">
+                                <input type="number" class="quantity-input form-control"
+                                       style="width: 49%" name="qty_data" id="qty_data"/>
+                                <button
+                                        class="btn btn-primary submit-btn sale-order-submit-btn w-100"
+                                        style="width: 49% !important;display: none; height: 38px"
+                                        data-target="#modalQuantityToShip" data-toggle="modal">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div role="dialog" class="modal fade" id="modalQuantityToShip">
+                        <div class="modal-dialog">
+                            <form id="decline" method="POST"
+                                  action="/sale_order_add_quantity/submit"
+                                  class="modal-content" enctype="multipart/form-data">
+                                <input type="hidden" id="output_input_hidden" name="output_input_hidden"/>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="file" name="delivery_order_file_data_saved" id="delivery_order_file_data_saved"
+                                       class="form-control custom_upload"
+                                       accept="application/pdf" multiple="multiple"/>
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Confirm Quantity To Ship</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        ×</button>
+                                </header>
+                                <main class="modal-body">
+                                    <span>Quantity To Ship: <span id="output_span" name="output_span"/></span><br/>
+                                    <span id="output_span_orders" name="output_span_orders"/>
+                                    <div style="margin-bottom: 2px" class="mt-2">
+                                        <input type="file" name="delivery_order_file_data" id="delivery_order_file_data"
+                                               class="custom_upload form-control"
+                                               accept="application/pdf"/>
+                                        <div class="custom-file-upload">
+                                            <label style="margin-bottom: 2px" for="delivery_order_file_data"
+                                                   class="btn-custom w-100">Upload Delivery Order Files</label>
+                                        </div>
+                                        <div id="delivery-order-file-name" class="file-name"></div>
+                                    </div>
+                                </main>
+                                <footer class="modal-footer">
+                                    <button type="submit" t-att-value="sale_order.id" name="order_id"
+                                            class="btn btn-primary form-sale-order-confirm" style="display: none;">
+                                        Confirm
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </footer>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//section[@id='details']" position="attributes">
+            <attribute name="class" remove="mt32" separator=" "/>
+            <attribute name="class" add="mt-2" separator=" "/>
+        </xpath>
+        <xpath expr="//section[@id='terms']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+        <xpath expr="//table[@id='sales_order_table']" position="attributes">
+            <attribute name="style">margin-bottom:0;</attribute>
+        </xpath>
+        <xpath expr="//div[@id='so_date']" position="after">
+            <xpath expr="//section[@id='details']" position="move"/>
+        </xpath>
+        <xpath expr="//td[@id='product_name']" position="attributes">
+            <attribute name="style">width:30%;!important</attribute>
+        </xpath>
+        <xpath expr="//td[@t-if='display_discount']" position="after">
+            <td style="text-align: right;">
+                <span t-field="line.manufactured_qty"/>
+                <br/>
+                <span t-field="line.product_uom"/>
+            </td>
+        </xpath>
+        <xpath expr="//th[@t-if='display_discount']" position="after">
+            <th style='text-align: right;'>Manufactured</th>
+        </xpath>
+        <xpath expr="//div[@id='introduction']" position="inside">
+            <div role="dialog" class="modal fade" id="modalduplicateso">
+                <div class="modal-dialog">
+                    <form id="decline" method="POST"
+                          action="/sale_order/duplicate"
+                          class="modal-content">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <header class="modal-header">
+                            <h4 class="modal-title">Duplicate This Sales Order</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                        </header>
+                        <main class="modal-body">
+                            <p>Enter the quantity for the new quotation.</p>
+                            <input type="number" name="duplicate_qty_data" id="duplicate_qty_data"
+                                   class="form-control"/>
+                        </main>
+                        <footer class="modal-footer">
+                            <button type="submit" name="order_id" t-att-value="sale_order.id"
+                                    class="btn btn-primary duplicate-submit-button" style="display: none;">
+                                Confirm
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </footer>
+                    </form>
+                </div>
+            </div>
+            <div t-if="sale_order.state in ['done','sale']" class="col-sm-auto">
+                <a role="button" style="font-size: 20px" class="btn btn-primary pl-4 pr-4" data-toggle="modal"
+                   data-target="#modalduplicateso" href="#">Duplicate
+                </a>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='introduction']" position="attributes">
+            <attribute name="t-attf-class" add="d-flex justify-content-between" separator=" "/>
+        </xpath>
+    </template>
+
+
+    <template id="portal_shipping_request" name="Shipping Request" inherit_id="portal.portal_my_home" priority="100">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Shipping Request</t>
+                <t t-set="url" t-value="'/my/shipping_request'"/>
+                <t t-set="placeholder_count" t-value="'shipping_requests_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_sign_inherited" inherit_id="sign.portal_my_home_sign">
+        <xpath expr="//t[@t-value=&quot;'/my/signatures'&quot;]//.." position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+    </template>
+
+    <template id="portal_my_shipping_request" name="My Shipping Request">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Shipping Requests</t>
+            </t>
+            <t t-if="not requests">
+                <p>There are currently no requests for your account.</p>
+            </t>
+
+            <t t-if="requests" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Transfer #</th>
+                        <th>Ref</th>
+                        <th class="text-left">Name of Product</th>
+                        <th class="text-center">Requested qty</th>
+                        <th class="text-center">Requested Date</th>
+                        <th class="text-right">Shipped Date</th>
+                        <th>Tag</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <t t-foreach="requests" t-as="req">
+                    <t t-set="attachments"
+                       t-value="request.env['ir.attachment'].sudo().search([('res_model','=','stock.picking'),('res_id','=',req.id),('uploaded_from_portal','=',True)]) | request.env['ir.attachment'].sudo().search([('res_id','=',req.sale_id.id),('res_model','=','sale.order'),('name','like','wo')],order='create_date desc', limit=1)"/>
+                    <tr>
+                        <td><t t-esc="req.display_name"/></td>
+                        <td><t t-esc="req.origin"/></td>
+                        <td class="text-left" style="white-space: pre-wrap;"><span
+                                t-esc="', '.join(req.move_lines.mapped('product_id.display_name'))"/></td>
+                        <td class="text-center"><span
+                                t-esc="sum(req.move_lines.mapped('quantity_done'))"/></td>
+                        <td class="text-center"><span
+                                t-esc="req.scheduled_date"
+                                t-options="{'widget': 'date'}"/></td>
+                        <td class="text-center"><span
+                                t-esc="req.date_done"
+                                t-options="{'widget': 'date'}"/></td>
+                        <td class="text-center">
+                            <div t-foreach='req.sale_id.sudo().tag_ids' t-as='tag' style="max-width: 80px;">
+                                <span class="badge badge-info"
+                                      t-esc="tag.name"
+                                      t-att-style="'background-color: %s; display: inline-block; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' % req.sale_id._get_tag_color(tag)"/>
+                            </div>
+                        </td>
+                        <td t-if="attachments">
+                            <t t-foreach="attachments" t-as="attachment">
+                                <a class="o_print_btn o_portal_invoice_print"
+                                   t-att-href="req.sale_id.get_portal_url(report_type='pdf')+'&amp;attachment_id=%s' % attachment.id">
+                                    <p style="white-space: pre-wrap; font-size: 8px;" t-esc="attachment.display_name"/>
+                                </a>
+                            </t>
+                            <t t-set='groups'
+                               t-value="request.env['procurement.group'].sudo().search([('sale_id', '=', req.sale_id.id)])"/>
+                            <t t-set='mos'
+                               t-value="(groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | groups.mrp_production_ids).filtered( lambda mo: mo.state=='done' and all(item is False for item in mo.mapped('workorder_ids.workcenter_id.production_area_cleaning_station')) and all(item is False for item in mo.mapped('workorder_ids.workcenter_id.packaging_area_cleaning_station')))"/>
+                            <a class="o_print_btn o_portal_invoice_print" t-if="mos"
+                               t-att-href="req.sale_id.get_portal_url(report_type='pdf')+'&amp;mo_ids=%s' % mos.ids">
+                                <p style="white-space: pre-wrap; font-size: 8px;">Production Order</p>
+                            </a>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="portal_my_home_menu_quotes" name="Portal layout : sales menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'Shipping Requests'" class="breadcrumb-item">
+                <span>Shipping Requests</span>
+            </li>
+        </xpath>
+    </template>
+
+</odoo>

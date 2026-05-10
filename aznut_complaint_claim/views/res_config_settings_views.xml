@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='connectors_setting_container']" position="after">
+                <h2 class="mt32">Complaint Claim</h2>
+                <div class="row mt16 o_settings_container" id="complaint_claim_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box" id="complaint_claim_qa">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Complaint Claim QA User</span>
+                            <div class="text-muted">
+                                QA user for complaint claim request
+                            </div>
+                            <div class="text-muted">
+                                <field name="complaint_claim_qa_user_id"
+                                       options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="complaint_claim_accounting">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Complaint Claim Accounting User</span>
+                            <div class="text-muted">
+                                Accounting user for complaint claim request
+                            </div>
+                            <div class="text-muted">
+                                <field name="complaint_claim_accounting_user_id"
+                                       options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="complaint_ceo_accounting">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Complaint Claim CEO User</span>
+                            <div class="text-muted">
+                                CEO user for complaint claim request
+                            </div>
+                            <div class="text-muted">
+                                <field name="complaint_claim_ceo_user_id"
+                                       options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="complaint_claim_manufactory">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Complaint Claim Manufactory User</span>
+                            <div class="text-muted">
+                                Manufactory user for complaint claim request
+                            </div>
+                            <div class="text-muted">
+                                <field name="complaint_claim_manufactory_user_id"
+                                       options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_reserve_sale_order_wizard,access_reserve_sale_order_wizard,model_reserve_sale_order_wizard,base.group_user,1,1,1,1
+aznut_sale.access_crm_lead_quality,access_crm_lead_quality,aznut_sale.model_crm_lead_quality,base.group_user,1,1,1,1
+access_crm_tag_portal,crm_tag_portal,sales_team.model_crm_tag,base.group_portal,1,0,0,0
+access_add_brand_wizard,access_add_brand_wizard,model_add_brand_wizard,base.group_user,1,1,1,1
+access_add_brand_line,access_add_brand_line,model_add_brand_line,base.group_user,1,1,1,1

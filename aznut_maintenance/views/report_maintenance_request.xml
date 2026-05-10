@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_maintenance_request">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <p>
+                                <strong>Name:</strong>
+                                <span t-field="o.name"/>
+                            </p>
+                            <p>
+                                <strong>Responsible:</strong>
+                                <span t-field="o.user_id"/>
+                            </p>
+                            <p>
+                                <strong>Equipment:</strong>
+                                <span t-field="o.equipment_id"/>
+                            </p>
+                            <p>
+                                <strong>Request Date:</strong>
+                                <span t-field="o.request_date"/>
+                            </p>
+                            <p>
+                                <strong>Close Date:</strong>
+                                <span t-field="o.close_date"/>
+                            </p>
+                            <p>
+                                <strong>Description:</strong>
+                                <span t-field="o.description"/>
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

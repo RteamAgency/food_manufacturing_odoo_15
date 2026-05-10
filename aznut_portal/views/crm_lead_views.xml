@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="crm_lead_view_kanban_opportunity" model="ir.ui.view">
+        <field name="name">aznut_portal.crm.lead.view.kanban.inherit.iap.mine</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm_iap_mine.crm_lead_view_kanban_opportunity"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">aznut_portal_follow_up_kanban</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_kanban_lead" model="ir.ui.view">
+        <field name="name">aznut_portal.crm.lead.view.kanban.lead.inherit.iap.mine</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm_iap_mine.crm_lead_view_kanban_lead"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">aznut_portal_follow_up_kanban</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="follow_up_lead_tree" model="ir.ui.view">
+        <field name="name">aznut_portal.follow.up.lead.tree</field>
+        <field name="model">crm.lead</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree string="Leads" editable="top" delete="0" create="0">
+                <field name="name" readonly="1"/>
+                <field name="email_from" readonly="1"/>
+                <field name="manager_note"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">aznut_portal.crm.lead.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Fireflies" attrs="{'invisible':[('fireflies_description','=',False)]}">
+                    <group>
+                        <field name="fireflies_description"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button class="btn-secondary" string="Send Calendly Link" name="action_send_calendly_link" type="object"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

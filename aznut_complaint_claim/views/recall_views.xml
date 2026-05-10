@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="recall_form" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.recall.form</field>
+        <field name="model">recall.recall</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="lot_id" readonly="1"/>
+                            <field name="product_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="production_id" readonly="1"/>
+                            <field name="recall_status" widget="selection_badge"/>
+                            <field name="recall_class"/>
+                        </group>
+                        <h5 style="color: red;">Recall Class Description.</h5>
+                        <field name="recall_class_description"/>
+                    </group>
+                    <notebook>
+                        <page name="moves_ids_list" string="Components">
+                            <h5>*Only lines that have been consumed are shown.</h5>
+                            <field name="moves_ids">
+                                <tree>
+                                    <field name="origin"/>
+                                    <field name="product_id"/>
+                                    <field name="lot_ids" widget="many2many_tags"/>
+                                    <field name="quantity_done" string="Consumed"/>
+                                    <field name="product_uom"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="recall_made" invisible="1"/>
+                                    <button name="action_recall" type="object" string="Recalled"
+                                            attrs="{'invisible':[('recall_made','=',False)]}"
+                                            class="btn-danger" context="{'recall_id':parent.id,'is_recall':True}"/>
+                                    <button name="action_recall" type="object" string="Recall"
+                                            attrs="{'invisible':[('recall_made','=',True)]}"
+                                            class="btn-success" context="{'recall_id':parent.id,'is_recall':True}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="recall_tree" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.recall.tree</field>
+        <field name="model">recall.recall</field>
+        <field name="arch" type="xml">
+            <tree edit="0">
+                <field name="name"/>
+                <field name="lot_id"/>
+                <field name="production_id"/>
+                <field name="recall_status"/>
+                <field name="recall_class"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="recall_search" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.recall.search</field>
+        <field name="model">recall.recall</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Open" name="recall_opened" domain="[('recall_status', '=', 'open')]"/>
+                <filter string="Closed" name="recall_opened" domain="[('recall_status', '=', 'closed')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_open_recall_wizard" model="ir.actions.act_window">
+        <field name="name">Recall</field>
+        <field name="res_model">recall.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="aznut_complaint_claim.recall_wizard_form"/>
+        <field name="search_view_id" ref="aznut_complaint_claim.recall_search"/>
+    </record>
+
+    <record id="action_recall" model="ir.actions.act_window">
+        <field name="name">Recalls</field>
+        <field name="res_model">recall.recall</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="aznut_complaint_claim.recall_tree"/>
+        <field name="help" type="html">
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No recalls!
+                </p>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_recall_mail_template" model="ir.actions.act_window">
+        <field name="name">Recall Mail Template</field>
+        <field name="res_model">mail.template</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="aznut_complaint_claim.recall_mail_template"/>
+        <field name="view_id" ref="mail.email_template_form"/>
+        <field name="target">new</field>
+        <field name="context">{'create': 0, 'delete': 0}</field>
+    </record>
+
+    <menuitem name="Recall"
+              id="menu_recall_main"
+              parent="aznut_complaint_claim.menu_complaint_claim_main"/>
+
+    <menuitem name="Recalls"
+              id="menu_recalls"
+              parent="aznut_complaint_claim.menu_recall_main"
+              sequence="1"
+              action="aznut_complaint_claim.action_recall"/>
+
+    <menuitem name="Create Recall"
+              id="menu_create_recall"
+              parent="aznut_complaint_claim.menu_recall_main"
+              sequence="2"
+              action="aznut_complaint_claim.action_open_recall_wizard"/>
+
+    <menuitem name="Template"
+              id="menu_recall_mail_template"
+              parent="aznut_complaint_claim.menu_recall_main"
+              sequence="3"
+              action="aznut_complaint_claim.action_recall_mail_template"/>
+</odoo>

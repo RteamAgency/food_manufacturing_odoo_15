@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_quality_video_tree_view" model="ir.ui.view">
+        <field name="name">mrp.quality.video.tree.view</field>
+        <field name="model">mrp.quality.video</field>
+        <field name="arch" type="xml">
+            <tree edit="0" create="0" delete="0">
+                <field name="production_id"/>
+                <field name="video_link" widget="url"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mrp_quality_video_search_view" model="ir.ui.view">
+        <field name="name">mrp.quality.video.search.view</field>
+        <field name="model">mrp.quality.video</field>
+        <field name="arch" type="xml">
+            <search string="Metal Detector Report">
+                <field name="production_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Production Order" name="group_by_production_id" context="{'group_by':'production_id'}"/>
+                    <filter string="Create Date" name="group_by_create_date"
+                            context="{'group_by':'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_form_tablet_menu_video_inh" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.form.tablet.menu.video.inh</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet_menu"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('workorder_menu')]" position="inside">
+                <field name="packaging_station" invisible="True"/>
+                <field name="production_id" invisible="True"/>
+                <div class="col-6" attrs="{'invisible': [('packaging_station', '=', False)]}">
+                    <button name="action_add_component" string="Metal Detector" class="btn-metal-detector btn-primary btn-block btn-lg"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_mrp_quality_video_tree" model="ir.actions.act_window">
+        <field name="name">Metal Detector Report</field>
+        <field name="res_model">mrp.quality.video</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="aznut_mrp_quality_video.mrp_quality_video_tree_view"/>
+        <field name="context">{'search_default_group_by_production_id': 1}</field>
+        <field name="search_view_id" ref="aznut_mrp_quality_video.mrp_quality_video_search_view"/>
+    </record>
+
+    <menuitem id="menu_mrp_quality_video_tree"
+              name="Metal Detector Report"
+              parent="mrp.menu_mrp_reporting"
+              action="action_mrp_quality_video_tree"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,52 @@
+<odoo>
+    <record id="support_settings_form_view" model="ir.ui.view">
+        <field name="name">support.settings.form</field>
+        <field name="model">support.settings</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group string="GPT Settings">
+                        <field name="gpt_text"/>
+                        <field name="gpt_token"/>
+                    </group>
+                    <group string="Procurement Settings">
+                        <field name="procurement_text"/>
+                        <field name="procurement_partner_id"
+                               options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                        <field name="procurement_vendors_text"/>
+                    </group>
+                     <group string="Manufacturing Settings">
+                        <field name="manufacturing_text"/>
+                        <field name="manufacturing_partner_id"
+                               options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                    </group>
+                      <group string="Approval Settings">
+                        <field name="approval_text"/>
+                        <field name="approval_partner_id"
+                               options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_support_settings" model="ir.actions.act_window">
+        <field name="name">Support Settings</field>
+        <field name="res_model">support.settings</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="aznut_calculator.support_settings_main"/>
+        <field name="view_id" ref="aznut_calculator.support_settings_form_view"/>
+    </record>
+
+    <menuitem id="menu_support_settings"
+              action="aznut_calculator.action_support_settings"
+              name="Support Settings"
+              sequence="100"
+              parent="aznut_calculator.menu_product_calculator_settings"/>
+</odoo>

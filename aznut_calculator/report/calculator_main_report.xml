@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="report_calculator_product">
+
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="aznut_calculator.external_layout_standard_inherited">
+                        <style>
+                            .mt-1-5 {
+                                margin-top: 0.30rem !important;
+                            }
+
+                            .aznut-pager {
+                                background-color: #e9ebf7;
+                                text-align: center;
+                                font-size: 10pt;
+                                color: #000;
+                                margin-top: 20px;
+                                padding: 10px 40px;
+                                border-radius: 16px 16px 0 0;
+                            }
+
+                            .aznut-calculator-title {
+                                background-color: #d7ffdd;
+                                border-radius: 17px;
+                                padding: 6px 18px;
+                            }
+
+                            .aznut-font-main-medium {
+                                font-family: Onest, sans-serif;
+                                font-weight: 500;
+
+                            }
+
+                            .aznut-font-main-semibold {
+                                font-family: Onest, sans-serif;
+                                font-weight: 600;
+
+                            }
+
+                            .aznut-font-main-bold {
+                                font-family: Onest, sans-serif;
+                                font-weight: 700;
+
+                            }
+
+                            .aznut-font-main-regular {
+                                font-family: Onest, sans-serif;
+                                font-weight: 400;
+                            }
+
+                            .aznut-font-title {
+                                font-family: Boldonse, sans-serif;
+                            }
+
+                            .aznut-thead {
+                                font-weight: 600;
+                                color: #b5ffc1 !important;
+                                background-color: #050050;
+                            }
+
+                            .aznut_tbody {
+                                font-weight: 400;
+                            }
+
+                            .aznut-table {
+                                border: 1px solid black;
+                                border-left: 1px solid #ffffff;
+                                border-right: 1px solid #ffffff;
+                                border-bottom: 1px solid #ffffff;
+                                border-radius: 20px 20px 0 0;
+                                font-size: 14px;
+                                overflow: hidden;
+                                border-spacing: 0;
+                                border-collapse: separate;
+                            }
+
+                            .aznut-table tr:not(:last-child) > th,
+                            .aznut-table tr:not(:last-child) > td {
+                                border-bottom: 1px solid black;
+                            }
+
+                            .aznut-table th:not(:last-child),
+                            .aznut-table td:not(:last-child) {
+                                border-right: 1px solid black;
+                            }
+
+
+                            .aznut_table_normal_line {
+                                box-sizing: content-box;
+                                padding: 6px 8px 4px 8px;
+                                text-align: left;
+                                font-family: ConfirmFont, sans-serif;
+                            }
+
+                            .aznut_table_counter_line {
+                                box-sizing: content-box;
+                                padding: 6px 0 4px 25px;
+                                text-align: left;
+                                font-family: ConfirmFont, sans-serif;
+                            }
+
+                            .aznut-table-total {
+                                border-bottom: 1px black solid;
+                                border-right: 1px black solid;
+                                border-left: 1px black solid;
+                                width: 339.21px;
+                                height: max-content;
+                            }
+
+                            .aznut-border-total-td {
+                                border-right: 1px black solid;
+                            }
+
+                            .aznut-border-total-tr {
+                                border-bottom: 1px black solid;
+                            }
+
+                            .aznut-width-total-td {
+                                width: 50%;
+                                padding: 3px 8px;
+                                font-size: 14px;
+                            }
+
+
+                            .aznut-base-ingredients-div {
+                                text-align: left;
+                                font-size: 14px;
+                                background-color: #d7ffdf;
+                                border-radius: 20px;
+                                padding: 12px;
+                            }
+
+                            .aznut-base-note-div {
+                                text-align: left;
+                                font-size: 14px;
+                                background-color: #ceccf6;
+                                border-radius: 20px;
+                                padding: 12px;
+
+                            }
+
+                            .aznut-base-note-div p {
+                                margin-top: 5px;
+                                margin-bottom: 0;
+                            }
+
+                            .aznut-base-note-div :last-child {
+                                margin-bottom: 0;
+                            }
+
+                            .aznut-table-total-all {
+                                border: 1px solid black;
+                                border-collapse: separate;
+                                overflow: hidden;
+                                border-spacing: 0;
+                                border-radius: 10px;
+                            }
+
+                            .aznut-info-title {
+                                font-size: 14px;
+                                margin-bottom: 5px;
+                            }
+
+                            .aznut-info-content {
+                                font-size: 12px;
+                                margin: 0;
+                                text-align: justify;
+                            }
+
+                            .aznut-info-block {
+                                border-radius: 20px;
+                                padding: 12px 18px;
+                                page-break-inside: avoid;
+                            }
+
+
+                        </style>
+                        <t t-if="not company">
+                            <t t-if="company_id">
+                                <t t-set="company" t-value="company_id"/>
+                            </t>
+                            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                                <t t-set="company" t-value="o.company_id.sudo()"/>
+                            </t>
+                            <t t-else="else">
+                                <t t-set="company" t-value="res_company"/>
+                            </t>
+                        </t>
+                        <div class="m-auto" style="max-width: 840px;">
+                            <div style="display: -webkit-box;display: flex;-webkit-box-pack: justify;-webkit-box-align: stretch;justify-content: space-between;align-items: stretch;">
+                                <div>
+                                    <t t-call="aznut_calculator.aznut_calculator_logo"/>
+                                </div>
+                                <div style="width: 63%" class="mt-2">
+                                    <t t-call="aznut_calculator.aznit_report_information_block">
+                                        <t t-set="_wrapperStyle"
+                                           t-value="'background-color: #d7ffdd;padding: 10px 11px 10px 11px;border-radius: 17px 17px 17px 17px;font-size: 12px;font-family: sans-serif;line-height: 15px;height:100%;color:#06004f;-webkit-box-pack: justify;'"/>
+                                        <t t-set="target_type" t-value="'Manufacture information'"/>
+                                        <t t-set="target" t-value="company.partner_id"/>
+                                        <t t-set="lead" t-value="o.sudo().lead_id or 'empty'"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <div style="display:-webkit-box;display: flex;-webkit-box-pack: justify;-webkit-box-align: stretch;justify-content: space-between;align-items: stretch;"
+                                 class="mt-2">
+                                <div class="text-left aznut-calculator-title w-100" style="max-width: 300px;">
+                                    <t t-call="aznut_calculator.aznut_calculator_title"/>
+                                </div>
+                                <div style="width: 63%">
+                                    <t t-call="aznut_calculator.aznit_report_information_block">
+                                        <t t-set="_wrapperStyle"
+                                           t-value="'background-color: #ffffb4;padding: 10px 11px 10px 11px;border-radius: 17px 17px 17px 17px;font-size: 12px;font-family: sans-serif;line-height: 15px;height:100%;-webkit-box-pack: justify;'"/>
+                                        <t t-set="target_type" t-value="'Customer information'"/>
+                                        <t t-set="target" t-value="o.partner_id"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <div>
+                                <t id="calculators_foreach"
+                                   t-foreach="o.calculator_ids.filtered(lambda calc: calc in o.allowed_calculators_ids)"
+                                   t-as="calculator">
+                                    <div id="calculators_div"
+                                         t-attf-style="{{'page-break-before:always;' if o.calculator_ids.ids.index(calculator.id) != 0 else ''}}">
+                                        <div style="margin-left:14px;margin-top:30px;">
+                                            <t t-call="aznut_calculator.aznut_product_name">
+                                                <t t-set="active_calculator" t-value="calculator"/>
+                                            </t>
+                                        </div>
+                                        <div class="mt-4">
+                                            <t t-call="aznut_calculator.aznut_table">
+                                                <t t-set="active_calculator" t-value="calculator"/>
+                                                <t t-set="currency" t-value="o.currency_id"/>
+                                            </t>
+                                        </div>
+                                        <div>
+                                            <t t-call="aznut_calculator.aznut_calculator_details">
+                                                <t t-set="active_calculator" t-value="calculator"/>
+                                                <t t-set="base_ingredients"
+                                                   t-value="o.manual_report_base_ingredients if o.use_manual_report_base else calculator.report_base_ingredients"/>
+
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                            <div style="page-break-inside: avoid;">
+                                <div class="ml-auto mt-4" style="width: 356px;margin-left:auto;">
+                                    <t t-call="aznut_calculator.aznut_calculator_totals">
+                                        <t t-set="active_calculators"
+                                           t-value="o.calculator_ids.filtered(lambda calc: calc in o.allowed_calculators_ids)"/>
+                                        <t t-set="currency" t-value="o.currency_id"/>
+                                    </t>
+                                </div>
+                                <div class="ml-auto mt-3" style="width: 390px;margin-left:auto;">
+                                    <t t-call="aznut_calculator.aznut_payment_terms"/>
+                                </div>
+                            </div>
+
+                            <div class="mt-5">
+                                <div>
+                                    <t t-call="aznut_calculator.aznut_info">
+                                        <t t-set="partner_name" t-value="o.partner_id.name"/>
+                                    </t>
+                                </div>
+                                <div class="mt-3">
+                                    <t t-call="aznut_calculator.aznut_signatures"/>
+                                </div>
+                                <div style="display: -webkit-box;display: flex;-webkit-box-pack: justify;-webkit-box-align: start;justify-content: space-between;"
+                                     class="mt-3">
+                                    <div style="width:49%" class="mt-3">
+                                        <t t-call="aznut_calculator.aznut_copy_block"/>
+                                    </div>
+                                    <div style="width: 49%">
+                                        <t t-call="aznut_calculator.aznut_icons"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="external_layout_standard_inherited" inherit_id="web.external_layout_standard" primary="True">
+            <xpath expr="//div[@t-attf-class='header o_company_#{company.id}_layout']" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('pt-5')]" position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+            <xpath expr="//div[@t-field='company.report_footer']//..//.." position="after">
+                <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                    <div class="d-flex justify-content-center">
+                        <div t-if="report_type == 'pdf'" class="aznut-pager mr-5">
+                            Page
+                            <div>
+                                <span class="page"/> / <span class="topage"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@t-field='company.report_footer']//..//.." position="attributes">
+                <attribute name="t-if">False</attribute>
+            </xpath>
+        </template>
+
+        <template id="aznut_calculator_logo">
+            <img src="/aznut_calculator/static/src/img/aznut_report_logo.png" alt="Logo" style="max-width: 300px;"/>
+        </template>
+
+        <template id="aznut_calculator_title">
+            <p class="aznut-font-title m-0" style="font-size:18px;">
+                <t t-out="o.display_name"/>
+            </p>
+            <p class="aznut-font-main-regular m-0" style="font-size:14px;">
+                Date: <t t-out="o.create_date.strftime('%B %d, %Y')"/>
+            </p>
+            <p class="aznut-font-main-regular m-0" style="font-size:14px;">
+                Expires: <t t-out="o._get_expiry_date().strftime('%B %d, %Y')"/>
+            </p>
+        </template>
+
+        <template id="aznit_report_information_block">
+            <div t-attf-style="{{_wrapperStyle}}">
+                <div class="aznut-font-main-bold">
+                    <span t-out="target_type" style="font-size:14px;"/>
+                </div>
+                <div class="d-flex mt-1 justify-content-between" style="-webkit-box-pack: justify;">
+                    <div style="width: 49%">
+                        <div t-if="target.name" class="aznut-font-main-regular">
+                            Company name:
+                            <span class="m-0" t-field="target.name"/>
+                        </div>
+                        <div class="aznut-font-main-regular">
+                            <t t-if="lead">
+                                <t t-if="lead != 'empty' and lead.user_id">
+                                    Phone Number:
+                                    <a t-esc="lead.user_id.phone or lead.user_id.mobile"
+                                       style="color: #0000EE!important;"/>
+                                </t>
+                                <t t-else="">
+                                    Phone Number:
+                                    <a t-esc="company.phone or company.mobile" style="color: #0000EE!important;"/>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                Phone Number:
+                                <a t-esc="target.phone or target.mobile" style="color: #0000EE!important;"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div style="width: 49%" class="aznut-font-main-regular">
+                        <div
+                                t-if="target.street or target.street2 or target.city or target.state_id.name or target.zip">
+                            Company Address:
+                            <span t-esc="', '.join(filter(lambda x: x, [target.street or target.street2, target.city, target.state_id.name, target.zip]))"/>
+                        </div>
+                        <div class="aznut-font-main-regular">
+                            <t t-if="lead">
+                                <t t-if="lead != 'empty'">
+                                    Email address:
+                                    <a t-esc="lead.user_id.email" style="color: #0000EE!important;"/>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                Email address:
+                                <a t-esc="target.email" style="color: #0000EE!important;"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="aznut_product_name">
+            <p class="aznut-font-title" style="font-size: 21px">Product Name: <t
+                    t-esc="active_calculator.product_name"/></p>
+        </template>
+
+        <template id="aznut_table">
+            <table class="aznut-table w-100" style="white-space: normal;">
+                <thead class="aznut-thead">
+                    <tr style="vertical-align: top;">
+                        <th class="aznut_table_counter_line"
+                            style="width: 20px;box-sizing: content-box; padding: 10px 8px 7px 8px;">No.</th>
+                        <th class="aznut_table_normal_line"
+                            style="box-sizing: content-box; padding: 10px 8px 7px 8px;">
+                            Active
+                            Ingredients</th>
+                        <th class="aznut_table_normal_line"
+                            style="box-sizing: content-box; padding: 10px 8px 7px 8px;">
+                            mg</th>
+                        <th class="aznut_table_normal_line"
+                            style="box-sizing: content-box; padding: 10px 8px 7px 8px;width: 150px!important;">
+                            Order
+                            details: </th>
+                        <th class="aznut_table_normal_line"
+                            style="box-sizing: content-box; padding: 10px 8px 7px 8px;width: 170px!important;;"/>
+                    </tr>
+                </thead>
+                <tbody class="aznut_tbody">
+                    <t t-set="rows_count" t-value="active_calculator._get_row_quantity()"/>
+                    <t t-set="details" t-value="active_calculator._get_order_details()"/>
+                    <t t-set="active_ingredients"
+                       t-value="active_calculator.active_ingredient_ids.sorted(lambda ing: (ing.sequence, ing.id))"/>
+                    <t t-foreach="rows_count + 1 if rows_count == len(active_ingredients) else rows_count" t-as="row">
+                        <t t-set="background_color"
+                           t-value="'background-color:#effbf0' if row % 2 == 1 else 'background-color:white'"/>
+                        <tr t-attf-style="{{background_color}}">
+                            <t t-if="row &lt; len(active_ingredients)">
+                                <td class="aznut_table_counter_line aznut_td "
+                                    style="border-left: 1px solid black;padding: 6px 0 4px 13px;"><span
+                                        t-esc="row+1"/></td>
+                                <td class="aznut_table_normal_line aznut_td "
+                                    style="white-space: normal; overflow: hidden; text-overflow: ellipsis;">
+                                    <span t-esc="active_ingredients[row].product_id.display_name"/>
+                                </td>
+                                <td class="aznut_table_normal_line aznut_td" style="border-right: none;">
+                                    <span t-esc="('{:,.4f}'.format(active_ingredients[row].quantity).rstrip('0') + '0' * max(0, 2 - len('{:,.4f}'.format(active_ingredients[row].quantity).rstrip('0').split('.')[-1])) if '.' in '{:,.4f}'.format(active_ingredients[row].quantity) else '{:,.2f}'.format(active_ingredients[row].quantity))"/>
+                                </td>
+                            </t>
+                            <t t-elif="row == len(active_ingredients)">
+                                <t t-set="ingredients_total"
+                                   t-value="sum(active_calculator.mapped('active_ingredient_ids.quantity'))"/>
+                                <td class="aznut_table_normal_line aznut_td " style="border-left: 1px solid black;"/>
+                                <td class="aznut_table_normal_line aznut_td "><b>Total:</b></td>
+                                <td class="aznut_table_normal_line aznut_td " style="border-right: none;">
+                                    <b t-esc="('{:,.4f}'.format(ingredients_total).rstrip('0') + '0' * max(0, 2 - len('{:,.4f}'.format(ingredients_total).rstrip('0').split('.')[-1])) if '.' in '{:,.4f}'.format(ingredients_total) else '{:,.2f}'.format(ingredients_total))"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td class="aznut_table_normal_line aznut_td " style="border-left: 1px solid black;"/>
+                                <td class="aznut_table_normal_line aznut_td "/>
+                                <td class="aznut_table_normal_line aznut_td " style="border-right: none;"/>
+                            </t>
+                            <t t-if="row &lt; len(details)">
+                                <td class="aznut_table_normal_line aznut_td " style="border-left: 1px solid black;">
+                                    <span t-esc="details[row].get('name')"/>
+                                </td>
+                                <td t-attf-style="border-right: 1px solid black;{{'text-transform: capitalize;' if details[row].get('name') not in ['Approximate Chews', 'Each Chew Size', 'Serving Size', 'Jar size'] else ''  }}"
+                                    class="aznut_table_normal_line aznut_td ">
+                                    <t t-if="details[row].get('name') == 'Label' or details[row].get('name') == 'Jar' or details[row].get('name') == 'Lid'">
+                                        <span t-if="details[row].get('val') == '1'">Included</span>
+                                        <span t-else="">Not Included</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="details[row].get('val')"/>
+                                    </t>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td class="aznut_table_normal_line aznut_td " style="border-left: 1px solid black;"/>
+                                <td class="aznut_table_normal_line aznut_td " style="border-right: 1px solid black;"/>
+                            </t>
+                        </tr>
+                    </t>
+                    <tr class="aznut-border-total-tr aznut-font-main-regular" style="border:red;">
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                        <td class="aznut-width-total-td aznut-border-total-td"
+                            t-attf-style="background-color:#effbf0;border-left: 1px solid black;{{'width: 166.01px!important;' if report_type == 'pdf' else 'width: 169.41px!important;'}}">
+                            Price per jar:</td>
+                        <td class="aznut-width-total-td text-right"
+                            t-attf-style="background-color:#effbf0;border-right: 1px solid black;{{'width: 167px!important;' if report_type == 'pdf' else 'width: 165.8px!important;'}}">
+                            <t t-esc="active_calculator.ready_jar_cost if active_calculator._name =='product.calculator' else active_calculator.price_per_jar"
+                               digits="[16,2]"
+                               t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                    <tr class="aznut-font-main-regular" t-if="active_calculator.discount_amount > 0"
+                        style="border:none;">
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                        <td class="aznut-width-total-td aznut-border-total-td"
+                            t-attf-style="background-color:#ffffff;border-left: 1px solid black;{{'width: 166.01px!important;' if report_type == 'pdf' else 'width: 169.41px!important;'}}">
+                            Discount per jar:</td>
+                        <td class="aznut-width-total-td text-right"
+                            t-attf-style="background-color:#ffffff;border-right: 1px solid black;{{'width: 167px!important;' if report_type == 'pdf' else 'width: 165.8px!important;'}}">
+                            <t t-esc="active_calculator.discount_amount" digits="[16,2]"
+                               t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                    <tr style="border:none;">
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                        <td style="border:none;"></td>
+                        <td class="aznut-width-total-td aznut-border-total-td aznut-font-main-bold"
+                            t-attf-style="background: #050050;color:#b5ffc1;border-radius: 0 0 0 10px;border-left: 1px solid black;{{'width: 166.01px!important;' if report_type == 'pdf' else 'width: 169.41px!important;'}}">
+                            Total:</td>
+                        <td class="aznut-font-main-regular text-right aznut-width-total-td"
+                            t-attf-style="background: #050050;color:#b5ffc1;border-radius: 0 0 10px 0;border-right: 1px solid black;{{'width: 167px!important;' if report_type == 'pdf' else 'width: 165.8px!important;'}}">
+                            <t t-esc="active_calculator.total_price" digits="[16,2]"
+                               t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </template>
+
+        <template id="aznut_calculator_details">
+            <div style="page-break-inside: avoid;">
+                <div t-if="base_ingredients" class="aznut-base-ingredients-div mt-4">
+                    <p class="aznut-font-main-semibold m-0">Base ingredients:</p>
+                    <span class="m-0 aznut-font-main-regular"
+                          t-esc="base_ingredients"/>
+                </div>
+                <div t-if="not is_html_empty(active_calculator._get_cleaned_note())" class="aznut-base-note-div mt-4">
+                    <p class="aznut-font-main-semibold m-0">Note:</p>
+                    <span class="m-0 aznut-font-main-regular" t-raw="active_calculator._get_cleaned_note()"/>
+                </div>
+
+            </div>
+        </template>
+
+        <template id="aznut_calculator_totals">
+            <t t-set="total_order"
+               t-value="sum(active_calculators.mapped('total_price'))"/>
+            <t t-set="total_discount"
+               t-value="sum([calc.discount_amount * calc.count_of_jars for calc in active_calculators])"/>
+            <t t-set="first_row" t-value="1 if total_discount else 0"/>
+            <table style="background-color: #effbf0;" class="aznut-table-total-all">
+                <tbody>
+                    <tr t-if="total_discount">
+                        <td class="aznut-width-total-td aznut-border-total-td"
+                            style="width: 178px!important;border-bottom: 1px black solid;">
+                            Total Discount:</td>
+                        <td class="aznut-width-total-td text-right"
+                            style="width: 178px!important;border-bottom: 1px black solid;">
+                            <t t-esc="total_discount"
+                               digits="[16,2]"
+                               t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                    <t t-foreach="range(len(active_calculators))" t-as="t">
+                        <tr class="aznut-font-main-regular"
+                            t-attf-style="{{'background-color:white' if (t + first_row) % 2 == 1 else ''}}">
+                            <td class="aznut-width-total-td aznut-border-total-td"
+                                style="width: 178.01px!important;border-bottom: 1px black solid;"><t
+                                    t-esc="active_calculators[t].product_name"/>:</td>
+                            <td class="aznut-width-total-td text-right" style="border-bottom: 1px black solid">
+                                <t t-esc="active_calculators[t].total_price" digits="[16,2]"
+                                   style="width: 178.01px!important;border-bottom: 1px black solid;"
+                                   t-options='{"widget": "monetary", "display_currency": currency}'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr style="background: #050050;color:#b5ffc1;">
+                        <td class="aznut-width-total-td aznut-border-total-td aznut-font-main-bold"
+                            style="width: 178.01px!important;border-bottom: 1px black solid;">
+                            Total:</td>
+                        <td class="aznut-font-main-regular text-right aznut-width-total-td"
+                            style="width: 178.01px!important;border-bottom: 1px black solid;">
+                            <t t-esc="total_order" digits="[16,2]"
+                               t-options='{"widget": "monetary", "display_currency": currency}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </template>
+
+        <template id="aznut_payment_terms">
+            <t t-set="base_url"
+               t-value="o.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+            <t t-set="terms_url" t-value="base_url + '/terms'"/>
+            <p class="m-0 aznut-font-main-regular" style="font-size: 12px">
+                Payment Terms: <a class="aznut-font-main-bold" style="font-size: 12px;color: #050050;"
+                                  t-esc="terms_url"/>
+            </p>
+        </template>
+
+
+        <template id="aznut_info">
+            <div style="page-break-before:always;display: -webkit-box; display: flex; -webkit-box-pack: justify; -webkit-box-align: start; justify-content: space-between;">
+                <div style="width: 49%">
+                    <div style="background-color: #d7ffdd;" class="aznut-info-block">
+                        <p class="aznut-info-title aznut-font-main-bold">Customer Consent</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <p class="mb-0 mt-1-5">
+                                I, <span t-esc="partner_name" class="aznut-font-main-semibold"
+                                         style="color: #283583;"></span>,
+                                the undersigned, hereby confirm that I have thoroughly reviewed and verified all details
+                                of
+                                my Quote with Best Practice Way LLC (hereinafter referred to as "the Manufacturer"). I
+                                acknowledge that I am solely responsible for ensuring the accuracy and completeness of
+                                all
+                                information provided, including but not limited to product formula, quantities, jar
+                                color
+                                and size,
+                                label finish, serving size, pricing, and any other specifications outlined in the
+                                Quote.</p>
+                            <p class="mb-0 mt-1-5">
+                                I confirm that I have had the opportunity to ask questions and receive satisfactory
+                                clarifications
+                                from the Manufacturer regarding any aspects of this Quote. I understand that once the
+                                Quote
+                                is
+                                signed and production begins, changes or reversals may not be possible, and any
+                                modifications
+                                requested thereafter may result in additional costs or delays, which I agree to
+                                cover.
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                By signing this confirmation, I accept full responsibility for verifying that the Quote
+                                reflects my
+                                intended requirements and agreed-upon terms. Any errors, omissions, or discrepancies not
+                                brought
+                                to the Manufacturer’s attention prior to this confirmation are my sole responsibility.
+                            </p>
+
+                            <p class="mb-0 mt-1-5">
+                                <strong>Quote Validity</strong><br/>
+                                This Quote is valid for 15 calendar days from the date of issue. After this period,
+                                pricing,
+                                availability, or other terms may be revised at the Manufacturer's discretion.
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                <strong>Storage Policy</strong><br/>
+                                Upon completion of production, the finished product will be stored free of charge for 30
+                                calendar days.
+                                If the order is not picked up or scheduled for shipment within this period, the Client
+                                agrees that Best Practice Way LLC will apply a storage fee of $300 per pallet per month,
+                                which will be invoiced accordingly.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #d7ffdd;" class="aznut-info-block mt-4">
+                        <p class="aznut-info-title aznut-font-main-bold">Custom Formula &amp; Regulatory Compliance</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <p class="mb-0 mt-1-5">
+                                For any product formulas that differ from the Manufacturer’s stock formulations in
+                                ingredient composition,
+                                dosage levels, or other modifications (hereinafter referred to as "Custom Formula"), the
+                                Client is solely
+                                responsible for verifying that such formulas are compliant and appropriate for the
+                                intended species under
+                                applicable pet supplement and feed regulations.
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                Before submitting a Custom Formula, the Client must review and confirm that all
+                                ingredients included in the
+                                formula meet <b>at least one</b> of the following regulatory criteria:
+                            </p>
+                            <ul class="mb-0 mt-1-5" style="padding-left: 20px;">
+                                <li>Listed in the AAFCO Official Publication (OP) for the intended species.</li>
+                                <li>Generally Recognized as Safe (GRAS) for the intended use.</li>
+                                <li>Approved as a food additive by the U.S. FDA for that species.</li>
+                            </ul>
+                            <p class="mb-0 mt-1-5">
+                                The Client agrees to document internally that this review has been completed and to
+                                provide reasonable
+                                evidence or explanation upon request. The Manufacturer may request ingredient
+                                specifications or supporting
+                                information to assess basic safety, but does not independently verify regulatory status.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #ffffb4;" class="aznut-info-block mt-4">
+                        <p class="aznut-info-title aznut-font-main-bold">Return Policy</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <p class="mb-0 mt-1-5">
+                                Once the product is shipped out, returns will not be accepted. Customers have the
+                                opportunity to inspect and verify the product prior to its release for shipping to
+                                ensure it meets their requirements.
+                                Any concerns or requests for adjustments should be communicated before the shipment is
+                                finalized. By approving the product for shipment, the customer acknowledges acceptance
+                                of the final product, and no returns will be processed thereafter.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="width: 49%">
+                    <div style="background-color: #ceccf6;" class="aznut-info-block">
+                        <p class="aznut-info-title aznut-font-main-bold">Labeling, Claims and Compliance</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <p class="mb-0 mt-1-5">
+                                The Client is solely responsible for ensuring that all product labeling, marketing
+                                claims, and packaging
+                                content comply with applicable federal, state, and industry standards. The Manufacturer
+                                does not provide
+                                regulatory review or approval of labeling or claims. Clients are strongly advised to
+                                seek independent label
+                                review services, such as through the National Animal Supplement Council (NASC), or a
+                                qualified regulatory
+                                consultant, before finalizing their labels.
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                The Manufacturer’s role is limited to producing the product in accordance with the
+                                formula and
+                                specifications provided by the Client. Regulatory compliance of Custom Formulas and
+                                product labeling
+                                remains the sole responsibility of the Client. The Client agrees to hold the
+                                Manufacturer harmless from any
+                                liability, enforcement action, or claim related to the composition, regulatory status,
+                                labeling, or
+                                marketing claims of Custom Formulas. The Manufacturer reserves the right to decline
+                                production of any
+                                Custom Formula deemed unsafe or clearly non-compliant.
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                Please review the information provided in the following links:<br/>
+                                <a href="https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cvm-gfi-235-current-good-manufacturing-practice-requirements-food-animals"
+                                   target="_blank">CVM GFI #235 -
+                                    Current Good Manufacturing Practice Requirements for Food for Animals</a><br/>
+                                <a href="https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cvm-gfi-245-hazard-analysis-and-risk-based-preventive-controls-food-animals"
+                                   target="_blank">CVM GFI #245 -
+                                    Hazard Analysis and Risk-Based Preventive Controls for Food for Animals</a><br/>
+                                <a href="https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cvm-gfi-246-hazard-analysis-and-risk-based-preventive-controls-food-animals-supply-chain-program"
+                                   target="_blank">CVM GFI #246 -
+                                    Hazard Analysis and Risk-Based Preventive Controls for Food for Animals:
+                                    Supply-Chain Program</a>
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                This product is intended for supplemental feeding only in labeled animal species. These
+                                statements have not
+                                been evaluated by the U.S. Food and Drug Administration. This product is not intended to
+                                diagnose, treat,
+                                cure, or prevent any disease or health condition in animals. Consult your veterinarian
+                                before use,
+                                especially if your pet has a known medical condition or is under medical supervision.
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                This Customer Consent and any guidance provided by the Manufacturer are informational in
+                                nature; the Client
+                                remains solely responsible for ensuring full product and label claims compliance with
+                                all applicable
+                                regulatory requirements.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #ffffb4;" class="aznut-info-block mt-4">
+                        <p class="aznut-info-title aznut-font-main-bold">Best Practice Way LLC is compliant with the
+                            following statements:</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <ul class="mb-0 mt-1-5" style="padding-left: 20px;">
+                                <li>GMP Certified</li>
+                                <li>FDA-registered Facility</li>
+                                <li>Third-party Lab Tested</li>
+                                <li>Gluten-Free Product</li>
+                                <li>No artificial flavoring</li>
+                                <li>No artificial preservatives</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background-color: #d7ffdd;" class="aznut-info-block mt-4">
+                        <p class="aznut-info-title aznut-font-main-bold">Allergy Disclaimer</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <p class="mb-0 mt-1-5">
+                                Our products may be formulated with various ingredients containing <b>FDA-recognized
+                                allergens (such as shellfish and soy)</b> that may cause allergic reactions in sensitive
+                                individuals or pets.
+                                <b>As an SQF-certified facility, product labels MUST have allergens listed
+                                    plainly, either in the ingredient section or elsewhere on the label.</b>
+                            </p>
+                            <p class="mb-0 mt-1-5">
+                                Pet owners should also be aware that handling the product could potentially result in an
+                                allergic reaction, including skin irritation or other symptoms. If the person handling
+                                the product or the pet has known allergies or sensitivities to specific ingredients, a
+                                doctor or veterinarian should be consulted before use.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="mt-4"
+                 style="page-break-before:always;display: -webkit-box; display: flex; -webkit-box-pack: justify; -webkit-box-align: start; justify-content: space-between;">
+                <div style="width: 49%">
+                    <div style="background-color: #d7ffdf;" class="aznut-info-block">
+                        <p class="aznut-info-title aznut-font-main-bold">Overrun Note</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <p class="mb-0 mt-1-5">
+                                Please note that the final number of jars produced may vary by up to 10% more or less
+                                due to standard
+                                production adjustments. The final invoice will reflect this variance, and any
+                                adjustments will be made
+                                before the final payment is processed.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 49%">
+                    <div style="background-color: #ffffb4;" class="aznut-info-block">
+                        <p class="aznut-info-title aznut-font-main-bold">Payment Terms</p>
+                        <div class="aznut-info-content aznut-font-main-regular">
+                            <p class="mb-0 mt-1-5">
+                                A 50% upfront payment is due upon acceptance of this proposal. The remaining 50% is due
+                                upon completion and readiness of the order.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="aznut-info-block mt-4" style="background-color: #ffd8d2;">
+                <p class="aznut-info-content aznut-font-main-bold" style="text-align: center">
+                    Electronic signatures are valid and enforced for all purposes outlined in this document.
+                </p>
+            </div>
+        </template>
+
+
+        <template id="aznut_signatures">
+            <div id="signature_wrapper"
+                 style="display: -webkit-box;display: flex;-webkit-box-pack: justify;justify-content: space-between;">
+                <div style="width: 49%; border: 1px solid black; border-radius: 20px; padding: 15px 30px;">
+                    <t t-call="aznut_calculator.aznut_signature">
+                        <t t-set="contact_name" t-value="o.partner_id.name"/>
+                        <t t-set="title" t-value="'Customer Company name:'"/>
+                    </t>
+                </div>
+                <div style="width: 49%; border: 1px solid black; border-radius: 20px; padding: 15px 30px;">
+                    <t t-call="aznut_calculator.aznut_signature">
+                        <t t-set="contact_name" t-value="company.partner_id.name"/>
+                        <t t-set="title" t-value="'Seller Company name:'"/>
+                    </t>
+                </div>
+            </div>
+        </template>
+
+        <template id="aznut_signature">
+            <p class="aznut-font-main-bold m-0" style="font-size: 14px;color:#231d6d;">
+                <t t-esc="title"/>
+            </p>
+            <p class="aznut-font-main-bold m-0" t-out="contact_name" style="font-size: 14px;color:#050050;"></p>
+            <table class="aznut-font-main-regular"
+                   style="width:100%;font-size: 14px; margin-top: 0.75rem; border-collapse: collapse; color:#050050;">
+                <tr>
+                    <td style="width:45px;white-space: nowrap; padding-right: 0.5rem; vertical-align: middle;">
+                        Date:
+                    </td>
+                    <td id="date_td" style="border-bottom: 1px solid black;"></td>
+                </tr>
+            </table>
+            <table class="aznut-font-main-regular"
+                   style=" width:100%;font-size: 14px; margin-top: 0.75rem; border-collapse: collapse;color:#050050;">
+                <tr>
+                    <td style=" width:50px; white-space: nowrap; padding-right: 0.5rem; vertical-align: middle;">
+                        Signature:
+                    </td>
+                    <td id="signature_td" style="border-bottom: 1px solid black;"></td>
+                </tr>
+            </table>
+        </template>
+
+        <template id="aznut_copy_block">
+            <div style="border-radius: 20px; background-color: #ffffb4;padding: 12px 15px;">
+                <p style="font-size: 12px" class="aznut-font-main-regular m-0">
+                    Please retain a copy of this document for your records. Your signed confirmation indicates your
+                    agreement to the terms outlined above.
+                </p>
+            </div>
+        </template>
+
+        <template id="aznut_icons">
+            <div style="display: -webkit-box;display: flex;-webkit-box-pack: justify;-webkit-box-align: baseline;justify-content: space-between;">
+                <div style="width: 19%;">
+                    <img style="width: 100%;" src="/aznut_calculator/static/src/img/aznut_icon_1.png" alt="Logo"/>
+                </div>
+                <div style="width: 19%;">
+                    <img style="width: 100%;" src="/aznut_calculator/static/src/img/aznut_icon_2.png" alt="Logo"/>
+                </div>
+                <div style="width: 23%;">
+                    <img style="width: 100%;" src="/aznut_calculator/static/src/img/aznut_icon_3.png" alt="Logo"/>
+                </div>
+                <div style="width: 19%;">
+                    <img style="width: 100%;" src="/aznut_calculator/static/src/img/aznut_icon_4.png" alt="Logo"/>
+                </div>
+            </div>
+        </template>
+
+        <template id="report_calculator_powder" inherit_id="aznut_calculator.report_calculator_product" primary="True">
+            <xpath expr="//t[@id='calculators_foreach']" position="attributes">
+                <attribute name="t-foreach">o.powder_calculator_ids.filtered(
+                    lambda calc: calc in o.allowed_calculators_ids)</attribute>
+            </xpath>
+            <xpath expr="//div[@id='calculators_div']" position="attributes">
+                <attribute name="t-attf-style">{{'page-break-before:always;' if o.powder_calculator_ids.ids.index(
+                    calculator.id) != 0 else ''}}</attribute>
+            </xpath>
+            <xpath expr="//t[@t-set='base_ingredients']" position="attributes">
+                <attribute name="t-value">False</attribute>
+            </xpath>
+            <xpath expr="//t[@t-set='active_calculators']" position="attributes">
+                <attribute name="t-value">o.powder_calculator_ids.filtered(
+                    lambda calc: calc in o.allowed_calculators_ids)</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>

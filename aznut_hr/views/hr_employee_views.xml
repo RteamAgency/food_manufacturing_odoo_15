@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_employee_form_inherit_hr_attendance" model="ir.ui.view">
+        <field name="name">aznut_hr.hr.employee</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="attendances" string="Attendances">
+                    <group>
+                        <field name="attendance_ids" readonly="1" nolabel="1" col="2"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//button[@id='hr_attendance_button']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_kanban_view_employees" model="ir.ui.view">
+        <field name="name">aznut_hr.hr.employee.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//li[@t-if='record.work_phone.raw_value']" position="after">
+                <t t-if="record.current_workorders.raw_value" t-raw="record.current_workorders.raw_value"/>
+            </xpath>
+            <xpath expr="//field[@name='image_128']" position="after">
+                <field name="current_workorders"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_public_view_kanban" model="ir.ui.view">
+        <field name="name">hr.employee.kanban</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//li[@t-if='record.work_phone.raw_value']" position="after">
+                <t t-if="record.current_workorders.raw_value" t-raw="record.current_workorders.raw_value"/>
+            </xpath>
+            <xpath expr="//field[@name='image_128']" position="after">
+                <field name="current_workorders"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

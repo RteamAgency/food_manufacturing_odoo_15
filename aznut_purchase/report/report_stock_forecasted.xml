@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template inherit_id="stock.report_product_product_replenishment"
+              id="report_product_product_replenishment">
+        <xpath expr="//div[hasclass('o_report_graph')]" position="replace">
+            <div class="d-flex justify-content-between">
+                <div class="o_report_graph" style="width: 64%!important;"/>
+                <t t-set="seller_lines" t-value="docs.get('seller_lines')"/>
+                <div t-if="seller_lines" style="width: 35%!important;">
+                    <table class="table table-bordered">
+                        <thead>
+                            <th class="text-center">Vendor</th>
+                            <th class="text-center">Actual Lead Time</th>
+                            <th class="text-center">Price</th>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="seller_lines" t-as="seller_line">
+                                <tr>
+                                    <td class="text-center"
+                                        t-esc="request.env['res.partner'].sudo().browse(seller_line).name"/>
+                                    <td class="text-center"
+                                        t-esc="seller_lines.get(seller_line,{}).get('actual_lead_time', 0)"/>
+                                    <td class="text-center" t-esc="seller_lines.get(seller_line,{}).get('price', 0)"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <table class="table table-borderless" style="width: 100%!important; font-size: 18px">
+                        <tr style="font-weight: bold;">
+                            <td class="text-left">
+                                <div>
+                                    <span>
+                                        Free stock:
+                                    </span>
+                                </div>
+                                <div t-if="docs.get('last_delivery_date')">
+                                    As of
+                                    <span t-esc="docs.get('last_delivery_date')"/>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <span t-esc="docs.get('free_qty')"/>
+                                    <span t-esc="docs['uom']"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//a[@t-if=&quot;line['document_in']&quot;]" position="after">
+            <a t-if="line['document_in'] and line.get('in_source_document_link')"
+               t-att-href="line.get('in_source_document_link')" t-esc="line['document_in'].name"
+               class="font-weight-bold" target="_blank"/>
+        </xpath>
+        <xpath expr="//a[@t-if=&quot;line['document_in']&quot;]" position="attributes">
+            <attribute name="t-if">line['document_in'] and not line.get('in_source_document_link')</attribute>
+        </xpath>
+        <xpath expr="//a[@t-if=&quot;line['document_out']&quot;]" position="after">
+            <a t-if="line['document_out'] and line.get('out_source_document_link')"
+               t-att-href="line.get('out_source_document_link')" t-esc="line['document_out'].name"
+               class="font-weight-bold" target="_blank"/>
+        </xpath>
+        <xpath expr="//a[@t-if=&quot;line['document_out']&quot;]" position="attributes">
+            <attribute name="t-if">line['document_out'] and not line.get('out_source_document_link')</attribute>
+        </xpath>
+    </template>
+
+    <template id="aznut_purchase_report_replenishment_header" inherit_id="stock.report_replenishment_header">
+        <xpath expr="//h3//a[@res-model='product.template']" position="attributes">
+            <attribute name="target">_blank</attribute>
+            <attribute name="t-att-href">product_template.get_product_template_link()</attribute>
+            <attribute name="view-type"/>
+        </xpath>
+        <xpath expr="//h3//a[@res-model='product.product']" position="attributes">
+            <attribute name="target">_blank</attribute>
+            <attribute name="view-type"/>
+            <attribute name="t-att-href">product_variant.get_product_link()</attribute>
+        </xpath>
+        <xpath expr="//h6//a[@res-model='product.product']" position="attributes">
+            <attribute name="target">_blank</attribute>
+            <attribute name="view-type"/>
+            <attribute name="t-att-href">product_variant.get_product_link()</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('row')]//div" position="before">
+            <div t-if="docs.get('brands')" class="mx-3 text-center">
+                <div class="btn-group">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Used in:
+                    </a>
+                    <ul class="dropdown-menu">
+                        <t t-foreach="docs['brands']" t-as="brand">
+                            <li class="dropdown-item">Brand: <span t-esc="brand"/></li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+            <div t-if="'daily_use' in docs" class="mx-3 text-center">
+                <div class="h3">
+                    <t t-esc="docs.get('daily_use')" t-options="{'widget': 'float', 'precision': precision}"/>
+                    <t t-esc="docs['uom']" groups="uom.group_uom"/>
+                </div>
+                <div>Daily Use</div>
+            </div>
+            <div t-if="'three_months_average_consumed_quantity' in docs" class="mx-3 text-center">
+                <div class="h3">
+                    <t t-esc="docs.get('three_months_average_consumed_quantity')"
+                       t-options="{'widget': 'float', 'precision': precision}"/>
+                    <t t-esc="docs['uom']" groups="uom.group_uom"/>
+                </div>
+                <div>Average monthly <br/> for 3 month</div>
+            </div>
+            <div t-if="'avg_monthly_consumed_qty' in docs" class="mx-3 text-center">
+                <div class="h3">
+                    <t t-esc="docs.get('avg_monthly_consumed_qty')"
+                       t-options="{'widget': 'float', 'precision': precision}"/>
+                    <t t-esc="docs['uom']" groups="uom.group_uom"/>
+                </div>
+                <div>Average for 6 month</div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='pending_forecasted']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+    </template>
+</odoo>

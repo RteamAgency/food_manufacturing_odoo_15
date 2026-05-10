@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+aznut_calculator_sign_quote.access_product_calculator_settings_sign,access_product_calculator_settings_sign,aznut_calculator_sign_quote.model_product_calculator_settings_sign,base.group_user,1,1,0,0

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_calculator_tree_view" model="ir.ui.view">
+        <field name="name">aznut_calculator_sign_quote.product.calculator.tree</field>
+        <field name="model">product.calculator</field>
+        <field name="inherit_id" ref="aznut_calculator.product_calculator_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="profit" position="before">
+                <field name="commission" groups="aznut_calculator.group_calculator_manager" widget="monetary"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="main_product_calculator_tree_view" model="ir.ui.view">
+        <field name="name">aznut_calculator_sign_quote.product.calculator.tree</field>
+        <field name="model">main.product.calculator</field>
+        <field name="inherit_id" ref="aznut_calculator.main_product_calculator_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-success">calculator_status == 'signed_by_customer'</attribute>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="calculator_status"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_calculator_form_view_inherited" model="ir.ui.view">
+        <field name="name">product.calculator.form.view.inherited</field>
+        <field name="model">main.product.calculator</field>
+        <field name="inherit_id" ref="aznut_calculator.main_product_calculator_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@icon='fa-print']" position="before">
+                <button name="company_sign_quote" string="Sign" type="object"
+                        icon="fa-pencil-square-o" class="oe_stat_button"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="after">
+                <field name="signature" invisible="1"/>
+                <field name="calculator_status" invisible="1"/>
+                <field name="company_signature" invisible="1"/>
+                <field name="is_locked" invisible="1"/>
+                <div class="ribbon ribbon-top-right"
+                     attrs="{'invisible': ['|', '|',('company_signature', '=', False), ('signature', '=', True),('calculator_status','=','cancelled')]}">
+                    <span class="bg-warning">Signed by seller</span>
+                </div>
+                <div class="ribbon ribbon-top-right" attrs="{'invisible': ['|',('signature', '=', False),('calculator_status','=','cancelled')]}">
+                    <span class="bg-primary">Signed by customer</span>
+                </div>
+                <div class="ribbon ribbon-top-right" attrs="{'invisible': [('calculator_status','!=','cancelled')]}">
+                    <span class="bg-danger">Cancelled</span>
+                </div>
+            </xpath>
+            <field name="jar_exist" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="lid_exist" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="label_exist" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="lid_price" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="attrs">{
+                    'readonly': ['|', '|', ('is_locked', '=', True), ('state', '!=', 'draft'),
+                                 ('is_user_calculator_procurement', '=', True)]}</attribute>
+            </field>
+            <field name="products_ids" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('is_locked', '=', True),
+                                                      ('is_user_calculator_procurement', '=', True)]}</attribute>
+            </field>
+            <field name="jar_product_id" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)],
+                                         'invisible': [('jar_exist', '=', False)]}</attribute>
+            </field>
+            <field name="lid_product_id" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)],
+                                         'invisible': [('lid_exist', '=', False)]}</attribute>
+            </field>
+            <field name="label_finish" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)],
+                                         'invisible': [('label_exist', '=', False)]}</attribute>
+            </field>
+            <field name="chews_per_jar" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)], }</attribute>
+            </field>
+            <field name="chew_size" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="portion_grams" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="jar_weight" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="count_of_jars" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="flavour_ids" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="jar_weight" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="jar_price" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="label_price" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="shrink_price" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="monthly_exp" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="jars_per_month" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="discount_amount" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="profit" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="bacteria_gram" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="cfu_portion" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="cfu_portion_uom" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="base_ingredient_ids" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('is_locked', '=', True),
+                                                      ('is_user_calculator_procurement', '=', True)]}</attribute>
+            </field>
+            <field name="active_ingredient_ids" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('is_locked', '=', True),
+                                                      ('is_user_calculator_procurement', '=', True)]}</attribute>
+            </field>
+            <field name="note" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_locked', '=', True)]}</attribute>
+            </field>
+            <field name="report_base_ingredients" position="attributes">
+                <attribute name="attrs">
+                    {'readonly': [('is_locked', '=', True)], 'invisible': [('use_manual_report_base', '=', True)]}
+                </attribute>
+            </field>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_lock_unlock" string="Unlock" type="object"
+                        icon="fa-unlock-alt" class="oe_stat_button"
+                        attrs="{'invisible':['|',('signature','==',False),('is_locked','=',False)]}"
+                        context="{'lock_action':'unlock'}" groups="aznut_calculator.group_calculator_administrator"/>
+                <button name="action_lock_unlock" string="Lock" type="object"
+                        icon="fa-lock" attrs="{'invisible':['|',('signature','==',False),('is_locked','=',True)]}"
+                        class="oe_stat_button" context="{'lock_action':'lock'}"
+                        groups="aznut_calculator.group_calculator_administrator"/>
+            </xpath>
+            <xpath expr="//label[@for='discount_amount']//.." position="after">
+                <th>
+                    <label for="commission" groups="aznut_calculator.group_calculator_user"/>
+                </th>
+            </xpath>
+            <xpath expr="//field[@name='discount_amount']//.." position="after">
+                <td>
+                    <field name="commission" widget="monetary" attrs="{'readonly': [('is_locked', '=', True)]}"
+                           groups="aznut_calculator.group_calculator_user"/>
+                </td>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="action_cancel_product_calculator" model="ir.actions.server">
+        <field name="name">Cancel</field>
+        <field name="model_id" ref="aznut_calculator.model_main_product_calculator"/>
+        <field name="binding_model_id" ref="aznut_calculator.model_main_product_calculator"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+records.action_cancel()
+        </field>
+    </record>
+</odoo>

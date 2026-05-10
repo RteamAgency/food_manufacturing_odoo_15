@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_lot_label_inherited">
+            <t t-call="web.html_container">
+                <style>
+                    td {
+                        width: 50%!important;
+                        text-align: center;
+                    }
+                    .label_name {
+                        text-align: left;
+                        border-top: 1px solid D4D4D4;
+                        border-bottom: 1px solid D4D4D4;
+                    }
+                    .label_lot {
+                        text-align: left;
+                        padding: 15px 0;
+                        border-bottom: 1px solid D4D4D4;
+                    }
+                </style>
+                <t t-set='nRows' t-value='3'/>
+                <t t-set='nCols' t-value='2'/>
+                <t t-set="pages" t-value="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]"/>
+                <t t-foreach="pages" t-as="page_docs">
+                    <div class="page" style="height: 297mm!important;padding: 3mm 0!important;margin:3px 0;box-sizing: border-box;">
+                        <table style="height: 291mm!important;width:100%!important;border-spacing: 10px 40px;">
+                            <t t-foreach="range(nRows)" t-as="row">
+                                <tr style="height: 30%;">
+                                    <t t-foreach="range(nCols)" t-as="col">
+                                        <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                                        <t t-if="barcode_index &lt; len(page_docs)">
+                                            <t t-set="o" t-value="page_docs[barcode_index]"/>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-set="o" t-value="page_docs[0]"/>
+                                        </t>
+                                        <td style="border: 1px solid black;padding: 0 2%;">
+                                            <div class="label_name">
+                                                <h4 t-field="o.product_id.display_name"/>
+                                            </div>
+                                            <div class="label_lot">
+                                                <span>LN/SN:</span><span t-field="o.name"/>
+                                            </div>
+                                            <t t-set="bar_size" t-value="'width:96%; height: 50%;'"/>
+                                            <div style="margin-top: 60px;"
+                                                 t-field="o.name"
+                                                 t-options="{'widget': 'barcode', 'quiet': 0, 'img_style':bar_size}"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="quality_point_view_form" model="ir.ui.view">
+        <field name="name">aznut_mrp.quality.point.view.form</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_form"/>
+        <field name="arch" type="xml">
+            <field name="product_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('measure_on', '=', 'vendor')]}</attribute>
+            </field>
+            <field name="product_category_ids" position="attributes">
+                <attribute name="attrs">{'invisible': [('measure_on', '=', 'vendor')]}</attribute>
+            </field>
+            <field name="measure_frequency_type" position="attributes">
+                <attribute name="attrs">{'invisible': [('measure_on', '=', 'vendor')]}</attribute>
+            </field>
+            <field name="picking_type_ids" position="after">
+                <field name="vendor_id"
+                       attrs="{'invisible':[('measure_on','!=','vendor')],'required':[('measure_on','=','vendor')]}"/>
+            </field>
+            <field name="measure_on" position="after">
+                <label for="purchase_orders_frequency" attrs="{'invisible': [('measure_on', '!=', 'vendor')]}"/>
+                <div class="o_row" attrs="{'invisible': [('measure_on', '!=', 'vendor')]}">
+                    <span>Every </span>
+                    <field name="purchase_orders_frequency" nolabel="1"/>
+                    <span> POs</span>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

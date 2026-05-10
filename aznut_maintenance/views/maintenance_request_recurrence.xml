@@ -1,0 +1,84 @@
+<odoo>
+    <record id="maintenance_request_recurrence_tree" model="ir.ui.view">
+        <field name="name">maintenance.request.recurrence.tree</field>
+        <field name="model">maintenance.request.recurrence</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="maintenance_request_id"/>
+                <field name="next_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="maintenance_request_recurrence_form" model="ir.ui.view">
+        <field name="name">maintenance.request.recurrence.form</field>
+        <field name="model">maintenance.request.recurrence</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button name="action_open_created_maintenance_requests" type="object" class="oe_stat_button"
+                                icon="fa-wrench"
+                                attrs="{'invisible': [('created_maintenance_requests_ids', '=', False)]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Requests</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Recurrence Period">
+                            <field name="repeat_day"/>
+                            <field name="repeat_number"/>
+                            <field name="repeat_period"/>
+                        </group>
+                        <group string="Recurrence Main Settings">
+                            <field name="maintenance_request_id" readonly="1"/>
+                            <field name="next_date"/>
+                            <field name="active" invisible="1"/>
+                            <field name="created_maintenance_requests_ids" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="maintenance_request_recurrence_wizard_action" model="ir.actions.act_window">
+        <field name="name">Create New Recurrence</field>
+        <field name="res_model">maintenance.request.recurrence.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="aznut_maintenance.maintenance_request_recurrence_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="maintenance_request_recurrence_action" model="ir.actions.act_window">
+        <field name="name">Recurrencies</field>
+        <field name="res_model">maintenance.request.recurrence</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="aznut_maintenance.maintenance_request_recurrence_tree"/>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <menuitem id="maintenance_request_recurrence_main"
+              parent="maintenance.menu_maintenance_title"
+              name="Recurrence"
+              sequence="4"/>
+
+    <menuitem id="maintenance_request_recurrence"
+              action="aznut_maintenance.maintenance_request_recurrence_action"
+              name="Recurrencies"
+              parent="aznut_maintenance.maintenance_request_recurrence_main"
+              sequence="1"/>
+
+    <menuitem id="maintenance_request_recurrence_wizard"
+              action="aznut_maintenance.maintenance_request_recurrence_wizard_action"
+              name="Create New Recurrence"
+              parent="aznut_maintenance.maintenance_request_recurrence_main"
+              sequence="2"/>
+</odoo>

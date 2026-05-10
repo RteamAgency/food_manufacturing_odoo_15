@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="aznut_dashboard_ceo.Activity" t-inherit="mail.Activity" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_Activity_info')]//a[hasclass('o_Activity_detailsButton')]" position="after">
+
+            <t t-if="activity.importance_level">
+                <t t-if="activity.importance_level == 'normal'">
+                    <span class="badge badge-success">Normal</span>
+                </t>
+                <t t-if="activity.importance_level == 'urgent'">
+                    <span class="badge badge-danger">Urgent</span>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-if='activity.canWrite']" position="after">
+            <AttachmentList t-if="activity.attachmentList" attachmentListLocalId="activity.attachmentList.localId"/>
+        </xpath>
+    </t>
+
+</templates>

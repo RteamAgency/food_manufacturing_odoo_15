@@ -1,0 +1,43 @@
+<odoo>
+    <record id="sale_margin_sale_order_inherited" model="ir.ui.view">
+        <field name="name">sale.order.margin.view.form.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='margin']" position="attributes">
+                <attribute name="groups">aznut_sale_margin.group_margin_access</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('text-nowrap')]" position="attributes">
+                <attribute name="groups">aznut_sale_margin.group_margin_access</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_margin_sale_order_line_form_inherited" model="ir.ui.view">
+        <field name="name">sale.margin.sale.order.line.form.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='margin']" position="attributes">
+                <attribute name="groups">aznut_sale_margin.group_margin_access</attribute>
+            </xpath>
+            <xpath expr="//field[@name='margin_percent']" position="attributes">
+                <attribute name="groups">aznut_sale_margin.group_margin_access</attribute>
+            </xpath>
+            <xpath expr="//field[@name='purchase_price']" position="attributes">
+                <attribute name="groups">aznut_sale_margin.group_margin_access</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_margin_sale_order_line_inherited" model="ir.ui.view">
+        <field name="name">sale.margin.sale.order.line.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order_line"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_price']" position="attributes">
+                <attribute name="groups">aznut_sale_margin.group_margin_access</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

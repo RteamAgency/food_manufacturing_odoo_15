@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="quality_point_view_form_inherit_mrp" model="ir.ui.view">
+        <field name="name">aznut_mrp.quality.point.view.form.inherit.mrp</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="mrp_workorder.quality_point_view_form_inherit_mrp"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='worksheet']" position="after">
+                <field name="production_batches"/>
+                <field name="not_create_components" attrs="{'invisible':[('production_batches','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

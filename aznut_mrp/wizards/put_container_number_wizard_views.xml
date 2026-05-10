@@ -1,0 +1,68 @@
+<odoo>
+    <record id="put_container_number_wizard" model="ir.ui.view">
+        <field name="name">aznut_mrp.put.container.number.wizard</field>
+        <field name="model">put.container.number.wizard</field>
+        <field name="arch" type="xml">
+            <style>
+                .put_container_number_form {
+                    button {
+                        font-size: 20px;
+                        width: 100%;
+                        height: 60px
+                    }
+                }
+            </style>
+            <script>
+                document.querySelectorAll('.modal-dialog').forEach(parent => {
+                if (parent.querySelector('.put_container_number_form')) {
+                parent.style.maxWidth ='60%';
+                }
+                });
+            </script>
+            <form class="put_container_number_form">
+                <sheet>
+                    <div class="oe_title" style=" text-align: center;margin: 10px auto 0;">
+                        <h1>
+                            <field name="container_number" style="font-size: 35px"/>
+                        </h1>
+                    </div>
+                    <table style="width: 80%; margin: 0 auto 20px;">
+                        <tr>
+                            <td><button name="set_number" context="{'number':1}" string="1" type="object"
+                                        class="btn-primary"/></td>
+                            <td><button name="set_number" context="{'number':2}" string="2" type="object"
+                                        class="btn-primary"/></td>
+                            <td><button name="set_number" context="{'number':3}" string="3" type="object"
+                                        class="btn-primary"/></td>
+                        </tr>
+                        <tr>
+                            <td><button name="set_number" context="{'number':4}" string="4" type="object"
+                                        class="btn-primary"/></td>
+                            <td><button name="set_number" context="{'number':5}" string="5" type="object"
+                                        class="btn-primary"/></td>
+                            <td><button name="set_number" context="{'number':6}" string="6" type="object"
+                                        class="btn-primary"/></td>
+                        </tr>
+                        <tr>
+                            <td><button name="set_number" context="{'number':7}" string="7" type="object"
+                                        class="btn-primary"/></td>
+                            <td><button name="set_number" string="8" context="{'number':8}" type="object"
+                                        class="btn-primary"/></td>
+                            <td><button name="set_number" string="9" context="{'number':9}" type="object"
+                                        class="btn-primary"/></td>
+                        </tr>
+                        <tr>
+                            <td><button name="delete_number" icon="fa-eraser" type="object"
+                                        class="btn-warning"/></td>
+                            <td><button name="set_number" string="0" context="{'number':0}" type="object"
+                                        class="btn-primary"/></td>
+                            <td><button name="confirm_number" icon="fa-check" type="object"
+                                        class="btn-success"/></td>
+                        </tr>
+                    </table>
+                    <footer/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

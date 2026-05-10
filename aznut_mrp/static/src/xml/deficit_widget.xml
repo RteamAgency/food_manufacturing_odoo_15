@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="DeficitWidget">
+        <div>
+            <t t-if="is_deficit">
+                <i style="color: red;" class="fa fa-exclamation-circle" aria-hidden="true"/>
+            </t>
+        </div>
+    </t>
+</templates>

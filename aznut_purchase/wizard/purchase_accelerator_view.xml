@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="purchase_accelerator_wizard_form" model="ir.ui.view">
+        <field name="name">aznut_mrp.purchase.accelerator.wizard.form</field>
+        <field name="model">purchase.accelerator.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="components_number"/>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"/>
+                    <button special="cancel" data-hotkey="z" string='Cancel' class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="purchase_accelerator_wizard_line_tree" model="ir.ui.view">
+        <field name="name">aznut_mrp.purchase.accelerator.wizard.line.tree</field>
+        <field name="model">purchase.accelerator.wizard.line</field>
+        <field name="arch" type="xml">
+            <tree expand="1">
+                <field name="product_id"/>
+                <field name="mo_info"/>
+                <field name="po_info"/>
+                <field name="batches_quantity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_accelerator_wizard_line_search" model="ir.ui.view">
+        <field name="name">aznut_mrp.purchase.accelerator.wizard.line.search</field>
+        <field name="model">purchase.accelerator.wizard.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <group expand="1" string="Group By">
+                    <filter string="Orders" name="group_by_mrp_orders_ids"
+                            context="{'group_by':'mrp_orders_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

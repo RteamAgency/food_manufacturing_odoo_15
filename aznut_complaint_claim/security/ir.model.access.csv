@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_complaint_claim_wizard,access_complaint_claim_wizard,model_complaint_claim_wizard,base.group_user,1,1,1,1
+access_complaint_claim_source,access_complaint_claim_source,model_complaint_claim_source,base.group_user,1,1,1,1
+access_complaint_claim,access_complaint_claim,model_complaint_claim,base.group_user,1,1,0,0
+access_complaint_claim_signature_line,access_complaint_claim_signature_line,model_complaint_claim_signature_line,base.group_user,1,1,0,0
+access_recall_wizard,access_recall_wizard,model_recall_wizard,base.group_user,1,1,1,1
+access_recall_recall,access_recall_recall,model_recall_recall,base.group_user,1,1,0,1

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_containers_labels">
+            <t t-call="web.html_container">
+                <style>
+                    .label_div {
+                        border: 1px solid black;
+                        width: 100% !important;
+                        padding: 0 30px 30px 30px;
+                        margin-bottom: 20px;
+
+                        h2 {
+                            margin-bottom: 0 !important;
+                        }
+
+                        td {
+                            padding: 6px !important;
+                        }
+
+                        th {
+                            padding: 6px !important;
+                        }
+
+                        table {
+                            width: 90% !important;
+                            margin-bottom: 0;
+                            font-size: 18px;
+                        }
+
+                    }
+
+                    .pdf-flex {
+                        display: -webkit-box;
+                        display: -webkit-flex;
+                    }
+
+                </style>
+                <t t-foreach="docs.filtered(lambda wo: len(wo._get_report_containers_labels_data()))" t-as="wo">
+                    <div class="page" style="padding-left: 2%;page-break-before:always;">
+                        <div style="width:90%!important;">
+                            <t t-foreach="wo._get_report_containers_labels_data()" t-as="row">
+                                <t t-set="number" t-value="(row_index or 0)+1"/>
+                                <div t-attf-style="margin-top:{{ 380 if  number % 2 == 0 else 0}}px; padding-top:{{ 10 if  number % 2 == 1 else 0}}px;">
+                                    <div class="label_div" style="page-break-inside: avoid;">
+                                        <h4 t-esc="wo.display_name"/>
+                                        <h2>Container #<t t-esc="row"/></h2>
+                                        <table style="text-align:left!important;">
+                                            <thead>
+                                                <tr>
+                                                    <th style='width:33%!important;'>Product name</th>
+                                                    <th style='width:33%!important;'>Lot number</th>
+                                                    <th style='width:33%!important;'>How many pounds</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="wo._get_report_containers_labels_data().get(row)"
+                                                   t-as="line">
+                                                    <tr>
+                                                        <td><span t-esc="line.component_id.display_name"/></td>
+                                                        <td><span
+                                                                t-esc="', '.join(line.reserved_lots_ids.mapped('name'))"/></td>
+                                                        <td><span t-esc="'{:.2f}'.format(line._get_weight())"/> Lb</td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                        <div style="margin-top: 12px;font-size: 18px;font-weight: bold">
+                                            Total Weight: <t t-esc="'{:.2f}'.format(wo._get_total_weight(row))"/> Lb;
+                                            <span style="margin-left: 7px;display: inline-block;">Actual Weight:
+                                                <span style="text-decoration: underline;opacity:0.8;">__________</span>
+                                            </span>
+                                        </div>
+                                        <div style="margin-top: 8px;font-size: 18px;font-weight: bold">
+                                            Date Of Premix: <t t-esc="wo.date_start.strftime('%m-%d-%Y')"/>
+                                        </div>
+                                        <div class="pdf-flex">
+                                            <div style="margin-top: 8px;font-size: 18px;font-weight: bold">
+                                                <span>Responsible Person Sign:
+                                                    <span style="text-decoration: underline;opacity:0.8;">
+                                                        __________</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

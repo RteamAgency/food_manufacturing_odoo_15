@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">aznut_sale.stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="qa_status" widget="selection_badge" decoration-info="qa_status == 'approved'"
+                       decoration-warning="qa_status == 'not_approved'"/>
+            </field>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="after">
+                <field name="is_order_released" invisible="1"/>
+                <widget name="web_ribbon" title="Not Released" bg_color="bg-danger"
+                        attrs="{'invisible': ['|',('is_order_released', '=', True),('picking_type_code','!=','outgoing')]}"/>
+                 <widget name="web_ribbon" title="Order Released" bg_color="bg-success"
+                        attrs="{'invisible': ['|',('is_order_released', '=', False),('picking_type_code','!=','outgoing')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

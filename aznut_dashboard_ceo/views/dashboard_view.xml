@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="action_dynamic_dashboard" model="ir.actions.client">
+            <field name="name">Dashboard</field>
+            <field name="tag">dynamic_dashboard</field>
+        </record>
+
+        <menuitem name="CEO" 
+                  id="menu_dashboard" 
+                  sequence="1" 
+                  groups="aznut_dashboard_ceo.group_ceo_dashboard_administrator"
+                  web_icon="aznut_dashboard_ceo,static/description/icon.png"/>
+        <menuitem name="Dashboards" id="menu_dynamic_dashboard" parent="aznut_dashboard_ceo.menu_dashboard"
+                  sequence="1" action="action_dynamic_dashboard"/>
+    </data>
+</odoo>

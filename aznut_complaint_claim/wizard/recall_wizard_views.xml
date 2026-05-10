@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="recall_wizard_form" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.recall.wizard.form</field>
+        <field name="model">recall.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="state" invisible="1"/>
+                            <field name="move_id" invisible="1" attrs="{'required':[('state','=','finish')]}"/>
+                            <field name="lot_id"
+                                   attrs="{'required':[('state','=','initial')],'invisible':[('state','!=','initial')]}"
+                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            <field name="product_id"/>
+                            <field name="component_lots_ids" widget="many2many_tags"
+                                   attrs="{'invisible':[('state','!=','finish')]}"/>
+                            <field name="allowed_production_ids" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="recall_class"
+                                   attrs="{'invisible':[('state','!=','initial')]}"/>
+                            <field name="production_id"
+                                   attrs="{'required':[('state','=','initial')],'invisible':[('lot_id','=',False)]}"
+                                   domain="[('id','in',allowed_production_ids)]"
+                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                        </group>
+                    </group>
+                    <group attrs="{'invisible':[('state','!=','finish')]}">
+                        <div class="d-flex">
+                            <label for="mass_orders_ids" string="Mass Sending"/>
+                            <field class="w-50 ml-3" name="mass_orders_ids" domain="[('id','in',orders_ids)]"
+                                   widget="many2many_tags"
+                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            <button name="send_recall_mail_mass" type="object" string="Send"
+                                    class="btn-secondary ml-3"/>
+                        </div>
+                    </group>
+                    <field name="orders_ids"
+                           attrs="{'required':[('state','=','finish')],'invisible':[('state','!=','finish')]}">
+                        <tree>
+                            <field name="recall_is_sent" invisible="1"/>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="state"/>
+                            <button class="btn-success" attrs="{'invisible':[('recall_is_sent','=',True)]}"
+                                    name="send_recall_mail" string="Send" type="object"/>
+                            <button class="btn-danger" attrs="{'invisible':[('recall_is_sent','=',False)]}"
+                                    name="send_recall_mail" string="Sent" type="object"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" attrs="{'invisible':[('state','!=','initial')]}"/>
+                    <button name="send_recall_mail_all" type="object" string="Send Recall Mail All"
+                            class="btn-primary" attrs="{'invisible':[('state','!=','finish')]}"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

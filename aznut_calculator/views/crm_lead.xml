@@ -1,0 +1,44 @@
+<odoo>
+    <record id="crm_lead_form_inherited" model="ir.ui.view">
+        <field name="name">aznut_calculator.crm.lead.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="open_product_calculator"
+                        icon="fa-calculator" groups="aznut_calculator.group_calculator_user">
+                    <div class="o_stat_info">
+                        <field name="product_calculators_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Chews Calculators</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" type="object" name="open_powder_calculator"
+                        icon="fa-calculator" groups="aznut_calculator.group_calculator_user">
+                    <div class="o_stat_info">
+                        <field name="powder_calculators_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Powder Calculators</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" string="Sample Test" type="object" name="open_sample_test_order"
+                        icon="fa-wrench" attrs="{'invisible':[('sample_test_orders_ids','=',[])]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
+                <field name="main_product_calculator_id" invisible="1"/>
+                <field name="main_powder_calculator_id" invisible="1"/>
+                <field name="sample_test_orders_ids" invisible="1"/>
+                <field name="show_sample_test_button" invisible="1"/>
+                <button name="action_product_send_quote" type="object" string="Send Product Quote" class="oe_highlight"
+                        attrs="{'invisible': [('product_calculators_count', '=', 0)]}"
+                        groups="aznut_calculator.group_calculator_user"/>
+                <button name="action_powder_send_quote" type="object" string="Send Powder Quote" class="oe_highlight"
+                        attrs="{'invisible': [('powder_calculators_count', '=', 0)]}"
+                        groups="aznut_calculator.group_calculator_user"/>
+                <button name="action_open_sample_test_wizard" type="object" string="Sample Test" class="oe_highlight"
+                        attrs="{'invisible': [('show_sample_test_button', '=', False)]}"/>
+                <button name="action_send_sample_test_report" type="object" string="Send Sample Test Report"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('show_sample_test_button', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

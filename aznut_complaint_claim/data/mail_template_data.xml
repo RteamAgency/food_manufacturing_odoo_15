@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="complaint_claim_assign_mail" model="mail.template">
+            <field name="name">Complaint Claim: Assign Mail</field>
+            <field name="model_id" ref="aznut_complaint_claim.model_complaint_claim"/>
+            <field name="subject">New Complaint Claim - {{object.name}}</field>
+            <field name="partner_to">{{ctx.get('partner_to')}}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello!
+                        <br/><br/>
+                        We have new open case complaint claim.
+                        <a t-att-href="ctx.get('claim_url')" t-out="object.display_name or ''"
+                           style="color:white;background-color: #875A7B; padding: 4px 50px 4px 50px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;"/>
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <record id="recall_mail_template" model="mail.template">
+            <field name="name">Recall: Mail</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ctx.get('recall_subject', 'No Subject')}}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Dear <span t-if="ctx.get('partner_name')" t-esc="ctx.get('partner_name','Partner')"/>,<br/>
+                        We are writing to inform you of an <b>urgent voluntary recall</b> of the following product
+                        manufactured
+                        and distributed by <b>Best Practice Way LLC:</b><br/>
+                        <t t-if="ctx.get('products_names')"><br/><b>Product Name:</b> <t
+                                t-esc="ctx.get('products_names')"/></t>
+                        <t t-if="ctx.get('lots_names')"><br/><b>Lot Number:</b> <t t-esc="ctx.get('lots_names')"/></t>
+                        <t t-if="ctx.get('manufacture_dates')"><br/><b>Manufacture Date:</b> <t
+                                t-esc="ctx.get('manufacture_dates')"/></t>
+                        <t t-if="ctx.get('lots_expirations')"><br/><b>Expiration Date:</b> <t
+                                t-esc="ctx.get('lots_expirations')"/></t>
+                        <t t-if="ctx.get('recall_class')"><br/><b>Recall Classification:</b> <t
+                                t-esc="ctx.get('recall_class')"/></t>
+                        <br/><br t-if="ctx.get('recall_class')"/>
+                        <b>Reason for Recall:</b><br/>
+                        This recall is being initiated due to <t
+                            t-esc="ctx.get('recall_class_description', 'No Description')"/>.<br/>
+                        This issue was identified during our internal quality assurance procedures and is being
+                        addressed
+                        immediately in accordance with FDA and SQF standards.
+                        <br/><br/>
+                        <b>Actions Required:</b><br/>
+                        We kindly ask that you:<br/>
+                        • <b>Immediately discontinue use or distribution</b> of the affected product.<br/>
+                        • <b>Check your inventory</b> and segregate all units from the above-mentioned lot.<br/>
+                        • <b>Notify your downstream customers</b> (if any) who may have received this lot.<br/>
+                        • <b>Complete and return the attached Recall Response Form</b> within 48 hours of receipt of
+                        this notice.
+                        <br/><br/>
+                        <b>Contact Information:</b><br/>
+                        If you have any questions or concerns, or require assistance with product handling or logistics,
+                        please contact:<br/>
+                        <b>Email</b>: recall@bpwlab.com<br/>
+                        <b>Phone: +1 954-589-1232</b>
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>

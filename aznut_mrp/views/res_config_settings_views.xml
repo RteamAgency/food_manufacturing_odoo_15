@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+        <field name="name">aznut_mrp.res.config.settings.view.form.inherit.mrp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='mrp_byproduct']" position="after">
+                <div class="col-lg-6 col-12 o_setting_box" id="mrp_label_per_quantity"
+                     title="Label Per Quantity">
+                    <div class="o_setting_right_pane">
+                        <label for="label_per_quantity"/>
+                        <div class="text-muted">
+                            Allow to configure how much quantity per one label
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <field name="label_per_quantity" class="o_light_label"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 o_setting_box" id="mrp_store_transfers"
+                     title='Store Transfers Rule'>
+                    <div class="o_setting_right_pane">
+                        <div>
+                            <label for="picking_type_id"/>
+                            <div class="text-muted">
+                                Allow to configure picking type for store transfers
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="picking_type_id" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div attrs="{'invisible':[('picking_type_id','=', False)]}" class="pt-4">
+                            <label for="location_id"/>
+                            <div class="text-muted">
+                                Allow to configure source location for store transfers
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="location_id" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div attrs="{'invisible':[('picking_type_id','=', False)]}" class="pt-4">
+                            <label for="location_dest_id"/>
+                            <div class="text-muted">
+                                Allow to configure destination location for store transfers
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="location_dest_id" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='show_margins']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="hide_total_margin">
+                    <div class="o_setting_left_pane">
+                        <field name="hide_total_margin"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="hide_total_margin"/>
+                        <div class="text-muted">
+                            Disable total margin field from sale order form view
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

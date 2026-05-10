@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="quality_alert_metal_detector_document">
+            <div class="page">
+                <t t-set="log_images" t-value="doc.get_log_note_images()"/>
+                <h1 class="mt-4 mb-4">
+                    Quality Alert: <span t-field="doc.name"/>
+                </h1>
+                <div t-if="doc.title">
+                    <strong>Title : </strong>
+                    <span t-field="doc.title"/>
+                </div>
+                <div t-if="doc.product_id">
+                    <strong>Product : </strong>
+                    <span t-field="doc.product_id"/>
+                </div>
+                <div t-if="doc.workcenter_id">
+                    <strong>Work Center : </strong>
+                    <span t-field="doc.workcenter_id"/>
+                </div>
+                <div t-if="doc.team_id">
+                    <strong>Team : </strong>
+                    <span t-field="doc.team_id"/>
+                </div>
+                <div t-if="doc.user_id">
+                    <strong>Responsible : </strong>
+                    <span t-field="doc.user_id"/>
+                </div>
+                <div>
+                    <strong>Creation Date : </strong>
+                    <span t-field="doc.create_date"/>
+                </div>
+                <div t-if="doc.partner_id">
+                    <strong>Vendor: </strong>
+                    <span t-field="doc.partner_id"/>
+                </div>
+                <div t-if="doc.email_cc">
+                    <strong>Email cc : </strong>
+                    <span t-field="doc.email_cc"/>
+                </div>
+                <div t-if="doc.date_assign">
+                    <strong>Date Assigned : </strong>
+                    <span t-field="doc.date_assign"/>
+                </div>
+            
+                <div t-if="doc.description or log_images">
+                    <hr/>
+                    <div>
+                        <strong>Description : </strong>
+                        <span t-field="doc.description"/>
+                    </div>
+                    <t t-if="log_images" t-foreach="log_images" t-as="image_attach">
+                        <img t-att-src="'/web/image/ir.attachment/%s/datas' % image_attach.id" style="max-width:33%;"/>
+                    </t>
+                </div>
+                <div t-if="not is_html_empty(doc.action_corrective)">
+                    <hr/>
+                    <div>
+                        <strong>Corrective Actions : </strong>
+                        <span t-field="doc.action_corrective"/>
+                    </div>
+                </div>
+                <div t-if="not is_html_empty(doc.action_preventive)">
+                    <hr/>
+                    <div>
+                        <strong>Preventive Actions : </strong>
+                        <span t-field="doc.action_preventive"/>
+                    </div>
+                </div>
+            </div>
+    </template>
+
+    <template id="report_quality_metal_detector">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <t t-call="aznut_mrp_quality_video.quality_alert_metal_detector_document" t-lang="doc.partner_id.lang"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

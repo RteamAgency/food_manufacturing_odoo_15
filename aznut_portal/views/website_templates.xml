@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="inherit_sort" inherit_id="website_sale.sort" customize_show="True" name="Inherit Show Sort by">
+        <xpath expr="//t[@t-set='list_price_asc_label']" position="after">
+            <t t-set="brand_asc_label">Brand</t>
+        </xpath>
+        <xpath expr="//t[@t-set='website_sale_sortable']" position="after">
+            <t t-set="website_sale_sortable"
+               t-value="website_sale_sortable + [(brand_asc_label, 'is_brand_empty asc, brand desc')]"/>
+        </xpath>
+    </template>
+
+    <template inherit_id="website_sale.product" id="product_inherit">
+        <xpath expr="//t[@t-set='additional_title']" position="after">
+            <t t-set="has_this_product_in_order"
+               t-value="product.id in website.sale_get_order().mapped('order_line.product_id.product_tmpl_id.id') and not website.sale_get_order().confirmed_by_client"/>
+        </xpath>
+        <xpath expr="//a[@id='add_to_cart']" position="attributes">
+            <attribute name="t-attf-class">btn btn-primary btn-lg js_check_product a-submit my-1 mr-1 px-5
+                font-weight-bold flex-grow-1
+                {{'confirmed-order' if website.sale_get_order().confirmed_by_client else 'not-confirmed-order'}}</attribute>
+            <attribute name="class"/>
+        </xpath>
+        <xpath expr="//div[@id='product_attributes_simple']" position="before">
+            <form id="confirm_order_form" class="w-50" action="/sale_order/confirm_order" method="POST"
+                  t-attf-style="display:{{'block' if has_this_product_in_order else 'none'}}!important">
+                <div class="d-inline w-100">
+                    <span name="to_show_confirm" id="to_show_confirm"
+                          t-att-value="1 if product.id in website.sale_get_order().mapped('order_line.product_id.product_tmpl_id.id') and not website.sale_get_order().confirmed_by_client else 0"/>
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <a data-animation-selector=".o_wsale_product_images" role="button"
+                       id="confirm_order_button"
+                       class="btn btn-secondary btn-lg js_check_product a-submit my-1 mr-1 px-3 font-weight-bold flex-grow-1 w-100"
+                       href="#"><i class="fa fa-check mr-2"/>Confirm Order</a>
+                    <div id="product_option_block" class="d-inline-block align-middle"/>
+                </div>
+            </form>
+            <div class="p-1" t-if="product.batch">
+                <h4>Batches (per batch / <t t-esc="product.batch"/> jars):</h4>
+                <div class="css_quantity input-group">
+                    <span t-att-data-batches-count="product.batch"/>
+                    <div class="input-group-prepend">
+                        <button t-attf-href="#"
+                                class="btn btn-primary float_left js_add_batches_cart_json d-none d-md-inline-block"
+                                aria-label="Remove one" title="Remove one">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="batches_count" class="js_batch_quantity form-control quantity" data-min='0'
+                           t-att-value="str(product._get_batches_count(add_qty or 1))"/>
+                    <div class="input-group-append">
+                        <button t-attf-href="#"
+                                class="btn btn-primary float_left js_add_batches_cart_json d-none d-md-inline-block"
+                                aria-label="Add one" title="Add one">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

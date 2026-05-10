@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">aznut_sale.product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_standard_price']" position="inside">
+                <field name="batch"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">aznut_sale.product.template.product.kanban</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="sale_ok"/>
+                <field name="purchase_ok"/>
+            </xpath>
+            <xpath expr="//div[@name='product_lst_price']" position="attributes">
+                <attribute name="t-if">record.sale_ok.raw_value</attribute>
+            </xpath>
+            <xpath expr="//div[@name='product_lst_price']" position="after">
+                <div name="product_lst_price" class="mt-1" t-if="record.purchase_ok.raw_value">
+                    Cost: <field name="standard_price" widget="monetary"
+                                 options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_add_to_website_prd_tmpl" model="ir.actions.server">
+        <field name="name">Add To Website</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+products = records.mapped('product_variant_ids')
+products.write({'website_published': True})
+        </field>
+    </record>
+
+    <record id="action_remove_from_website_prd_tmpl" model="ir.actions.server">
+        <field name="name">Remove From Website</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+products = records.mapped('product_variant_ids')
+products.write({'website_published': False})
+        </field>
+    </record>
+
+    <record id="action_add_to_website_prd" model="ir.actions.server">
+        <field name="name">Add To Website</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+records.write({'website_published': True})
+        </field>
+    </record>
+
+    <record id="action_remove_from_website_prd" model="ir.actions.server">
+        <field name="name">Remove From Website</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+records.write({'website_published': False})
+        </field>
+    </record>
+
+    <record id="action_open_add_brand_wizard" model="ir.actions.server">
+        <field name="name">Add Brand</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+prd_templates = records.mapped('product_tmpl_id')
+action = prd_templates.open_add_brand_wizard()
+        </field>
+    </record>
+
+    <record id="action_open_add_brand_wizard_prd_template" model="ir.actions.server">
+        <field name="name">Add Brand</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+action = records.open_add_brand_wizard()
+        </field>
+    </record>
+
+    <menuitem name="Products"
+              id="menu_products_main"
+              web_icon="aznut_sale,static/description/icon.png"
+              sequence="10"
+              groups="base.group_user"
+              action="purchase.product_normal_action_puchased"/>
+
+    <menuitem name="Products"
+              id="menu_product_template"
+              sequence="1"
+              action="purchase.product_normal_action_puchased"
+              parent="aznut_sale.menu_products_main"/>
+
+    <menuitem name="Product Variants"
+              id="menu_product_product"
+              sequence="2"
+              action="purchase.product_product_action"
+              parent="aznut_sale.menu_products_main"/>
+</odoo>

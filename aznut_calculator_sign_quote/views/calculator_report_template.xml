@@ -1,0 +1,49 @@
+<odoo>
+    <template id="portal_quote_report_template" inherit_id="aznut_calculator.report_calculator_product"
+              primary="True">
+        <xpath expr="//t[@t-foreach='docs']" position="attributes">
+            <attribute name="t-foreach" remove="docs" add="quote" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-call='web.html_container']" position="attributes">
+            <attribute name="t-call" remove="web.html_container"/>
+        </xpath>
+    </template>
+
+    <template id="portal_powder_quote_report_template" inherit_id="aznut_calculator.report_calculator_powder"
+              primary="True">
+        <xpath expr="//t[@t-foreach='docs']" position="attributes">
+            <attribute name="t-foreach" remove="docs" add="quote" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-call='web.html_container']" position="attributes">
+            <attribute name="t-call" remove="web.html_container"/>
+        </xpath>
+    </template>
+
+    <template id="aznut_signatures_inherit" inherit_id="aznut_calculator.aznut_signatures">
+        <xpath expr="//t[@t-value='o.partner_id.name']" position="after">
+            <t t-set="date" t-value="o.signed_on"/>
+            <t t-set="signature" t-value="o.signature"/>
+        </xpath>
+        <xpath expr="//t[@t-value='company.partner_id.name']" position="after">
+            <t t-set="date" t-value="o.company_signed_on"/>
+            <t t-set="signature" t-value="o.company_signature"/>
+        </xpath>
+    </template>
+
+    <template id="aznut_signature_inherit" inherit_id="aznut_calculator.aznut_signature">
+        <xpath expr="//td[@id='signature_td']" position="replace">
+            <td t-if="signature">
+                <img t-attf-src="data:image/jpg;base64,{{ signature }}"
+                     style="max-height: 3rem;max-width: 60%; height: 100%"/>
+            </td>
+
+            <td t-else="" id="signature_td" style="border-bottom: 1px solid black; max-height: 3rem; height: 100%"></td>
+        </xpath>
+        <xpath expr="//td[@id='date_td']" position="replace">
+            <td t-if="date">
+                <span t-esc="date"/>
+            </td>
+            <td t-else="" style="border-bottom: 1px solid black;"></td>
+        </xpath>
+    </template>
+</odoo>

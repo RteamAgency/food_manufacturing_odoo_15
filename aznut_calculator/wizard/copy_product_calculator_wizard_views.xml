@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="copy_product_calculator_wizard_form" model="ir.ui.view">
+        <field name="name">copy.product.calculator.wizard.form</field>
+        <field name="model">copy.product.calculator.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="allowed_calculator_ids" invisible="1"/>
+                            <field name="main_calculator_id" invisible="1"/>
+                            <field name="not_allowed_products_ids" invisible="1"/>
+                            <field name="calculator_product_category_id" invisible="1"/>
+                            <field name="ready_jar_cost" invisible="1"/>
+                            <field name="calculator_id" domain="[('id','in',allowed_calculator_ids)]"
+                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            <field name="product_id" context="{'default_list_price': ready_jar_cost,
+                                           'default_categ_id':calculator_product_category_id,
+                                           'default_detailed_type':'product',
+                                           'default_sale_ok':True,
+                                           'default_invoice_policy':'order',
+                                           'calculator_products':True,
+                                           }"
+                                   domain="[('id','not in',not_allowed_products_ids),('detailed_type', '=','product')]"/>
+                        </group>
+                        <group>
+                            <field name="product_tmpl_id" invisible="1"/>
+                            <field name="include_bom" attrs="{'readonly':[('product_id','=',False)]}"/>
+                            <field name="bom_id" domain="[('product_tmpl_id','=',product_tmpl_id)]"
+                                   attrs="{'invisible':[('include_bom','=',False)]}"
+                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Base ingredients">
+                            <field name="base_ingredient_ids">
+                                <tree>
+                                    <field name="product_id"/>
+                                    <field name="quantity"
+                                           groups="aznut_calculator.group_calculator_administrator"/>
+                                    <field name="uom_id" groups="aznut_calculator.group_calculator_administrator"/>
+                                    <field name="total_cost" widget="monetary"
+                                           groups="aznut_calculator.group_calculator_administrator"/>
+                                    <field name="cost_per_lb" widget="monetary"
+                                           groups="aznut_calculator.group_calculator_administrator"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Active Ingredients">
+                            <field name="active_ingredient_ids">
+                                <tree>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="product_id" options="{'no_create_edit':True,'no_create':True}"/>
+                                        <field name="quantity" string="Quantity"/>
+                                        <field name="active_ingredient_uom_id" string=" "/>
+                                        <field name="cost_per_lb" widget="monetary"
+                                               groups="aznut_calculator.group_calculator_administrator"/>
+                                        <field name="ingredient_cost_per_jar" widget="monetary"
+                                               groups="aznut_calculator.group_calculator_administrator"/>
+                                        <field name="readonly_quantity"
+                                               groups="aznut_calculator.group_calculator_administrator" string="Active Quantity"/>
+                                        <field name="uom_id" string=" "
+                                               groups="aznut_calculator.group_calculator_administrator"/>
+                                        <field name="total_cost" widget="monetary"
+                                               groups="aznut_calculator.group_calculator_administrator"/>
+                                        <field name="calculator_id" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
+                                    </tree>
+                            </field>
+                        </page>
+                        <page string="BoM Lines" attrs="{'invisible':[('bom_id','=',False)]}">
+                            <field name="wizard_lines" readonly="0" widget="one2many">
+                                <tree editable="top">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="cost_per_lb" groups="aznut_calculator.group_calculator_administrator" widget="monetary"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="copy_powder_calculator_wizard_form" model="ir.ui.view">
+        <field name="name">copy.powder.calculator.wizard.form</field>
+        <field name="model">copy.powder.calculator.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="allowed_calculator_ids" invisible="1"/>
+                            <field name="main_calculator_id" invisible="1"/>
+                            <field name="not_allowed_products_ids" invisible="1"/>
+                            <field name="calculator_product_category_id" invisible="1"/>
+                            <field name="ready_jar_cost" invisible="1"/>
+                            <field name="calculator_id" domain="[('id','in',allowed_calculator_ids)]"
+                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                            <field name="product_id" context="{'default_list_price': ready_jar_cost,
+                                           'default_categ_id':calculator_product_category_id,
+                                           'default_detailed_type':'product',
+                                           'default_sale_ok':True,
+                                           'default_invoice_policy':'order',
+                                           'calculator_products':True,
+                                           }"
+                                   domain="[('id','not in',not_allowed_products_ids),('detailed_type', '=','product')]"/>
+                        </group>
+                        <group>
+                            <field name="product_tmpl_id" invisible="1"/>
+                            <field name="include_bom" attrs="{'readonly':[('product_id','=',False)]}"/>
+                            <field name="bom_id" domain="[('product_tmpl_id','=',product_tmpl_id)]"
+                                   attrs="{'invisible':[('include_bom','=',False)]}"
+                                   options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ingredients">
+                            <field name="active_ingredient_ids">
+                                <tree>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="cost_per_lb" widget="monetary" groups="aznut_calculator.group_calculator_administrator"/>
+                                    <field name="display_cost_per_scoop"
+                                           groups="aznut_calculator.group_calculator_administrator"/>
+                                    <field name="total_bom_lb"
+                                           groups="aznut_calculator.group_calculator_administrator"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="BoM Lines" attrs="{'invisible':[('bom_id','=',False)]}">
+                            <field name="wizard_lines" widget="one2many">
+                                <tree editable="top">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="cost_per_lb" groups="aznut_calculator.group_calculator_administrator" widget="monetary"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

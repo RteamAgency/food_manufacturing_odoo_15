@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_mrp_bom" inherit_id="mrp.report_mrp_bom" priority="2">
+        <xpath expr="//th[@name='th_mrp_bom_h']" position="after">
+            <th class="text-center">
+                <span>
+                    Free To Use / On Hand
+                </span>
+            </th>
+            <th class="text-center">
+                <span>
+                    Availability
+                </span>
+            </th>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;data['bom_qty']&quot;]/../.." position="before">
+            <td class="text-right">
+                <span>
+                    <t t-esc="data['quantity_available']"
+                       t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                    /
+                    <t t-esc="data['quantity_on_hand']"
+                       t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                </span>
+            </td>
+            <td class="text-center">
+                <t t-if="data.get('components_available', None) != None">
+                    <span>General: <span
+                            t-attf-class="{{'text-success' if data['components_available'] and data['availability_state'] != 'unavailable' else 'text-danger' }}"
+                            t-esc="data['availability_display']"/></span>
+                </t>
+            </td>
+
+        </xpath>
+    </template>
+
+    <template id="report_mrp_bom_line" inherit_id="mrp.report_mrp_bom_line" priority="2">
+        <xpath expr="//t[@t-esc=&quot;l['prod_qty']&quot;]/../.." position="before">
+            <td class="text-right">
+                <span>
+                    <t t-esc="l['quantity_available']"
+                       t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                    /
+                    <t t-esc="l['quantity_on_hand']"
+                       t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                </span>
+            </td>
+            <td class="text-center">
+                <t t-if="l.get('availability_state', None) != None">
+                    <span t-attf-class="{{'text-success' if l['availability_state'] == 'available' else ''}}{{'text-warning' if l['availability_state'] == 'expected' else ''}}{{'text-danger' if l['availability_state'] == 'unavailable' else ''}}"
+                          t-esc="l['availability_display']"/>
+                </t>
+            </td>
+        </xpath>
+    </template>
+</odoo>

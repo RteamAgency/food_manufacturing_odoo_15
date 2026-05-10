@@ -1,0 +1,99 @@
+<odoo>
+    <data>
+        <record id="main_product_calculator_email" model="mail.template">
+            <field name="name">Main Chews Calculator: Send by email</field>
+            <field name="model_id" ref="aznut_calculator.model_main_product_calculator"/>
+            <field name="subject">{{ object.company_id.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{object.partner_id.email_formatted}}</field>
+            <field name="body_html" type="html">
+                <t t-set="base_url" t-value="object.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                <t t-set="portal_url" t-value="base_url + '/my/quotes_calc/' + str(object.id)"/>
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello,
+                        <br/><br/>
+                        Your order <strong t-out="object.display_name or ''"/>
+                        <t t-if="sum(object.calculator_ids.mapped('total_price'))">
+                            amounting in <strong
+                                t-out="format_amount(sum(object.calculator_ids.mapped('total_price')), object.currency_id) or ''"/>
+                        </t>
+                        has been confirmed.<br/>
+                        Thank you for your trust!
+                        <br/>
+                        <br/>
+                        <a t-att-href="portal_url" class="btn" style="background-color:#f0ae02;border-color:#f0ae02;">
+                            Sign quote</a>
+                        <br/>
+                        <br/>
+                        Do not hesitate to contact us if you have any questions.
+                        <br/><br/>
+                    </p>
+                </div>
+            </field>
+            <field name="report_template" ref="action_report_main_product_calculator"/>
+            <field name="report_name">{{ (object.name or '').replace('/', '_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <record id="main_powder_calculator_email" model="mail.template">
+            <field name="name">Main Powder Calculator: Send by email</field>
+            <field name="model_id" ref="aznut_calculator.model_main_powder_calculator"/>
+            <field name="subject">{{ object.company_id.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{object.partner_id.email_formatted}}</field>
+            <field name="body_html" type="html">
+                <t t-set="base_url" t-value="object.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                <t t-set="portal_url" t-value="base_url + '/my/powder_quotes_calc/' + str(object.id)"/>
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello,
+                        <br/><br/>
+                        Your order <strong t-out="object.display_name or ''"/>
+                        <t t-if="sum(object.powder_calculator_ids.mapped('total_price'))">
+                            amounting in <strong
+                                t-out="format_amount(sum(object.powder_calculator_ids.mapped('total_price')), object.currency_id) or ''"/>
+                        </t>
+                        has been confirmed.<br/>
+                        Thank you for your trust!
+                        <br/>
+                        <br/>
+                        <a t-att-href="portal_url" class="btn" style="background-color:#f0ae02;border-color:#f0ae02;">
+                            Sign quote</a>
+                        <br/>
+                        <br/>
+                        Do not hesitate to contact us if you have any questions.
+                        <br/><br/>
+                    </p>
+                </div>
+            </field>
+            <field name="report_name">{{ (object.name or '').replace('/', '_') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="report_template" ref="action_report_main_powder_calculator"/>
+        </record>
+
+        <record id="sample_test_email" model="mail.template">
+            <field name="name">Sample Test: Send by email</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="subject">Sample Test {{ object.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ctx.get('partner_to')}}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello,
+                        <br/><br/>
+                        Sample Test Report!<br/><br/>
+                        Thank you for your trust!<br/>
+                        Do not hesitate to contact us if you have any questions.
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+            <field name="report_template" ref="mrp.action_report_production_order"/>
+            <field name="report_name">Sample Test {{ (object.name or '')}}</field>
+        </record>
+    </data>
+</odoo>

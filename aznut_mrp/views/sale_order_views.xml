@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_order_form_inherit">
+        <field name="name">aznut_mrp.sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']" position="before">
+                <field name="show_production_margin" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='margin_percent']" position="after">
+                <field name="production_purchase_price"
+                       attrs="{'column_invisible':[('parent.show_production_margin','=',False)]}"/>
+                <field name="production_margin"
+                       attrs="{'column_invisible':[('parent.show_production_margin','=',False)]}"/>
+                <field name="production_margin_percent"
+                       attrs="{'column_invisible': [('parent.show_production_margin','=',False)],'invisible':[('price_subtotal', '=', 0),]}"
+                       widget="percentage"/>
+            </xpath>
+            <xpath expr="//field[@name='tax_totals_json']" position="after">
+                <label for="production_margin" groups="base.group_user"
+                       attrs="{'invisible':[('show_production_margin','=',False)]}"/>
+                <div class="text-nowrap" groups="base.group_user"
+                     attrs="{'invisible':[('show_production_margin','=',False)]}">
+                    <field name="production_margin" class="oe_inline"/>
+                    <span class="oe_inline" attrs="{'invisible': [('amount_untaxed', '=', 0)]}">
+                        (<field name="production_margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>
+                        )
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_margin_sale_order">
+        <field name="name">aznut_mrp.sale.order.margin.view.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_margin.sale_margin_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='margin']" position="before">
+                <field name="hide_total_margin" invisible="1"/>
+            </xpath>
+            <xpath expr="//label[@for='margin']" position="attributes">
+                <attribute name="attrs">{'invisible': [('hide_total_margin', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='margin']/.." position="attributes">
+                <attribute name="attrs">{'invisible': [('hide_total_margin', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_inherit" model="ir.ui.view">
+        <field name="name">aznut_mrp.view.quotation.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='margin_percent']" position="after">
+                <field name="show_production_margin" invisible="1"/>
+                <field name="production_margin" sum="Total Production Margin"
+                       attrs="{'invisible':[('show_production_margin','=',False)]}"/>
+                <field name="production_margin_percent"
+                       widget="percentage" attrs="{'invisible':[('show_production_margin','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

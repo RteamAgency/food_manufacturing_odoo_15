@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_workcenter_view_inherit" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.workcenter.form</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_info']//group" position="inside">
+                <group string="Fields Visibility" name="kanban_visibility">
+                    <group>
+                        <field name="hide_mark_as_done_button"/>
+                    </group>
+                    <group>
+                        <field name="hide_mark_as_done_and_close_button"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='general_info']//group[3]" position="inside">
+                <field name="packaging_station"/>
+                <field name="quality_station"/>
+                <field name="production_station"/>
+                <field name="premix_station"/>
+                <field name="production_area_cleaning_station"/>
+                <field name="production_area_cleaning_product"
+                       attrs="{'invisible':[('production_area_cleaning_station','=',False)]}"/>
+                <field name="packaging_area_cleaning_station"/>
+                <field name="packaging_area_cleaning_product"
+                       attrs="{'invisible':[('packaging_area_cleaning_station','=',False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='time_stop']//.." position="after">
+                <label for="cutting_time"/>
+                <div>
+                    <field name="cutting_time" widget="float_time" class="oe_inline"/> minutes
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

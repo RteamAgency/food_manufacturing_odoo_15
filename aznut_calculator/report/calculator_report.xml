@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="paperformat_report_main_product_calculator" model="report.paperformat">
+            <field name="name">A4 Main Chews Calculator</field>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">7.9</field>
+            <field name="margin_bottom">12</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_report_main_product_calculator" model="ir.actions.report">
+            <field name="name">Main Chews Calculator Report</field>
+            <field name="model">main.product.calculator</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">aznut_calculator.report_calculator_product</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="print_report_name">(object.name)</field>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="aznut_calculator.paperformat_report_main_product_calculator"/>
+        </record>
+
+        <record id="action_report_main_powder_calculator" model="ir.actions.report">
+            <field name="name">Main Powder Calculator Report</field>
+            <field name="model">main.powder.calculator</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">aznut_calculator.report_calculator_powder</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="print_report_name">(object.name)</field>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="aznut_calculator.paperformat_report_main_product_calculator"/>
+        </record>
+    </data>
+</odoo>

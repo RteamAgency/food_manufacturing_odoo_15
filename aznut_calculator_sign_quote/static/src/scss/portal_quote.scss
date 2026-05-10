@@ -1,0 +1,22 @@
+.w-30 {
+    width: 30%;
+}
+.w-20 {
+    width: 20%;
+}
+
+.button_signed {
+    color: #FFFFFF;
+    &:hover, &:active {
+        background-color: #f0ae02!important;
+        border-color:#f0ae02!important;
+    }
+    &:focus {
+        box-shadow: none;
+    }
+}
+.o_sale_stock_picking {
+    .delivery_w33 {
+        min-width: 33%;
+    }
+}

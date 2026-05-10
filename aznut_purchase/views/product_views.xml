@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">aznut_purchase.product.template.product.tree</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="responsible_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field position="after" name="qty_available">
+                <field name="on_the_way_quantity"/>
+            </field>
+            <field position="after" name="virtual_available">
+                <field name="three_months_average_consumed_quantity"/>
+                <field name="turnover"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_tree_view" model="ir.ui.view">
+        <field name="name">aznut_purchase.product.product.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field position="after" name="qty_available">
+                <field name="on_the_way_quantity"/>
+            </field>
+            <field position="after" name="virtual_available">
+                <field name="three_months_average_consumed_quantity"/>
+                <field name="turnover"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_tree_view_not_available" model="ir.ui.view">
+        <field name="name">aznut_purchase.product.product.tree.not.available</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <tree default_order="components_no_po_quantity desc">
+                <field name="name" class="product_forecast_link"/>
+                <field name="last_mo_date"/>
+                <button name="open_product" type="object" string="Open Product" class="btn-primary"/>
+                <field name="free_qty" optional="hide"/>
+                <field name="components_not_available_quantity"/>
+                <field name="components_on_the_way_quantity"/>
+                <field name="po_info"/>
+                <field name="components_no_po_quantity" decoration-danger="components_no_po_quantity &gt; 0"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_supplierinfo_tree_view2" model="ir.ui.view">
+        <field name="name">aznut_purchase.product.supplierinfo.tree.view2</field>
+        <field name="model">product.supplierinfo</field>
+        <field name="inherit_id" ref="purchase.product_supplierinfo_tree_view2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <button type="object" name="action_open_lead_time_history" class="btn"
+                        icon="fa-list"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="lead_time_history_line_form" model="ir.ui.view">
+        <field name="name">aznut_purchase.lead.time.history.line.form</field>
+        <field name="model">lead.time.history.line</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0" edit="0">
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="old_delay"/>
+                <field name="new_delay"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">aznut_purchase.product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Lead Time History" name="lead_time_history"
+                      attrs="{'invisible':[('purchase_ok','=',False)]}">
+                    <group name="lead_time_history">
+                        <h3>History</h3>
+                        <field name="lead_time_history_lines_ids" nolabel="1" colspan="4"/>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//label[@for='list_price']" position="before">
+                <label for="free_qty"/>
+                <div class="o_row">
+                    <field name="free_qty"/>
+                    <span groups="uom.group_uom" class="oe_read_only">
+                        <field name="uom_name"/>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_change_product_category" model="ir.actions.server">
+        <field name="name">Change Product Category</field>
+        <field name="model_id" ref="product.model_product_product"/>
+        <field name="binding_model_id" ref="product.model_product_product"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.mapped('product_tmpl_id').open_change_product_category_wizard()
+        </field>
+    </record>
+
+    <record id="action_change_product_template_category" model="ir.actions.server">
+        <field name="name">Change Product Category</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.open_change_product_category_wizard()
+        </field>
+    </record>
+</odoo>

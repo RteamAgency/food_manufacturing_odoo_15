@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">aznut_portal.product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <pags string="Tags History" name="tags_history" attrs="{'invisible':[('purchase_ok','=',True)]}">
+                <group>
+                        <field name="tags_history_lines_ids" nolabel="1">
+                            <tree default_order="order_id asc">
+                                <field name="new_tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                                <field name="old_tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+                                <field name="create_date"/>
+                                <field name="create_uid"/>
+                                <field name="order_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </pags>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,82 @@
+.aznut-calculator-chat-container {
+  background-color: #ffffff;
+  color: #000000;
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 100%;
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #ccc;
+}
+
+
+.aznut-calculator-message {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.aznut-calculator-message-system,
+.aznut-calculator-message-assistant {
+  justify-content: flex-start;
+}
+
+.aznut-calculator-message-user {
+  justify-content: flex-end;
+}
+
+.aznut-calculator-bubble {
+  max-width: 80%;
+  padding: 10px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.aznut-calculator-message-system .aznut-calculator-bubble {
+  background-color: #f0f0f0;
+}
+
+.aznut-calculator-message-assistant .aznut-calculator-bubble {
+  background-color: #d9e6f7;
+}
+
+.aznut-calculator-message-user .aznut-calculator-bubble {
+  background-color: #4c8bf5;
+  color: white;
+}
+
+.aznut-calculator-time {
+  font-size: 12px;
+  margin-left: 10px;
+  opacity: 0.6;
+}
+
+.aznut-calculator-input {
+  .o_field_widget {
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 14px;
+    color: #333;
+    width: 75%;
+    max-width: 75%;
+    resize: none;
+    box-sizing: border-box;
+  }
+
+  .o_field_widget:focus {
+    border-color: #4c8bf5;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 139, 245, 0.4);
+  }
+
+  .o_field_widget::placeholder {
+    color: #888;
+    font-style: italic;
+  }
+}

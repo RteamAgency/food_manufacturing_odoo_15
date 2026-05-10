@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_mrporder_current_qty" inherit_id="mrp.report_mrporder" primary="True" priority="60">
+        <xpath expr="//strong[contains(text(),'Quantity to Produce:')]" position="replace">
+            <strong>Quantity Produced:</strong>
+        </xpath>
+        <span t-field="o.product_qty" position="attributes">
+            <attribute name="t-field">o.qty_producing</attribute>
+        </span>
+        <xpath expr="//span[contains(text(),'Products to Consume')]" position="replace">
+            <span t-else="">Consumed Products Now</span>
+        </xpath>
+        <span t-field="raw_line.product_uom_qty" position="attributes">
+            <attribute name="t-field">raw_line.should_consume_qty</attribute>
+        </span>
+    </template>
+
+    <template id="header_company_block">
+        <div class="col-4">
+            <div class="mw-100"
+                 t-if="target.name">
+                <span class="m-0" t-field="target.name"/>
+            </div>
+            <div class="mw-100"
+                 t-if="target.street or target.street2 or target.city or target.state_id.name or target.zip">
+                <span class="m-0"
+                      t-esc="(', ').join(filter(lambda x: x, [target.street or target.street2, target.city, target.state_id.name, target.zip]))"/>
+            </div>
+            <div class="mw-100"
+                 t-if="target.mobile or target.phone">
+                Phone:
+                <span t-esc="target.mobile or target.phone"/>
+            </div>
+            <div class="mw-100"
+                 t-if="target.email">
+                Email:
+                <a t-esc="target.email"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="internal_layout_inherited" inherit_id="web.internal_layout" primary="True">
+        <xpath expr="//div[hasclass('text-center')]" position="replace"/>
+        <xpath expr="//div[hasclass('col-3')]/.." position="attributes">
+            <attribute name="style">-webkit-box-pack: justify;justify-content: space-between;</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('col-3')]" position="replace">
+            <t t-call="aznut_mrp.header_company_block">
+                <t t-set="target" t-value="company.partner_id"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('text-right')]" position="replace">
+            <div>
+                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                     style="max-height: 85px;"
+                     alt="Logo"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]" position="after">
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                <div t-if="quality_wo">
+                    <span>
+                        QC/QA Officer: <t t-if="quality_wo.done_user" t-esc="quality_wo.done_user.name"/>
+                    </span>
+                    <img t-if="quality_wo.done_user"
+                         t-attf-src="data:image/jpg;base64,{{ quality_wo.done_user.sign_signature }}"
+                         style="max-height: 6rem;max-width: 50%"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_mrporder_analyses_page">
+        <div class="page">
+            <div>
+                <h2 t-esc="o.date_finished.strftime('%B %d, %Y')" style="font-size: 48px;font-weight: 600;"/>
+            </div>
+            <h2 style="text-align:center;font-weight: 600;"><t t-esc="(child_mo and child_mo.name) or o.name"/><br/>Certificate of
+                Analyses</h2>
+            <ul style="list-style: none;padding-left: 0;font-size: 18px;margin-top: 20px;">
+                <li><strong>Product Name: <t t-esc="(child_mo and child_mo.product_id.name) or o.product_id.name"/></strong></li>
+                <li>Date of Manufacturing: <t t-esc="o.date_finished.strftime('%m-%d-%Y')"/></li>
+                <li>Lot number: <t t-esc="o.lot_producing_id.name"/></li>
+                <li t-if="quality_wo and quality_wo.date_finished">
+                    <t t-set="date_analyses" t-value="o.get_time_with_timezone(quality_wo, quality_wo.date_finished)"/>
+                    Date of analyses: <t t-esc="date_analyses.strftime('%m-%d-%Y')"/>
+                    <span>Time: <t t-esc="date_analyses.strftime('%H:%M')"/></span>
+                </li>
+            </ul>
+            <table t-if="quality_wo" style="width: 100%;font-size: 18px;text-align: center;margin-top: 30px;">
+                <thead>
+                    <tr style="border-bottom: 1px solid black;">
+                        <th/>
+                        <th>Analyses method</th>
+                        <th>Product Spec</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="analyses_data.get('quality_check')" t-as="check">
+                        <tr>
+                            <td><t t-esc="check.get('name')"/></td>
+                            <td><t t-esc="check.get('method')"/></td>
+                            <td><t t-esc="check.get('value')"/></td>
+                            <td style="text-transform: capitalize;">
+                                <t t-esc="analyses_data.get('check_status')"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <p style="margin-top: 30px;">
+                Base Ingredients:
+                <br/><br/> No Chemical, No Pesticides<span t-if="base_ingredients.mapped('name')">, <t
+                    t-esc="', '.join(base_ingredients.mapped('name'))"/></span>.
+                <div t-if="active_ingredients">
+                    <br/><br/>
+                    Active Ingredients:
+                    <br/><br/>
+                    <t t-esc="', '.join(active_ingredients.mapped('name'))"/>
+                </div>
+            </p>
+            <br/>
+            <p>Microbiology test results attached - <t t-esc="o.product_id.name"/></p>
+        </div>
+    </template>
+
+    <template id="report_mrporder_operators">
+        <t t-set="workorders_operators" t-value="analyses_data.get('workorders_operators')"/>
+        <div t-if="workorders_operators">
+            <p style="page-break-before:always;"/>
+            <h2 style="text-align:center;font-weight: 600;"><t t-esc="(child_mo and child_mo.name) or o.name"/><br/>Workorders
+                Operators</h2>
+            <table class="table-bordered table" style="width: 100%;margin-top: 20px; font-size: 18px;">
+                <thead>
+                    <th class="w-50">Station</th>
+                    <th class="w-50">Operators</th>
+                </thead>
+                <tbody>
+                    <t t-foreach="workorders_operators" t-as="workorder_operators">
+                        <tr>
+                            <td t-esc="workorder_operators" style="vertical-align: middle;"/>
+                            <td t-esc="workorders_operators.get(workorder_operators)" style="vertical-align: middle;"/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <template id="report_mrporder_packaging_images">
+        <t t-set="packaging_images" t-value="analyses_data.get('packaging_images')"/>
+        <div t-if="packaging_images">
+            <p style="page-break-before:always;"/>
+            <h2 style="text-align:center;font-weight: 600;"><t t-esc="(child_mo and child_mo.name) or o.name"/><br/>Packaging
+                Images</h2>
+            <table style="width: 100%;margin-top: 20px; text-align: center; border-spacing: 10px 0"
+                   class='table-borderless'>
+                <thead>
+                    <th class="w-50">Current Image</th>
+                    <th class="w-50">Previous Image</th>
+                </thead>
+                <tbody>
+                    <t t-foreach="packaging_images" t-as="vals">
+                        <tr>
+                            <td style="padding-top: 15px">
+                                <img t-if="vals.get('current_image')"
+                                     t-attf-src="data:image/jpg;base64,{{ vals.get('current_image') }}"
+                                     style="max-height: 16rem;max-width:85%"/>
+                            </td>
+                            <td style="padding-top: 15px">
+                                <img t-if="vals.get('previous_image')"
+                                     t-attf-src="data:image/jpg;base64,{{ vals.get('previous_image') }}"
+                                     style="max-height: 16rem;max-width:85%"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+        <t t-set="packaging_worksheet_images" t-value="analyses_data.get('packaging_worksheet_images')"/>
+        <div t-if="packaging_worksheet_images">
+            <p style="page-break-before:always;"/>
+            <h2 style="text-align:center;font-weight: 600;"><t t-esc="(child_mo and child_mo.name) or o.name"/><br/>Packaging
+                Worksheet Images</h2>
+            <table style="width: 100%;margin-top: 20px;" class='table-borderless'>
+                <tbody>
+                    <t t-foreach="packaging_worksheet_images" t-as="vals">
+                        <tr>
+                            <t t-foreach="vals" t-as="val">
+                                <td style="width: 50%;text-align: center" class="pt-4">
+                                    <p t-esc="val[0]" style="padding: 3px; font-size: 20px !important;"/>
+                                    <img t-attf-src="data:image/jpg;base64,{{ val[1] }}"
+                                         style="max-height: 16rem;max-width:85%"/>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <template id="report_mrporder_worksheet_images">
+        <t t-set="worksheet_images" t-value="analyses_data.get('worksheet_images')"/>
+        <div t-if="worksheet_images">
+            <p style="page-break-before:always;"/>
+            <h2 style="text-align:center;font-weight: 600;"><t t-esc="(child_mo and child_mo.name) or o.name"/><br/>Production
+                Worksheet Images</h2>
+            <table style="width: 100%;margin-top: 20px;" class='table-borderless'>
+                <tbody>
+
+                    <t t-foreach="worksheet_images" t-as="vals">
+                        <tr>
+                            <t t-foreach="vals" t-as="val">
+                                <td style="width: 50%;text-align: center" class="pt-4">
+                                    <p t-esc="val[0]" style="padding: 3px; font-size: 20px !important;"/>
+                                    <img t-attf-src="data:image/jpg;base64,{{ val[1] }}"
+                                         style="max-height: 16rem;max-width:85%"/>
+                                </td>
+                            </t>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+    <template id="report_mrporder_batch_page">
+        <t t-set="batch_record" t-value="o._get_batch_record_data()"/>
+        <div t-if="batch_record">
+            <p style="page-break-before:always;"/>
+            <h2 style="text-align:center;font-weight: 600;"><t t-esc="(child_mo and child_mo.name) or o.name"/><br/>Batch Record</h2>
+            <ul style="list-style: none;padding-left: 0;font-size: 19px;margin-top: 30px;line-height: 2;">
+                <li><strong>Product Name: <t t-esc="o.product_id.name"/></strong></li>
+                <li><strong>Date of Manufacturing:</strong> <t t-esc="o.date_finished.strftime('%m-%d-%Y')"/></li>
+                <li><strong>Lot number:</strong> <t t-esc="o.lot_producing_id.name"/></li>
+                <li t-if="analyses_data.get('previous_lot_id')"><strong>Previous lot number:</strong>  <t
+                        t-esc="analyses_data.get('previous_lot_id')"/></li>
+                <li>
+                    <strong>Start:</strong>
+                    <t t-esc="o.get_time_with_timezone(o.workorder_ids.filtered(lambda wo: wo.workcenter_id.resource_calendar_id)[:1], production_wo.date_start).strftime('%m-%d-%Y %H:%M')"/>
+                </li>
+                <li>
+                    <strong>Finished:</strong>
+                    <t t-esc="o.get_time_with_timezone(o.workorder_ids.filtered(lambda wo: wo.workcenter_id.resource_calendar_id)[:1], production_wo.date_finished).strftime('%m-%d-%Y %H:%M')"/>
+                </li>
+                <t t-foreach="batch_record.get('batch_records')" t-as="batch_check">
+                    <li>
+                        <strong><t t-esc="batch_check.get('title')"/>: </strong>
+                        <t t-esc="batch_check.get('value')" t-options="{'widget':'float_time'}"/>
+                    </li>
+                </t>
+                <li>
+                    <strong>Cutting time:</strong>
+                    <t t-esc="batch_record.get('cutting_time')" t-options="{'widget':'float_time'}"/>
+                </li>
+                <li><strong>Total weight:</strong>
+                    <t t-set="total_weight"
+                       t-value="bom_structure.get('total_weight') * bom_structure.get('batches_count')"/>
+                    <t t-esc="round(total_weight,2)"/>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="report_mrporder_bom_structure">
+        <p style="page-break-before:always;"/>
+        <div t-if="bom_structure.get('base_lines') or bom_structure.get('active_lines') or bom_structure.get('packaging_lines')">
+            <h2 style="text-align:center;font-weight: 600;">Bom Structure</h2>
+            <h3 style="font-size: 18px;font-weight:bold;margin-top: 30px;" t-esc="o.bom_id.display_name"/>
+            <t t-call="aznut_mrp.bom_structure_table">
+                <t t-set="bom_lines" t-value="bom_structure.get('base_lines')"/>
+                <t t-set="table_name" t-value="'Base Ingredients: (CONFIDENTIAL)'"/>
+            </t>
+            <t t-call="aznut_mrp.bom_structure_table">
+                <t t-set="bom_lines" t-value="bom_structure.get('active_lines')"/>
+                <t t-set="table_name" t-value="'Active Ingredients: (CONFIDENTIAL)'"/>
+            </t>
+            <t t-call="aznut_mrp.bom_structure_table">
+                <t t-set="bom_lines" t-value="bom_structure.get('packaging_lines')"/>
+                <t t-set="table_name" t-value="'Packaging Materials:'"/>
+                <t t-set="total_name" t-value="'Total packaging materials'"/>
+                <t t-set="total_value"
+                   t-value="bom_structure.get('total_packaging',0) * bom_structure.get('batches_count',0)"/>
+            </t>
+            <t t-set="packaging_wo" t-value="o.workorder_ids.filtered(lambda wo: wo.packaging_station)"/>
+            <div t-if="packaging_wo.packaging_activity_line_ids" class="mt-5">
+                <table class="table table-bordered">
+                    <tbody>
+                        <t t-foreach="packaging_wo.packaging_activity_line_ids" t-as="line">
+                            <tr>
+                                <td class="w-50"><t t-esc="line.packaging_activity_id.display_name"/></td>
+                                <td class="w-50"><t t-esc="line.activity_employee_id.display_name"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </template>
+
+    <template id="bom_structure_table">
+        <table t-if="bom_lines" style="width:60%;line-height: 1.6;margin-top: 20px;font-size:18px;">
+            <thead>
+                <tr>
+                    <th style="width:50%;"><t t-esc="table_name"/></th>
+                    <th style="width:30%;" class="text-right">Lot #</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="bom_lines" t-as="line">
+                    <t t-set="bom_line" t-value="line.get('bom_line')"/>
+                    <t t-set="lot" t-value="line.get('lot')"/>
+                    <tr>
+                        <td t-esc="bom_line.product_id.name" class="text-left"/>
+                        <td class="text-right"><t t-if="lot" t-esc="', '.join(lot.mapped('name'))"/></td>
+                    </tr>
+                </t>
+                <tr t-if='total_value' style="font-weight: bold;">
+                    <td t-esc="total_name" class="text-left"/>
+                    <td t-esc="round(total_value,2)" class="text-right"/>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="aznut_report_mrporder_inherited">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="child_mo" t-value="o"/>
+                <t t-if="not o.parent_productions_ids">
+                    <t t-call="aznut_mrp.internal_layout_inherited">
+                        <t t-set="analyses_data" t-value="o._get_analyses_data()"/>
+                        <t t-set="bom_structure" t-value="o._get_bom_structure_data()"/>
+                        <t t-set="base_ingredients" t-value="analyses_data.get('base_ingredients')"/>
+                        <t t-set="active_ingredients" t-value="analyses_data.get('active_ingredients')"/>
+                        <t t-set="quality_wo" t-value="analyses_data.get('quality_wo')"/>
+                        <t t-set="production_wo" t-value="analyses_data.get('production_wo')"/>
+                        <t t-call="aznut_mrp.report_mrporder_analyses_page"/>
+                        <t t-call="aznut_mrp.report_mrporder_worksheet_images"/>
+                        <t t-call="aznut_mrp.report_mrporder_operators"/>
+                        <t t-call="aznut_mrp.report_mrporder_packaging_images"/>
+                        <t t-call="aznut_mrp.report_mrporder_batch_page"/>
+                        <t t-call="aznut_mrp.report_mrporder_bom_structure"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-set="child_mo" t-value="o"/>
+                    <t t-foreach="o.parent_productions_ids" t-as="parent_mo">
+                        <t t-call="aznut_mrp.internal_layout_inherited">
+                            <t t-set="o" t-value="parent_mo"/>
+                            <t t-set="analyses_data" t-value="o._get_analyses_data()"/>
+                            <t t-set="bom_structure" t-value="o._get_bom_structure_data()"/>
+                            <t t-set="base_ingredients" t-value="analyses_data.get('base_ingredients')"/>
+                            <t t-set="active_ingredients" t-value="analyses_data.get('active_ingredients')"/>
+                            <t t-set="quality_wo" t-value="analyses_data.get('quality_wo')"/>
+                            <t t-set="production_wo" t-value="analyses_data.get('production_wo')"/>
+                            <t t-call="aznut_mrp.report_mrporder_analyses_page"/>
+                            <t t-call="aznut_mrp.report_mrporder_worksheet_images"/>
+                            <t t-call="aznut_mrp.report_mrporder_operators"/>
+                            <t t-call="aznut_mrp.report_mrporder_packaging_images"/>
+                            <t t-call="aznut_mrp.report_mrporder_batch_page"/>
+                            <t t-call="aznut_mrp.report_mrporder_bom_structure"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

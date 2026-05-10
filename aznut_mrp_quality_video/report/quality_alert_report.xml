@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_quality_alert_metal_detector" model="ir.actions.report">
+            <field name="name">Metal Detector Report</field>
+            <field name="model">quality.alert</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">aznut_mrp_quality_video.report_quality_metal_detector</field>
+            <field name="report_file">aznut_mrp_quality_video.report_quality_metal_detector</field>
+            <field name="print_report_name">'%s - Metal Detector' % object.name</field>
+            <field name="binding_model_id" ref="quality.model_quality_alert"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

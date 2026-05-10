@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="website_order_confirmation" model="mail.template">
+            <field name="name">Aznut Portal: Confirm Website Order</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.display_name }} Confirmation</field>
+            <field name="email_to">accounting@bpwlab.com</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello!
+                        <br/><br/>
+                        Sale Order <strong t-out="object.display_name or ''"/> was confirmed.
+                        <br/><br/>
+                        Can you check this order from customer:
+                        <a t-att-href="ctx.get('order_url')"
+                           style="color:white;background-color: #875A7B; padding: 4px 50px 4px 50px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                            Link
+                        </a>
+                        <br/><br/>
+                        Thanks!
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+
+        <record id="order_shipping_confirmation" model="mail.template">
+            <field name="name">Aznut Portal: Order Shipping Confirm</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="subject">{{ object.display_name }} Shipping Confirmation</field>
+            <field name="partner_to">
+                {{ object.sale_id.customer_service_id.partner_id.id or object.sale_id.user_id.partner_id.id}}
+            </field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello!
+                        <br/><br/>
+                        I have requested the shipment and uploaded all the necessary documents.
+                        <br/><br/>
+                        Please let me know if you require any additional information.
+                        <br/><br/>
+                        Thanks!
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>

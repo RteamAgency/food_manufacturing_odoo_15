@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_jars_components_report_tree" model="ir.ui.view" >
+        <field name="name">view.purchase.jars.components.report.tree</field>
+        <field name="model">purchase.jars.components.report</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="component_id"/>
+                <field name="avg_component_qty_per_month"/>
+                <field name="uom_id"/>
+                <field name="avg_component_price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="purchase_jars_components_report_search_view" model="ir.ui.view">
+        <field name="name">purchase.jars.components.report.search.view</field>
+        <field name="model">purchase.jars.components.report</field>
+        <field name="arch" type="xml">
+            <search string="Average Forecast Production of 3 month by Components">
+                <field name="component_id"/>
+            </search>
+        </field>
+    </record>
+</odoo>

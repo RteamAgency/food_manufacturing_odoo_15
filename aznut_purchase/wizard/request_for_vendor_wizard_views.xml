@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="request_for_vendor_wizard_form" model="ir.ui.view">
+        <field name="name">aznut_mrp.request.for.vendor.wizard.form</field>
+        <field name="model">request.for.vendor.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button attrs="{'invisible':[('show_include_all_button','=',False)]}" name="action_include_all"
+                            string="Include All"
+                            type="object" class="btn-primary"/>
+                    <button attrs="{'invisible':[('show_button_reset','=',False)]}" name="action_reset"
+                            string="Reset"
+                            type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <field name="show_button_reset" invisible="1"/>
+                    <field name="show_include_all_button" invisible="1"/>
+                    <div>
+                        <field name="request_for_vendor_wizard_line_ids" colspan="1" nolabel="1">
+                            <tree default_order="date_planned">
+                                <field name="included_in_email" invisible="1"/>
+                                <field name="order_id" class="text-center"/>
+                                <field name="order_link" widget="url" text="-->" string=" "/>
+                                <field name="partner_id"/>
+                                <field name="date_planned"/>
+                                <button name="action_include_in_email" type="object" string="Include"
+                                        attrs="{'invisible':[('included_in_email','=',True)]}"/>
+                                <button name="action_exclude_from_email" type="object" string="Exclude"
+                                        attrs="{'invisible':[('included_in_email','=',False)]}"/>
+                            </tree>
+                        </field>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Send"
+                            type="object" class="btn-primary"/>
+                    <button special="cancel" data-hotkey="z" string='Cancel' class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="request_for_vendor_wizard_line_form" model="ir.ui.view">
+        <field name="name">aznut_mrp.request.for.vendor.wizard.line.form</field>
+        <field name="model">request.for.vendor.wizard.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="email_template"/>
+                            </group>
+                        </sheet>
+                    </form>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

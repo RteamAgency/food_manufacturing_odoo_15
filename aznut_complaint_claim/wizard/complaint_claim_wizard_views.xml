@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="complaint_claim_wizard_form" model="ir.ui.view">
+        <field name="name">aznut_complaint_claim.complaint.claim.wizard.form</field>
+        <field name="model">complaint.claim.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="row o_website_sale_image_modal">
+                    <div class="col-md-6 col-xl-5">
+                        <label for="order_id"/>
+                        <h2><field name="order_id"/></h2>
+                        <label for="complaint_claim_source_id"/><br/>
+                        <field name="complaint_claim_source_id" style="width:100%!important;"/><br/>
+                        <label for="description"/><br/>
+                        <field name="description" placeholder="Please enter description"/>
+                    </div>
+                    <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
+                        <div class="row">
+                            <div class="col">
+                                <field name="image" widget="image"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <button name="action_confirm" confirm="Create Complaint Claim?" string="Confirm" type="object"
+                            class="btn-primary"/>
+                    <button special="cancel" data-hotkey="z" string='Cancel' class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

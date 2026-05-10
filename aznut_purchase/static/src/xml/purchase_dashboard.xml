@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="purchase.AznutPurchaseDashboard" t-inherit="purchase.PurchaseDashboard" t-inherit-mode="extension">
+        <xpath expr="//t[@t-esc=&quot;values['all_to_send']&quot;]/../.." position="attributes">
+            <attribute name="t-if">!values['is_receiving_operator']</attribute>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;values['all_to_send']&quot;]/../.." position="after">
+            <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action" title="All Draft RFQs"
+                context='{"search_default_draft_rfqs": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                <a href="#"><t t-esc="values['all_to_send']"/><br/>To Send</a>
+            </td>
+        </xpath>
+
+        <xpath expr="//t[@t-esc=&quot;values['all_waiting']&quot;]/../.." position="attributes">
+            <attribute name="t-if">!values['is_receiving_operator']</attribute>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;values['all_waiting']&quot;]/../.." position="after">
+            <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action" title="All Waiting RFQs"
+                context='{"search_default_waiting_rfqs": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                <a href="#"><t t-esc="values['all_waiting']"/><br/>Waiting</a>
+            </td>
+        </xpath>
+
+        <xpath expr="//t[@t-esc=&quot;values['all_late']&quot;]/../.." position="attributes">
+            <attribute name="t-if">!values['is_receiving_operator']</attribute>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;values['all_late']&quot;]/../.." position="after">
+            <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action" title="All Late RFQs"
+                context='{"search_default_late_rfqs": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                <a href="#"><t t-esc="values['all_late']"/><br/>Late</a>
+            </td>
+        </xpath>
+
+        <xpath expr="//t[@t-esc=&quot;values['my_to_send']&quot;]/../.." position="attributes">
+            <attribute name="t-if">!values['is_receiving_operator']</attribute>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;values['my_to_send']&quot;]/../.." position="after">
+            <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action" title="My Draft RFQs"
+                context='{"search_default_draft_rfqs": true, "search_default_my_purchases": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                <a href="#"><t t-esc="values['my_to_send']"/></a>
+            </td>
+        </xpath>
+
+        <xpath expr="//t[@t-esc=&quot;values['my_waiting']&quot;]/../.." position="attributes">
+            <attribute name="t-if">!values['is_receiving_operator']</attribute>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;values['my_waiting']&quot;]/../.." position="after">
+            <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action" title="My Waiting RFQs"
+                context='{"search_default_waiting_rfqs": true, "search_default_my_purchases": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                <a href="#"><t t-esc="values['my_waiting']"/></a>
+            </td>
+        </xpath>
+
+        <xpath expr="//t[@t-esc=&quot;values['my_late']&quot;]/../.." position="attributes">
+            <attribute name="t-if">!values['is_receiving_operator']</attribute>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;values['my_late']&quot;]/../.." position="after">
+            <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action" title="My Late RFQs"
+                context='{"search_default_late_rfqs": true, "search_default_my_purchases": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                <a href="#"><t t-esc="values['my_late']"/></a>
+            </td>
+        </xpath>
+
+
+        <xpath expr="//t[@t-esc=&quot;values['my_waiting']&quot;]/../../.." position="after">
+            <tr class="mt-2">
+                <td class="o_text">
+                    <div>Shipping Information</div>
+                </td>
+                <td t-if="!values['is_receiving_operator']" class="o_main o_dashboard_action"
+                    title="Waiting For Shipping Information"
+                    context='{"search_default_waiting_for_shipping_information": true}'>
+                    <span style="color: white"><t t-esc="values['waiting_for_shipping_information_count']"/><br/>
+                        Waiting</span>
+                </td>
+                <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action"
+                    title="Waiting For Shipping Information"
+                    context='{"search_default_waiting_for_shipping_information": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                    <span style="color: white"><t t-esc="values['waiting_for_shipping_information_count']"/><br/>
+                        Waiting</span>
+                </td>
+                <td t-if="!values['is_receiving_operator']" class="o_main o_dashboard_action"
+                    title="Ready To Schedule Shipments"
+                    context='{"search_default_ready_to_schedule_shipments": true}'>
+                    <span style="color: white"><t t-esc="values['ready_to_schedule_shipments_count']"/><br/>
+                        Ready</span>
+                </td>
+                <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action"
+                    title="Ready To Schedule Shipments"
+                    context='{"search_default_ready_to_schedule_shipments": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                    <span style="color: white"><t t-esc="values['ready_to_schedule_shipments_count']"/><br/>
+                        Ready</span>
+                </td>
+                <td t-if="!values['is_receiving_operator']" class="o_main o_dashboard_action" title="In Transit"
+                    context='{"search_default_shipping_information_in_transit": true}'>
+                    <span style="color: white"><t t-esc="values['in_transit_count']"/><br/>
+                        In Transit</span>
+                </td>
+                <td t-if="values['is_receiving_operator']" class="o_main o_dashboard_action" title="In Transit"
+                    context='{"search_default_shipping_information_in_transit": true,"create":false,"edit":false,"delete":false, "receiving_operator":true}'>
+                    <span style="color: white"><t t-esc="values['in_transit_count']"/><br/>
+                        In Transit</span>
+                </td>
+            </tr>
+            <tr class="mt-2">
+                <td class="o_text">
+                    <div>Manufacturing Orders Batches</div>
+                </td>
+                <td colspan="3" style="padding: 0!important;">
+                    <div style="display: flex; width: 100%; justify-content: space-between">
+                        <div class="purchase_dasboard_div" title="Available Batches">
+                            <span style="color: white"><t t-esc="values['available_batches']"/><br/>Available</span>
+                        </div>
+                        <div t-if="!values['is_receiving_operator']"
+                             class="purchase_dasboard_div o_dashboard_action aznut_clickable"
+                             title="Not Available Batches"
+                             context='{"not_available_batches": true}'>
+                            <a href="#" style="color: white"><t t-esc="values['not_available_batches']"/><br/>Not
+                                Available</a>
+                        </div>
+                        <div t-else="" class="purchase_dasboard_div"
+                             title="Not Available Batches"
+                             context='{"not_available_batches": true}'>
+                            <span style="color: white"><t t-esc="values['not_available_batches']"/><br/>Not
+                                Available</span>
+                        </div>
+                        <div t-if="!values['is_receiving_operator']"
+                             class="purchase_dasboard_div o_dashboard_action aznut_clickable"
+                             title="Purchase Accelerator"
+                             context='{"purchase_accelerator": true}'>
+                            <a href="#" style="color: white">Purchase <br/> Accelerator</a>
+                        </div>
+                        <div t-else="" class="purchase_dasboard_div"
+                             title="Purchase Accelerator">
+                            <span style="color: white">Purchase <br/> Accelerator</span>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+        </xpath>
+        <xpath expr="//t[@t-esc=&quot;values['all_avg_days_to_purchase']&quot;]//..//..//..//..//.." position="after">
+            <div class="d-flex" style="margin-top:5px;">
+                <div style="width:25%;text-align:center;">Average Forecast Production<br/> of 3 month (Jars)</div>
+                <div style="width:25%;" class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            <t t-esc="values['current_month']['avg']"/> Jars <br/>
+                            <t t-esc="values['current_month']['month']"/>
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li id="by_brand_current" class="dropdown-item">By Brands</li>
+                        <li id="by_component_current" class="dropdown-item">By Components</li>
+                    </ul>
+                </div>
+                <div style="width:25%;" class="btn-group">
+                    <button class="btn btn-secondary dropdown-toggle" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        <span>
+                            <t t-esc="values['next_month']['avg']"/> Jars <br/>
+                            <t t-esc="values['next_month']['month']"/>
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li id="by_brand_next" class="dropdown-item">By Brands</li>
+                        <li id="by_component_next" class="dropdown-item">By Components</li>
+                    </ul>
+                </div>
+                <div style="width:25%;"></div>
+            </div>
+        </xpath>
+    </t>
+</templates>

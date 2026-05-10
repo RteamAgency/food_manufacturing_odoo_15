@@ -1,0 +1,480 @@
+th[data-name="display_cost_per_scoop"],
+td[name="display_cost_per_scoop"] {
+  text-align: end !important;
+}
+
+.tree_compare {
+  th {
+    width: 16% !important;
+  }
+
+  td {
+    width: 11% !important;
+  }
+
+  .o_field_x2many_list_row_add {
+    display: none !important;
+  }
+}
+
+.readonly_field {
+  color: #b4b4b4 !important;
+}
+
+.th15 {
+  width: 5%;
+}
+
+.th25 {
+  width: 25%;
+}
+
+.th30 {
+  width: 30%;
+}
+
+.th33 {
+  width: 33.3%;
+}
+
+.th40 {
+  width: 40%;
+}
+
+.th50 {
+  width: 50%;
+}
+
+.padding-0 {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.grid_table_package {
+  grid-template-columns: repeat(3, minmax(max-content, auto)) !important;
+
+  .cell_head {
+    background-color: rgba(182, 215, 168, .2);
+  }
+
+  input {
+    max-width: 100% !important;
+  }
+
+}
+
+.grid_table {
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: repeat(11, minmax(max-content, auto));
+  padding-inline-start: 0;
+
+  li {
+    list-style-type: none;
+    border: 1px solid #E0E2E6;
+
+    &:nth-child(2n) {
+      border-left: none;
+      border-right: none;
+    }
+
+    &:last-child {
+      border-right: 1px solid #E0E2E6;
+    }
+
+    .cell_head {
+      white-space: nowrap;
+      padding: 0.75rem;
+      border-bottom: 1px solid #E0E2E6;
+    }
+
+    .cell_content {
+      padding: 0.75rem;
+    }
+  }
+
+  input {
+    max-width: 70px;
+  }
+
+  &-mini {
+    grid-template-columns: repeat(8, minmax(max-content, auto));
+  }
+}
+
+.required_back {
+  background-color: rgba(255, 127, 127, .1);
+
+  .o_form_label.o_form_label_empty, .o_form_view .o_form_label.o_form_label_false {
+    opacity: 1;
+    font-weight: 500;
+  }
+}
+
+.required_header {
+  th {
+    background-color: rgba(255, 127, 127, .1);
+  }
+}
+
+.probiotic_header {
+  th {
+    background-color: rgba(173, 216, 230, .15);
+  }
+}
+
+.packing_back {
+  background-color: rgba(182, 215, 168, .2);
+}
+
+.required_label {
+  input, span {
+    background-color: rgba(255, 127, 127, .1);
+  }
+}
+
+.uom_input {
+  input {
+    width: 60%;
+  }
+
+  select {
+    margin-left: 4%;
+    width: 30%;
+    min-width: 20px;
+  }
+
+  span:nth-child(2) {
+    margin-left: 4%;
+  }
+}
+
+.bacteria_input {
+  input {
+    width: 60%;
+  }
+
+  &_pow {
+    margin-left: 5%;
+  }
+}
+
+.material_options {
+  span[name='label_finish'][raw-value]:not([raw-value="false"]),
+  span[name='jar_product_id'][raw-value]:not([raw-value="false"]) {
+    display: inline-block;
+    margin: 0px 0px 0px 0px;
+    padding: 1px 6px;
+    color: rgba(68, 75, 90, 0.76);
+    border: 1px solid #C9CCD2;
+    cursor: pointer;
+  }
+}
+
+.main_row {
+  .o_group.o_inner_group > tbody > tr > td.o_td_label {
+    min-width: 80px;
+    padding-right: 5px;
+  }
+}
+
+.user_base_ingredients_view {
+  .o_list_record_remove {
+    display: none !important;
+  }
+}
+
+.grid_with_flex {
+  .cell_head {
+    background-color: rgba(182, 215, 168, .2);
+  }
+}
+
+.grid_with_flex_powder {
+  .cell_head {
+    background-color: rgba(182, 215, 168, .2);
+  }
+
+  grid-template-columns: repeat(6, minmax(max-content, auto)) !important;
+
+}
+
+.overhead_calc {
+  height: 170px;
+
+  .probiotic_header {
+    th {
+      height: 58.5px;
+    }
+  }
+
+  input {
+    max-width: 63px;
+  }
+}
+
+.moq_discount {
+  th:not(.o_list_record_selector).o_list_number_th {
+    text-align: left !important;
+    width: 50% !important;
+  }
+
+  td:not(.o_list_record_selector).o_list_number {
+    text-align: left !important;
+  }
+}
+
+.bom_wiz_lines > tbody > tr {
+  &:last-child {
+    .o_td_label {
+      padding: 10px 15px 0 0 !important;
+    }
+
+    td {
+      padding: 10px 45px 0 0 !important;
+    }
+  }
+}
+
+.grid_powder_table {
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: repeat(6, minmax(max-content, auto));
+  padding-inline-start: 0;
+
+  li {
+    list-style-type: none;
+    border: 1px solid #E0E2E6;
+
+    &:nth-child(2n) {
+      border-left: none;
+      border-right: none;
+    }
+
+    &:last-child {
+      border-right: 1px solid #E0E2E6;
+    }
+
+    .cell_head {
+      white-space: nowrap;
+      padding: 0.75rem;
+      border-bottom: 1px solid #E0E2E6;
+    }
+
+    .cell_content {
+      padding: 0.75rem;
+    }
+  }
+
+  input {
+    max-width: 70px;
+  }
+
+  &-mini {
+    grid-template-columns: repeat(8, minmax(max-content, auto));
+  }
+}
+
+.grid_table_compare {
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: repeat(4, minmax(max-content, auto));
+  padding-inline-start: 0;
+  row-gap: 10px;
+
+
+  li {
+    list-style-type: none;
+    border: 1px solid #E0E2E6;
+
+    &:nth-child(2n) {
+      border-left: none;
+      border-right: none;
+    }
+
+    &:last-child {
+      border-right: 1px solid #E0E2E6;
+    }
+
+    .cell_head {
+      white-space: nowrap;
+      padding: 0.75rem;
+      border-bottom: 1px solid #E0E2E6;
+    }
+
+    .cell_content {
+      padding: 0.75rem;
+    }
+  }
+
+  input {
+    max-width: 70px;
+  }
+
+  &-mini {
+    grid-template-columns: repeat(8, minmax(max-content, auto));
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid_table_compare {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .grid_table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    row-gap: 10px;
+
+    li {
+      &:nth-child(6) {
+        border-right: 1px solid #E0E2E6;
+      }
+    }
+
+    input {
+      max-width: 90px;
+    }
+  }
+  .grid_with_flex {
+    grid-template-columns: repeat(7, auto) !important;
+
+    input {
+      max-width: 76px;
+    }
+  }
+  .grid_with_flex_powder {
+    grid-template-columns: repeat(6, auto) !important;
+
+    input {
+      max-width: 76px;
+    }
+  }
+  .grid_powder_table {
+    grid-template-columns: repeat(4, auto) !important;
+
+    input {
+      max-width: 76px;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid_table_package {
+    grid-template-columns: repeat(5, minmax(max-content, auto)) !important;
+
+    li {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      .cell_head {
+        height: 66px;
+        white-space: wrap;
+        word-break: break-word;
+      }
+    }
+
+  }
+
+  .grid_with_flex {
+    grid-template-columns: repeat(7, auto) !important;
+
+    li {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      .cell_head {
+        height: 66px;
+        white-space: wrap;
+        word-break: break-word;
+      }
+    }
+  }
+
+}
+
+@media (max-width: 992px) {
+  .grid_table {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    row-gap: 10px;
+
+    li {
+      &:nth-child(6) {
+        border-left: 1px solid #E0E2E6;
+      }
+    }
+  }
+  .th30, .th40 {
+    width: 33.3%;
+  }
+  .material_options {
+    .o_group_col_6 {
+      width: 50%;
+    }
+  }
+  .grid_with_flex {
+    grid-template-columns: repeat(4, auto) !important;
+
+    li {
+      &:nth-child(4) {
+        border-right: 1px solid #E0E2E6;
+      }
+
+      &:nth-child(8) {
+        border-right: 1px solid #E0E2E6;
+      }
+    }
+  }
+  .overhead_calc {
+    height: unset !important;
+
+    .probiotic_header {
+      th {
+        height: unset !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .grid_table, .grid_with_flex, .grid_with_flex_powder {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px 10px;
+
+    li {
+      &:nth-child(6) {
+        border-left: 1px solid #E0E2E6;
+      }
+
+      &:nth-child(2n) {
+        border-left: 1px solid #E0E2E6;
+        border-right: 1px solid #E0E2E6;
+      }
+    }
+  }
+}
+
+@media (max-width: 1199px) {
+  .overhead_calc {
+    height: 170px;
+  }
+}
+
+td[name='lots'], td[name='locations'], td[name='quantities'] {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+td[name="seq_number"] {
+  width: 40px !important;
+  text-align: left !important;
+}
+
+th[data-name="seq_number"] {
+  text-align: left !important;
+  width: 40px !important;
+}
+

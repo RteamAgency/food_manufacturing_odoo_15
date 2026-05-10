@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_quality_tree" model="ir.ui.view">
+        <field name="name">aznut_sale.crm.lead.quality.tree</field>
+        <field name="model">crm.lead.quality</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="quality_type"/>
+                <field name="description"/>
+                <field name="trigger_stage_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_lead_quality_form" model="ir.ui.view">
+        <field name="name">aznut_sale.crm.lead.quality.form</field>
+        <field name="model">crm.lead.quality</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="description"/>
+                            <field name="quality_type"/>
+                            <field name="trigger_stage_id"/>
+                        </group>
+                        <group>
+                            <field name="user_id" domain="[('share','=',False)]"
+                                   attrs="{'invisible':[('quality_type','!=','activity')],'required':[('quality_type','=','activity')]}"/>
+                            <field name="due_type"
+                                   attrs="{'invisible':[('quality_type','!=','activity')]}"/>
+                            <field name="due_value"
+                                   attrs="{'invisible':[('quality_type','!=','activity')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_lead_quality_action" model="ir.actions.act_window">
+        <field name="name">CRM Quality</field>
+        <field name="res_model">crm.lead.quality</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="menu_crm_lead_quality"
+            name="Quality"
+            parent="crm.menu_crm_config_lead"
+            action="aznut_sale.crm_lead_quality_action"
+            sequence="4"/>
+</odoo>

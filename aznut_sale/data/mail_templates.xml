@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template inherit_id="mail.mail_bounce_catchall" id="mail_bounce_catchall_inherit">
+            <xpath expr="//t[@t-esc='res_company.email']" position="attributes">
+                <attribute name="t-esc">'orders@bpwlab.com'</attribute>
+            </xpath>
+             <xpath expr="//a[@t-att-href=&quot;'mailto:%s' % res_company.email&quot;]" position="attributes">
+                <attribute name="t-att-href">'mailto:%s' % 'orders@bpwlab.com'</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>

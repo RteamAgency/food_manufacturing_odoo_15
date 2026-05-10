@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template inherit_id="mrp_account_enterprise.mrp_cost_structure" id="mrp_cost_structure_inherit">
+        <xpath expr="//tr[@t-foreach=&quot;line['operations']&quot;]" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+
+        <xpath expr="//tr[@t-foreach=&quot;line['operations']&quot;]" position="after">
+            <tr t-foreach="line['operations']" t-as="row" class="text-muted">
+
+                <td>
+                    <span t-if="row[0]" class="o_mrp_reports_web_action" t-att-res-id="row[1]"
+                          res-model="mrp.routing.workcenter" view-type="form" t-esc="row[1]"/>
+                    <span t-else="" t-esc="row[1]"/>
+                </td>
+                <td class="text-right">
+                    <span><t t-esc="row[2]" t-options='{"widget": "float", "precision": 4}'/></span>
+                </td>
+                <td class="text-right">
+                    <span>hours</span>
+                </td>
+                <td class="text-right">
+                    <span t-esc="row[3]"
+                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
+                <td class="text-right">
+                    <span t-esc="row[2] * row[3]"
+                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
+                <t t-set="opcost" t-value="opcost + row[2] * row[3]"/>
+            </tr>
+            <tr>
+                <td colspan="4" class="text-right">
+                    <strong>Total Cost of Operations</strong>
+                </td>
+                <td class="text-right">
+                    <strong t-esc="opcost"
+                            t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
+            </tr>
+        </xpath>
+
+        <xpath expr="//t[@t-if=&quot;line['operations']&quot;]//th[hasclass('o_mrp_report_line_header')]"
+               position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+
+        <xpath expr="//t[@t-if=&quot;line['operations']&quot;]//th[hasclass('text-right')]"
+               position="after">
+            <th class="text-right"><span>UoM</span></th>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">aznut_calculator_sign_quote.sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="main_calculator_id" invisible="1"/>
+                <field name="main_powder_calculator_id" invisible="1"/>
+                <button name="show_product_quote" string="Chews Quote" type="object"
+                        icon="fa-pencil-square-o" class="oe_stat_button"
+                        attrs="{'invisible':[('main_calculator_id','=',False)]}"/>
+                <button name="show_powder_quote" string="Powder Quote" type="object"
+                        icon="fa-pencil-square-o" class="oe_stat_button"
+                        attrs="{'invisible':[('main_powder_calculator_id','=',False)]}"/>
+            </xpath>
+            <xpath expr="//tree//field[@name='tax_id']" position="after">
+                <field name="sales_commission" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='tax_totals_json']" position="after">
+                <label for="total_sales_commission" groups="base.group_user"/>
+                <div class="text-nowrap" groups="base.group_user">
+                    <field name="total_sales_commission" widget="monetary" class="oe_inline"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

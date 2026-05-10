@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">aznut_mrp.product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block" attrs="{'invisible':[('sale_ok','=',False)]}">
+                    <field name="is_customer_specific_labeling"/>
+                    <label for="is_customer_specific_labeling"/>
+                </span>
+                <span class="d-inline-block ml-2 mrp-color">
+                    MRP Color:
+                    <field name="mrp_color" decoration-danger="mrp_color == '3'" decoration-info="mrp_color == '2'"
+                           decoration-warning="mrp_color == '1'"/>
+                </span>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Cost History" name="cost_history" groups="base.group_user">
+                    <group name="cost_history" colspan="4">
+                        <field name="product_cost_history_line_ids" nolabel="1">
+                            <tree>
+                                <field name="date"/>
+                                <field name="old_standard_price"/>
+                                <field name="new_standard_price"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='allow_negative_stock']" position="after">
+                <field name="pump_ratio"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">aznut_mrp.product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <group>
+                    <field name="is_removed_from_premix_availability"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="CeoDashboard">
+        <div class="container-fluid dashboard-container">
+            <div class="o_ceo_dashboard">
+                <div class="stats-container">
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CeoDashboardSimpleBlock">
+        <div class="stat-card">
+            <div class="stat-details">
+                <h3 class="stat-title"><t t-esc="title"/></h3>
+                <ul class="params-list">
+                    <t t-foreach="block_data" t-as="row">
+                        <li t-attf-class="params-item #{row.action_class || ''}" t-att-data-res-ids="row.res_ids or ''">
+                            <div class="params-info">
+                                <h3><t t-esc="row.title"/></h3>
+                            </div>
+                            <span t-attf-class="stat-value #{row.color || ''}">
+                                <t t-esc="row.data.join(' / ')"/>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <i t-attf-class="bx #{icon}" aria-hidden="true"></i>
+        </div>
+    </t>
+
+    <t t-name="CeoDashboardSaleBarChart">
+        <div class="stat-card chart-card">
+            <div class="stat-details stat-chart">
+                <h3 class="stat-title">By Brands Ordered</h3>
+                <ul class="params-list chart_list">
+                    <t t-foreach="block_data" t-as="row">
+                        <li class="params-item params-item-chart">
+                            <canvas t-att-id="row.chart_id" style="height:100%; width: 100%;"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <i t-attf-class="bx #{icon}" aria-hidden="true"></i>
+        </div>
+    </t>
+
+    <t t-name="CeoDashboardCrmBlock">
+        <div class="stat-card">
+            <div class="stat-details">
+                <h3 class="stat-title"><t t-esc="title"/></h3>
+                <ul class="params-list">
+                    <li t-attf-class="params-item #{block_data[0].action_class || ''}" t-att-data-res-ids="block_data[0].res_ids or ''">
+                        <div class="params-info">
+                            <h3><t t-esc="block_data[0].title"/></h3>
+                        </div>
+                        <span t-attf-class="stat-value #{block_data[0].color || ''}" style="color:#FF2E2E;">
+                            <t t-esc="block_data[0].data.join(' / ')"/>
+                        </span>
+                    </li>
+                    <div class="params-block">
+                        <li t-attf-class="params-button #{block_data[1].action_class || ''}" t-att-data-res-ids="block_data[1].res_ids or ''">
+                            <div class="params-info">
+                                <h3><t t-esc="block_data[1].title"/></h3>
+                            </div>
+                            <span t-attf-class="stat-value #{block_data[1].color || ''}">
+                                <t t-esc="block_data[1].data.join(' / ')"/>
+                            </span>
+                        </li>              
+                        <li class="params-button create_activity">
+                            <span>Schedule</span>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+            <i t-attf-class="bx #{icon}" aria-hidden="true"></i>
+        </div>
+    </t>
+
+    <t t-name="CeoDashboardMiniBlock">
+        <div class="stat-card stat-card-mini">
+            <div class="stat-details">
+                <h3 class="stat-title"><t t-esc="title"/></h3>
+                <ul class="params-list">
+                    <t t-foreach="block_data" t-as="row">
+                        <li t-attf-class="params-item #{row.action_class || ''}" t-att-data-res-ids="row.res_ids or ''">
+                            <div class="params-info">
+                                <h3><t t-esc="row.title"/></h3>
+                            </div>
+                            <span t-attf-class="stat-value #{row.color || ''}">
+                                <t t-esc="row.data.join(' / ')"/>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,362 @@
+td.container_number {
+  cursor: pointer !important;
+  text-align: center !important;
+  text-decoration: underline;
+}
+
+td.container_number:hover {
+  background-color: grey;
+  color: grey;
+}
+
+
+.workorder_tree {
+  width: 90% !important;
+  margin: 30px auto 0 auto;
+
+  a.o_dropdown_button {
+    --o-input-border-color: white !important;
+  }
+
+  .workorder_tree_new {
+    font-size: 16px !important;
+
+    td {
+      text-align: center !important;
+      vertical-align: middle !important;
+      padding: 0.5em 0.5em;
+    }
+
+    a.o_dropdown_button {
+      display: none;
+    }
+
+    .o_list_view .o_list_table .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) .o_input {
+      border: none;
+      padding: unset;
+    }
+
+
+    .o_list_view .o_list_table .o_data_row.o_selected_row > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
+      border-bottom: unset;
+    }
+
+    i {
+      display: none;
+    }
+
+    .o_list_button {
+      justify-content: center;
+    }
+
+    .o_list_view .o_list_table .o_data_row.o_selected_row > .o_data_cell {
+      border-bottom: unset;
+    }
+
+    .o_field_x2many_list_row_add {
+      a {
+        color: white !important;
+
+      }
+    }
+
+  }
+
+  .o_list_button {
+    display: flex;
+  }
+
+  tbody {
+    background-image: url("../img/img.png");
+    color: #FFFFFF !important;
+    border-color: unset;
+
+    .custom-control-label:before {
+      width: 20px;
+      height: 20px;
+      right: 0;
+    }
+
+    .custom-control-label:after {
+      width: 20px;
+      height: 20px;
+    }
+
+    .custom-control-label {
+      margin-left: 10px;
+    }
+
+    .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier):not(.o_handle_cell) {
+      background-color: transparent !important;
+    }
+  }
+
+  thead {
+    background-image: url("../img/img.png");
+    color: #FFFFFF !important;
+
+    .o_column_sortable:not(.o_handle_cell).o-sort-up,
+    .o_column_sortable:not(.o_handle_cell).o-sort-down {
+      color: #FFF !important;
+    }
+
+    tr {
+      th {
+        width: 20% !important;
+        max-width: 20% !important;
+        border-bottom: 1px solid #FFFFFF !important;
+        text-align: left !important;
+
+        &:first-child {
+          width: 40% !important;
+          max-width: 40% !important;
+        }
+      }
+       th[data-name='operation_id'] {
+            width: 5% !important;
+          }
+    }
+  }
+
+  tr {
+    background-color: unset !important;
+
+    td {
+      padding: 10px 0;
+      border-right: 1px solid #FFFFFF;
+      border-top: none;
+      text-align: left;
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+  }
+
+  .o_data_row {
+    border-bottom: 1px solid #FFF;
+  }
+
+}
+
+.o_workorder_batch {
+
+
+  margin-top: 30px !important;
+  font-size: 20px !important;
+
+  label {
+    font-size: 20px !important;
+  }
+
+  .custom-control-label:before {
+    width: 20px;
+    height: 20px;
+    right: 0;
+  }
+
+  .custom-control-label:after {
+    width: 20px;
+    height: 20px;
+  }
+
+  .workorder_tree {
+    width: 80% !important;
+    margin: 30px auto 30px auto;
+
+  }
+
+}
+
+.o_list_view .o_list_table thead > tr > th.o_deficit_widget_cell {
+  max-width: 50px !important;
+  color: transparent !important;
+}
+
+.o_list_view .o_list_table tbody > tr > td > div[name="onhand_deficit"] {
+  width: 100%;
+  text-align: center;
+}
+
+
+.lot-field {
+  margin-left: 15px;
+  font-size: 38px;
+  color: white;
+  max-width: 15% !important;
+
+  .o_input {
+    padding: 0 !important;
+    text-align: center !important;
+    border-color: #007E84 !important;
+  }
+}
+
+.current_images_kanban {
+  border-left: 1px solid #007E84 !important;
+
+  div[name='current_packaging_image_line_ids'] {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .o-kanban-button-new {
+    color: #fff !important;
+    background-color: #017e84 !important;
+    border-color: #017e84 !important;
+    width: 120px;
+    margin: 15px 0 !important;
+  }
+
+  .o_cp_buttons {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .oe_kanban_details {
+    padding-left: 0 !important;
+    width: 50%;
+  }
+}
+
+.current_images_kanban, .previous_images_kanban {
+  width: 50% !important;
+  margin-top: 0 !important;
+  padding: 25px 10px 5px 10px;
+
+  h2 {
+    margin-bottom: 15px;
+  }
+
+  .oe_kanban_details {
+    background: transparent !important;
+    border: none;
+    width: 200px !important;
+  }
+
+  .o_kanban_record {
+    width: 200px !important;
+    padding: 8px !important;
+  }
+
+  .o_kanban_ghost {
+    margin: 0 !important;
+  }
+}
+
+.expected_block {
+  padding-top: 25px;
+  width: 100% !important;
+  margin-top: 15px !important;
+  border-top: 1px solid #007E84 !important;
+
+  .workorder_tree {
+    width: 48% !important;
+    margin-top: 0 !important;
+
+    &:first-child {
+      margin-left: 0 !important;
+    }
+
+    &:last-child {
+      margin-right: 0 !important;
+    }
+  }
+}
+
+@media(max-width: 992px) {
+  .tablet_title {
+    align-items: center;
+
+    span[name="product_id"] {
+      font-size: 24px !important;
+    }
+  }
+  .lot-field {
+    input {
+      font-size: 24px !important;
+    }
+  }
+}
+
+@media(max-width: 768px) {
+  .expected_block {
+    flex-direction: column;
+
+    .workorder_tree {
+      width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+  }
+  div[name="workorder_scrap_line_ids"] {
+    button {
+      padding: 0.4em !important;
+      font-size: 14px !important;
+    }
+  }
+  .containers_block.workorder_tree {
+    margin: 25px 0 !important;
+    width: 100% !important;
+  }
+}
+
+@media(max-width: 576px) {
+  .expected_block {
+    flex-direction: column;
+
+    .workorder_tree {
+      width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+  }
+  .containers_block.workorder_tree {
+    margin: 25px 0 !important;
+    width: 100% !important;
+  }
+  div[name="package_lines_ids"] {
+    button {
+      font-size: 14px !important;
+    }
+  }
+  .current_images_kanban, .previous_images_kanban {
+    img {
+      width: 150px !important;
+      height: 150px !important;
+    }
+  }
+}
+
+button.aznut-validate-btn {
+  font-size: 85% !important;
+  padding: 4px 10px;
+  line-height: 1.2;
+  font-weight: 600;
+  width: 90%;
+  margin: auto auto !important;
+}
+
+@media (max-width: 768px) {
+  button.aznut-validate-btn {
+    font-size: 65% !important;
+    padding: 3px 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  button.aznut-validate-btn {
+    font-size: 45% !important;
+    padding: 1px 4px;
+    margin: 5px auto 0 auto !important;
+  }
+}
+
+@media (max-width: 480px) {
+  button.aznut-validate-btn {
+    font-size: 40% !important;
+    padding: 0.5px 2px;
+    margin: 5px auto 0 auto !important;
+  }
+}

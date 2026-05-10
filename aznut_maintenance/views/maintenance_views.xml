@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="aznut_maintenance_hr_equipment_request_view_form" model="ir.ui.view">
+        <field name="name">aznut_maintenance.equipment.request.form</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="replace">
+                <group>
+                    <field name='description' placeholder="Internal Notes"/>
+                </group>
+                <group>
+                    <field name="image_1920" widget="image"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

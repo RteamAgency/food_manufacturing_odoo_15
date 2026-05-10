@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="dashboard_mail_activity_view_tree" model="ir.ui.view">
+        <field name="name">dashboard.mail.activity.view.tree</field>
+        <field name="model">dashboard.mail.activity</field>
+        <field name="arch" type="xml">
+            <tree string="Urgent Activities" create="0" delete="0" edit="0">
+                <field name="state" invisible="1"/>
+                <field name="name"/>
+                <field name="mail_activity_type_id"/>
+                <field name="note"/>
+                <field name="feedback"/>
+                <field name="date_due"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

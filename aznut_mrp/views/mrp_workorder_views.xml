@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_workorder_view_form_tablet_inherit" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.workorder.view.form.inherit.quality.tablet.new</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="hide_mark_as_done_button" invisible="1"/>
+                <field name="hide_mark_as_done_and_close_button" invisible="1"/>
+                <field name="current_workorder_batch_id" invisible="1"/>
+                <field name="next_workorder_batch_id" invisible="1"/>
+                <field name="previous_workorder_batch_id" invisible="1"/>
+                <field name="next_production_check_id" invisible="1"/>
+                <field name="previous_production_check_id" invisible="1"/>
+                <field name="production_station" invisible="1"/>
+                <field name="premix_station" invisible="1"/>
+                <field name="packaging_station" invisible="1"/>
+                <field name="production_status" invisible="1"/>
+                <field name="current_production_check_state" invisible="1"/>
+                <field name="show_current_production_check_lines_ids" invisible="1"/>
+                <field name="show_finish_batches_button" invisible="1"/>
+                <field name="has_quality_check_premix_lines" invisible="1"/>
+                <field name="show_calculate_batches_produced_quantity_button" invisible="1"/>
+                <field name="production_checks_ids" invisible="1"/>
+                <field name="current_production_check_not_create_components" invisible="1"/>
+                <field name="highlight_next_check_button" invisible="1"/>
+                <field name="show_validate_button" invisible="1"/>
+                <field name="show_calculate_batches_produced_quantity_button" invisible="1"/>
+                <field name="show_additional_lots" invisible="1"/>
+                <field name="show_lots_in_checks" invisible="1"/>
+                <field name="show_number_packages_wizard" invisible="1"/>
+                <field name="show_package_lines" invisible="1"/>
+                <field name="show_print_containers_labels_button" invisible="1"/>
+                <field name="show_confirm_production_quantity_button" invisible="1"/>
+                <field name="is_lot_validated" invisible="1"/>
+                <field name="is_duration_expired" invisible="1"/>
+                <field name="night_shift_user" invisible="1"/>
+                <field name="has_pump_uom" invisible="1"/>
+            </field>
+            <xpath expr="//div[hasclass('o_actions')]" position="inside">
+                <button name="action_print_containers_labels" type="object" string="Print Containers Labels"
+                        class="btn-secondary"
+                        attrs="{'invisible':[('show_print_containers_labels_button','=',False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='component_id']" position="attributes">
+                <attribute name="style">width:inherit!important;</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_workorder_field')]" position="after">
+                <div class="o_workorder_field"
+                     attrs="{'invisible': ['|',('premix_station', '=',False),('show_additional_lots','=',False)]}">
+                    <div class="o_workorder_lot">
+                        <div class="o_form_label" attrs="{'invisible': [('component_tracking', '!=', 'serial')]}">
+                            Additional Serial Numbers
+                        </div>
+                        <div class="o_form_label" attrs="{'invisible': [('component_tracking', '!=', 'lot')]}">
+                            Additional Lot Numbers</div>
+                        <field name="product_lots_ids" class="text-center o_lot_number"
+                               widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_workorder_field')]//field[@name='lot_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('component_tracking', '=', 'none')],
+                                         'readonly': [('premix_station', '=', True),
+                                                      ('lot_id', '!=', False), ('is_expired', '=', False)]}</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='do_finish']" position="attributes">
+                <attribute name="attrs">{'invisible': [
+                    '|', '|', '|', '|', '|',
+                    ('is_user_working', '=', False),
+                    ('is_last_step', '!=', True),
+                    ('skipped_check_ids', '!=', []),
+                    ('hide_mark_as_done_button', '=', True),
+                    ('production_status', '=', 'draft'),
+                    '&amp;',
+                    ('is_last_unfinished_wo', '=', False),
+                    ('is_last_lot', '=', False),
+                ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_next'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': [
+                    '|', '|', '|', '|', '|',
+                    ('is_user_working', '=', False),
+                    ('is_last_step', '=', True),
+                    ('test_type', 'not in', ['register_consumed_materials', 'register_byproducts', 'picture']),
+                    ('consumption', '=', 'strict'), '&amp;',
+                    ('consumption', 'in', ['flexible', 'warning']), ('component_qty_to_do', '&gt;=', 0),
+                    ('show_validate_button', '=', False),
+                ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_next'][3]" position="attributes">
+                <attribute name="attrs">{'invisible': [
+                    '|', '|', '|', '|',
+                    ('is_user_working', '=', False),
+                    ('is_last_step', '=', True),
+                    ('test_type', 'not in', ['register_consumed_materials', 'register_byproducts', 'picture']),
+                    ('component_qty_to_do', '&lt;', 0),
+                    ('show_validate_button', '=', False),
+                ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='do_finish']" position="after">
+                <button name="action_start_production"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible':['|',('production_status', '!=', 'draft'),('show_finish_batches_button','=',False)]}"
+                        string="Start Batches"/>
+                <button name="action_open_number_packages_wizard"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible':[('show_number_packages_wizard', '=', False)]}"
+                        string="Set Number Of Containers"/>
+                <button attrs="{'invisible': [('show_confirm_production_quantity_button', '=', False)]}"
+                        name="action_open_confirm_production_quantity_wizard" type="object" class="btn-primary"
+                        string="Confirm Production Quantity"/>
+            </xpath>
+            <xpath expr="//button[@name='action_open_manufacturing_order']" position="attributes">
+                <attribute name="attrs">{'invisible': [
+                    '|', '|', '|', '|', '|', '|',
+                    ('is_user_working', '=', False),
+                    ('is_last_step', '!=', True),
+                    ('skipped_check_ids', '!=', []),
+                    ('is_last_unfinished_wo', '=', False),
+                    ('production_status', '=', 'draft'),
+                    ('hide_mark_as_done_and_close_button', '=', True),
+                    ('show_confirm_production_quantity_button', '=', True),
+                ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='finished_product_check_ids']/tree" position="inside">
+                <field name="has_quality_check_premix_lines" invisible="1"/>
+                <button name="action_open_quality_check_premix_lines" type="object" icon="fa-arrow-right"
+                        attrs="{'invisible':[('has_quality_check_premix_lines','=',False)]}"/>
+            </xpath>
+            <xpath expr="//h3" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['|', '|', '|', ('current_quality_check_id', '!=', False), ('check_ids', '=', []),
+                                  ('qty_producing', '=', 0), ('packaging_station', '=', True)]}</attribute>
+            </xpath>
+            <field name="finished_product_check_ids" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['|', '|', '|', ('current_quality_check_id', '!=', False), ('check_ids', '=', []),
+                                  ('qty_producing', '=', 0), ('packaging_station', '=', True)]}</attribute>
+            </field>
+            <xpath expr="//div[hasclass('o_workorder_form')]" position="after">
+                <div attrs="{'invisible':['|',('is_last_step','!=',True),('packaging_station','!=',True)]}">
+                    <div class="tablet_title" style="display: flex;justify-content: center; margin-bottom: 20px;">
+                        <field name="product_id" readonly="1" style="font-size: 35px;"/>
+                        <field name="finished_lot_id" class="lot-field" readonly="1"
+                               style="border-color: #007E84!important;"
+                               options="{'no_open':True}"/>
+                        <button name="action_validate_lot" type="object"
+                                string="Validate"
+                                class="btn btn-primary" style="width: 12%;margin: 10px;max-height: 45px;"
+                                attrs="{'invisible': [('is_lot_validated', '=', True)]}"/>
+                        <button name="action_reset_lot" type="object"
+                                string="Reset"
+                                class="btn btn-warning" style="width: 12%;margin: 10px;max-height: 40px;"
+                                attrs="{'invisible': [('is_lot_validated', '=', False)]}"/>
+
+                    </div>
+                    <div class="d-flex justify-content-between flex-column o_workorder_batch border-top border-2 pt-5 mt-4"
+                         style="border-color: #007E84!important;">
+                        <div class="d-flex w-50 justify-content-between" style="margin-top: 0!important;">
+                            <div class="w-50">
+                                <h2>Current Time:
+                                    <span groups="mrp_workorder.group_mrp_wo_tablet_timer"
+                                          class="mr-3 my-3 text-center">
+                                        <field attrs="{'invisible':[('is_duration_expired','=',False)]}" name="duration"
+                                               widget="mrp_time_counter" readonly="1"
+                                               class="mr-3 aznut-counter" style="color: red"/>
+                                        <field attrs="{'invisible':[('is_duration_expired','=',True)]}" name="duration"
+                                               widget="mrp_time_counter" readonly="1"
+                                               class="mr-3 aznut-counter"/>
+                                    </span>
+                                </h2>
+                            </div>
+                            <div class="w-50">
+                                <h2>Expected Time:
+                                    <field name="duration_expected" readonly="1"/>
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="workorder_tree" style="width: 100%!important;margin-top: 0px !important;">
+                            <field name="workorder_scrap_line_ids" class="workorder_tree_new">
+                                <tree editable="top" create="0" delete="0">
+                                    <field name="product_id" options="{'no_open':True}"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="uom_id" attrs="{'readonly':[('done_quantity','>',0)]}"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                    <field name="quantity"/>
+                                    <field name="lot_id" domain="[('id','in',allowed_lot_ids)]"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                    <field name="allowed_lot_ids" invisible="1"/>
+                                    <field name="location_id"
+                                           options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                    <field name="done_quantity" string="Done Qty"/>
+                                    <button name="action_add" type="object" string="Add" class="btn btn-primary"
+                                            style="padding: 0.4em 1.5em;!important;"/>
+                                </tree>
+                            </field>
+                        </div>
+                        <div class="d-flex expected_block">
+                            <div class="workorder_tree">
+                                <h2>
+                                    Packaging Activities
+                                </h2>
+                                <field name="packaging_activity_line_ids" options="{'no_open':True}"
+                                       class="workorder_tree_new">
+                                    <tree editable="top">
+                                        <field name="packaging_activity_id" string="Name"
+                                               options="{'no_open':True}"/>
+                                        <field name="activity_employee_id" widget="many2one"
+                                               options="{'no_create_edit':True,'no_create':True,'no_open':True}"/>
+                                    </tree>
+                                </field>
+                            </div>
+                            <div class="workorder_tree">
+                                <h2>Workorder Notes</h2>
+                                <field name="production_workorder_ids"
+                                       class="workorder_tree_new note-tree">
+                                    <tree>
+                                        <field name="operation_id"/>
+                                        <field name="workorder_note"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between o_workorder_batch border-top border-2 mt-5"
+                         style="border-color: #007E84!important;width:100%;">
+                        <div class="d-flex justify-content-between"
+                             style="max-width: 100%!important;margin-top: 0!important;">
+                            <div class="previous_images_kanban">
+                                <h2 class="text-center">Previous Images</h2>
+                                <field name="previous_packaging_image_lines_ids">
+                                    <kanban class="o_kanban_small_column" sample="1">
+                                        <field name="id"/>
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_details d-flex m-0 mr-5"
+                                                     style="width:200px!important;">
+                                                    <div class="align-items-center justify-content-center m-auto">
+                                                        <img style="width: 200px;height:200px"
+                                                             alt="Previous image"
+                                                             t-att-src="kanban_image('packaging.image.line', 'image', record.id.raw_value)"/>
+                                                        <h3 t-esc="record.name.raw_value" class="text-center mt-2"/>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </div>
+                            <div class="current_images_kanban">
+                                <h2 class="text-center">Current Images</h2>
+                                <field name="current_packaging_image_line_ids">
+                                    <kanban sample="1">
+                                        <field name="id"/>
+                                        <field name="image"/>
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div class="oe_kanban_details d-flex m-0 mr-5">
+                                                    <div class="align-items-center justify-content-center m-auto">
+                                                        <img style="width: 200px;height:200px"
+                                                             alt="Current Image"
+                                                             t-att-src="kanban_image('packaging.image.line', 'image', record.id.raw_value)"/>
+                                                        <h3 t-esc="record.name.raw_value" class="text-center mt-2"/>
+
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_workorder_batch border-top border-2 pt-5 mt-4"
+                         attrs="{'invisible':[('show_package_lines','=',False)]}"
+                         style="border-color: #007E84!important;margin-top: 0!important;">
+                        <div class="workorder_tree containers_block" style="margin-top: 0!important;">
+                            <h2>Containers:</h2>
+                            <field name="package_lines_ids" widget="one2many"
+                                   options="{'no_open': True}">
+                                <tree default_order="number">
+                                    <field name="name"/>
+                                    <field name="number" invisible="1"/>
+                                    <field name="is_validated"/>
+                                    <button name="action_validate" type="object"
+                                            string="Validate"
+                                            class="aznut-validate-btn btn-primary"
+                                            attrs="{'invisible': [('is_validated', '=', True)]}"/>
+                                    <button name="action_reset" type="object"
+                                            string="Reset"
+                                            class="aznut-validate-btn btn-warning"
+                                            attrs="{'invisible': [('is_validated', '=', False)]}"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_workorder_batch" attrs="{'invisible':[('has_quality_check_premix_lines','=',False)]}">
+                    <div class=" workorder_tree"
+                         style="width: 90% !important;">
+                        <field name="current_quality_check_premix_line_ids" options="{'no_open':True}">
+                            <tree editable="top" delete="0" create="0">
+                                <field name="component_id" readonly="1"/>
+                                <field name="pump_uom"
+                                       attrs="{'column_invisible':[('parent.has_pump_uom','=',False)]}"/>
+                                <field name="display_quantity" readonly="1"/>
+                                <field name="quality_check_id" invisible="1"/>
+                                <field name="is_checked" readonly="0"/>
+                                <field name="reserved_lots_ids" widget="many2many_tags" class="text-center"
+                                       options="{'color_field': 'color'}"
+                                       attrs="{'column_invisible':[('parent.show_lots_in_checks','=',False)]}"/>
+                                <field name="locations"
+                                       attrs="{'column_invisible':[('parent.show_lots_in_checks','=',False)]}"/>
+
+                                <field name="container_number" class="container_number"/>
+
+                                <button name="action_validate" type="object"
+                                        string="Validate"
+                                        class="aznut-validate-btn btn-primary"
+                                        attrs="{'invisible': [('is_checked', '=', True)]}"/>
+                                <button name="action_reset" type="object"
+                                        string="Reset"
+                                        class="aznut-validate-btn btn-warning"
+                                        attrs="{'invisible': [('is_checked', '=', False)]}"/>
+                            </tree>
+                        </field>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_continue'][3]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [
+                        '|', '|', '|', '|',
+                        ('is_user_working', '=', False),
+                        ('is_last_step', '=', True),
+                        ('test_type', '!=', 'register_consumed_materials'),
+                        ('component_qty_to_do', '&gt;=', 0),
+                        ('has_quality_check_premix_lines', '=', True)
+                    ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_continue'][4]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible':
+                         ['|', '|', '|', '|', '|',
+                          ('has_quality_check_premix_lines', '=', True),
+                          ('is_user_working', '=', False),
+                          ('is_last_step', '=', True),
+                          ('test_type', '!=', 'register_consumed_materials'), ('consumption', '=', 'strict'),
+                          '&amp;', ('consumption', 'in', ['flexible', 'warning']),
+                          ('component_qty_to_do', '&lt;', 0),
+                          ]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='qty_producing']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='finished_lot_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="attrs">{
+                    'invisible': [('is_last_step', '=', True), ('packaging_station', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_generate_serial']" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['|', ('finished_lot_id', '!=', False), '&amp;', ('is_last_step', '=', True),
+                                  ('packaging_station', '=', True)]}</attribute>
+            </xpath>
+
+            <xpath expr="//label[@for='finished_lot_id'][1]" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['|', ('product_tracking', '!=', 'lot'), '&amp;', ('is_last_step', '=', True),
+                                  ('packaging_station', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='finished_lot_id'][2]" position="attributes">
+                <attribute name="attrs">{
+                    'invisible': ['|', ('product_tracking', '!=', 'serial'), '&amp;', ('is_last_step', '=', True),
+                                  ('packaging_station', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='duration']/.." position="attributes">
+                <attribute name="attrs">{
+                    'invisible': [('is_last_step', '=', True), ('packaging_station', '=', True)]}</attribute>
+            </xpath>
+            <!--            <xpath expr="//button[@name='action_generate_serial']" position="attributes">-->
+            <!--                <attribute name="invisible">1</attribute>-->
+            <!--            </xpath>-->
+            <xpath expr="//div[hasclass('o_workorder_data')]" position="attributes">
+                <attribute name="attrs">{'invisible': [('current_workorder_batch_id', '!=', False),
+                                                       ('production_status', '=', 'in_progress')]}
+                </attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_workorder_data')]" position="after">
+                <div class="o_workorder_data o_workorder_batch"
+                     attrs="{'invisible': ['|',('current_workorder_batch_id', '=',False),('production_status','!=','in_progress')]}">
+                    <div class="o_workorder_bar_content o_workorder_form">
+                        <div class="o_workorder_field">
+                            <label for="product_id" string="Batch:"/>
+                            <field name="current_workorder_batch_name"/>
+                            <label for="current_workorder_batch_name" string=""/>
+                            <field name="product_id" options="{'no_open': True}" readonly="1"/>
+                        </div>
+                        <div class="o_workorder_field text-center">
+                            <label for="current_workorder_batch_quantity" string="Quantity:"/>
+                            <field name="current_workorder_batch_quantity"/>
+                        </div>
+                        <div class="o_workorder_field text-right">
+                            <label for="current_workorder_batch_is_validated" string="Validated:"
+                                   attrs="{'invisible': [('current_workorder_batch_is_validated', '=', False)]}"/>
+                            <field name="current_workorder_batch_is_validated" string="Validated"
+                                   attrs="{'invisible': [('show_calculate_batches_produced_quantity_button', '=', True)]}"
+                                   readonly="1"/>
+                            <button name="action_calculate_batches_produced_quantity" type="object" string="Validate"
+                                    class="btn btn-primary"
+                                    attrs="{'invisible': [('show_calculate_batches_produced_quantity_button', '=', False)]}"/>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px">
+                        <div class="o_workorder_form o_workorder_bar_content">
+                            <div class="o_workorder_field">
+                                <field name="current_production_check_id" readonly="1" options="{'no_open':True}"/>
+                            </div>
+                            <div class="o_workorder_field text-right">
+                                <button name="button_change_production_check" type="object" class="btn-secondary"
+                                        context="{'previous': True}"
+                                        attrs="{'invisible': [('previous_production_check_id', '=', False)]}"
+                                        string="Previous Check"
+                                        icon="fa-chevron-left o_workorder_btn_icon_small"/>
+                                <button disabled="1" class="btn-secondary"
+                                        attrs="{'invisible': [('previous_production_check_id', '!=', False)]}"
+                                        string="Previous Check"
+                                        icon="fa-chevron-left o_workorder_btn_icon_small"/>
+                                <button name=""></button>
+                                <button name="button_change_production_check" type="object" context="{'next': True}"
+                                        attrs="{'invisible': ['|',('next_production_check_id', '=', False),('highlight_next_check_button','=',True)]}"
+                                        string="Next Check"
+                                        class="btn-secondary"
+                                        icon="fa-chevron-right float-right o_workorder_btn_icon_small"/>
+                                <button name="button_change_production_check" type="object" context="{'next': True}"
+                                        attrs="{'invisible': ['|',('next_production_check_id', '=', False),('highlight_next_check_button','=',False)]}"
+                                        string="Next Check"
+                                        class="btn-primary"
+                                        icon="fa-chevron-right float-right o_workorder_btn_icon_small"/>
+                                <button disabled="1"
+                                        attrs="{'invisible': [('next_production_check_id', '!=', False)]}"
+                                        string="Next Check"
+                                        class="btn-secondary"
+                                        icon="fa-chevron-right float-right o_workorder_btn_icon_small"/>
+                                <button
+                                        string="Return To The First Check"
+                                        class="btn-secondary"
+                                        name="button_return_to_the_first_check" type="object"/>
+                            </div>
+                        </div>
+                        <field name="current_production_check_note"/>
+                    </div>
+                    <div class="workorder_tree"
+                         attrs="{'invisible':[('show_current_production_check_lines_ids','=',False)]}">
+                        <field name="current_production_check_lines_ids" widget="one2many"
+                               options="{'no_open': True}">
+                            <tree>
+                                <field name="component_id"
+                                       attrs="{'column_invisible':[('parent.current_production_check_not_create_components','=',True)]}"/>
+                                 <field name="pump_uom"
+                                       attrs="{'column_invisible':[('parent.has_pump_uom','=',False)]}"/>
+                                <field name="display_quantity"
+                                       attrs="{'column_invisible':[('parent.current_production_check_not_create_components','=',True)]}"/>
+                                <field name="reserved_lots_ids"
+                                       attrs="{'column_invisible':[('parent.current_production_check_not_create_components','=',True)]}"
+                                       widget="many2many_tags" class="text-center" options="{'color_field': 'color'}"/>
+                                <field name="locations"
+                                       attrs="{'column_invisible':[('parent.current_production_check_not_create_components','=',True)]}"/>
+                                <field name="quality_check_name"
+                                       attrs="{'column_invisible':[('parent.current_production_check_not_create_components','=',False)]}"/>
+                                <field name="is_checked"/>
+                                <button name="action_validate" type="object"
+                                        string="Validate"
+                                        class="aznut-validate-btn btn-primary"
+                                        attrs="{'invisible': [('is_checked', '=', True)],'column_invisible':['|',('parent.current_workorder_batch_is_validated','=',True),('parent.current_production_check_state','!=','none')]}"/>
+                                <button name="action_reset" type="object"
+                                        string="Reset"
+                                        class="aznut-validate-btn btn-warning"
+                                        attrs="{'invisible': [('is_checked', '=', False)],'column_invisible':['|',('parent.current_workorder_batch_is_validated','=',True),('parent.current_production_check_state','!=','none')]}"/>
+                            </tree>
+                        </field>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_actions')]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', ('working_state', '=', 'blocked'),
+                                   '&amp;',
+                                   ('current_workorder_batch_id', '!=', False),
+                                   ('production_status', '=', 'in_progress')]}
+                </attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_actions')]" position="after">
+                <div attrs=" {'invisible': ['|',('working_state', '=', 'blocked'),'|',('current_workorder_batch_id', '=', False),('production_status', '!=', 'in_progress')]}">
+                    <span groups="mrp_workorder.group_mrp_wo_tablet_timer" class="mr-3 my-3 text-center">
+                        <field name="duration" widget="mrp_time_counter" readonly="1" class="mr-3"/>
+                        <i class="fa fa-clock-o" attrs="{'invisible': [('is_user_working', '=', False)]}"
+                           title="User is working"/>
+                        <i class="fa fa-clock-o text-warning" attrs="{'invisible': [('is_user_working', '=', True)]}"
+                           title="User is not working"/>
+                    </span>
+                    <button name="action_view_production_checks"
+                            type="object"
+                            class="btn-secondary"
+                            attrs="{'invisible':[('production_checks_ids','=',False)]}"
+                            string="View Checks"/>
+                    <button name="action_finish_batches"
+                            type="object"
+                            class="btn-primary"
+                            attrs="{'invisible':[('next_workorder_batch_id', '!=', False)]}"
+                            string="Finish Batches"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_workorder_actions')]" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('current_workorder_batch_id', '!=', False),
+                                   ('production_status', '=', 'in_progress')]}
+                </attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_workorder_actions')]" position="after">
+                <div attrs="{'invisible':[('production_station','=',False)]}">
+                    <label for="batches_produced_quantity" string="Produced:" style="font-size: 20px !important;"/>
+                    <field name="batches_produced_quantity"/>
+                    <label for="product_uom_id" string=" "/>
+                    <field name="product_uom_id"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_workorder_actions')]" position="after">
+                <div class="o_workorder_bar_content o_workorder_actions"
+                     attrs=" {'invisible': ['|',('current_workorder_batch_id', '=', False),('production_status', '!=', 'in_progress')]}">
+                    <button name="action_batches_menu" type="object" class="btn-secondary o_workorder_icon_btn"
+                            string=""
+                            icon="fa-bars" aria-label="Dropdown menu" title="Dropdown menu"
+                            context="{'show_add_components':0}"/>
+                    <button name="button_pending" type="object" class="btn-secondary mr8"
+                            attrs="{'invisible': ['|', ('is_user_working', '=', False), ('working_state', '=', 'blocked')]}"
+                            barcode_trigger="pause" string="Pause" style="width:20%;margin-right: 10px"/>
+                    <button name="button_start" type="object" class="btn-warning"
+                            attrs="{'invisible': ['|', '|', ('is_user_working', '=', True), ('working_state', '=', 'blocked'), ('state', '=', 'done')]}"
+                            barcode_trigger="pause" string="Continue" style="width:20%;margin-right: 10px"/>
+                    <button name="button_unblock" type="object" context="{'default_workcenter_id': workcenter_id}"
+                            attrs="{'invisible': [('working_state', '!=', 'blocked')]}" string="Unblock"
+                            class="btn-danger" style="width:20%;margin-right: 10px"/>
+                    <button name="button_change_batch" type="object" class="btn-secondary" context="{'previous': True}"
+                            attrs="{'invisible': [('previous_workorder_batch_id', '=', False)]}" string="PREVIOUS BATCH"
+                            icon="fa-chevron-left o_workorder_btn_icon_small" style="margin-right: 10px"/>
+                    <button disabled="1" class="btn-secondary"
+                            attrs="{'invisible': [('previous_workorder_batch_id', '!=', False)]}"
+                            string="PREVIOUS BATCH"
+                            icon="fa-chevron-left o_workorder_btn_icon_small" style="margin-right: 10px"/>
+                    <button name="button_change_batch" type="object" context="{'next': True}"
+                            attrs="{'invisible': ['|',('next_workorder_batch_id', '=', False),('current_workorder_batch_is_validated','=',True)]}"
+                            string="NEXT BATCH" style="margin-right: 10px"
+                            class="btn-secondary" icon="fa-chevron-right float-right o_workorder_btn_icon_small"/>
+                    <button name="button_change_batch" type="object" context="{'next': True}"
+                            attrs="{'invisible': ['|',('next_workorder_batch_id', '=', False),('current_workorder_batch_is_validated','=',False)]}"
+                            string="NEXT BATCH" style="margin-right: 10px"
+                            class="btn-primary" icon="fa-chevron-right float-right o_workorder_btn_icon_small"/>
+                    <button disabled="1"
+                            attrs="{'invisible': [('next_workorder_batch_id', '!=', False)]}" string="NEXT BATCH"
+                            class="btn-secondary" icon="fa-chevron-right float-right o_workorder_btn_icon_small"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_workorder_form_view_inherit" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.production.work.order.form</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='workorder_page_work_instruction']" position="after">
+                <page string="Batch Records" name="batch_recording"
+                      attrs="{'invisible': [('has_production_batches', '=', False)]}">
+                    <field name="has_production_batches" invisible="1"/>
+                    <field name="workorder_batch_ids" options="{'no_open': True}">
+                        <tree delete="0" edit="0" create="0">
+                            <field name="name" string="Batch#"/>
+                            <field name="time_start"/>
+                            <field name="time_finish"/>
+                            <field name="is_validated"/>
+                            <field name="block_reasons_description"/>
+                            <field name="time_actual" widget="float_time" string="Duration" sum="Total Duration"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Check Records" name="batch_recording"
+                      attrs="{'invisible': [('has_production_batch_checks', '=', False)]}">
+                    <field name="has_production_batch_checks" invisible="1"/>
+                    <field name="workorder_batch_checks_ids" options="{'no_open': True}">
+                        <tree delete="0" edit="0" create="0" default_order="batch_number">
+                            <field name="workorder_batch_id" string="Batch#"/>
+                            <field name="production_check_id"/>
+                            <field name="batch_number" invisible="1"/>
+                            <field name="title"/>
+                            <field name="time_start"/>
+                            <field name="time_finish"/>
+                            <field name="is_validated"/>
+                            <field name="time_actual" widget="float_time" string="Duration" sum="Total Duration"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Operators" name="employees_ids">
+                    <field name="employees_ids" options="{'no_open': True}" readonly="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="work_email"/>
+                            <field name="department_id"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Note" name="workorder_note">
+                    <field name="workorder_note"/>
+                </page>
+                <page string="Blocks Description" attrs="{'invisible':[('block_reasons_ids','=',[])]}">
+                    <field name="production_station" invisible="1"/>
+                    <field name="block_reasons_ids">
+                        <tree>
+                            <field name="mrp_workorder_batch_id" attrs="{'column_invisible':[('parent.production_station','=',False)]}"/>
+                            <field name="loss_id"/>
+                            <field name="description"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_form_tablet_menu_inherit" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.workorder.view.form.tablet.menu</field>
+        <field name="model">mrp.workorder</field>
+        <field name="mode">primary</field>
+        <field name="priority">10000</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet_menu"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_add_component']/.." position="replace"/>
+            <xpath expr="//button[@name='action_add_byproduct']/.." position="replace"/>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_form_tablet_menu_inherit_second" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.workorder.view.form.tablet.menu.second</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority">10001</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet_menu"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(mrp.act_mrp_block_workcenter_wo)d']" position="attributes">
+                <attribute name="context">{'default_workcenter_id': workcenter_id,
+                                           'default_block_workorder_id': id}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_workorder_tree_editable_view" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.production.work.order.tree.editable</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <field position="after" name="date_planned_start">
+                <field name="employees_ids" widget="many2many_tags"/>
+            </field>
+            <xpath expr="//button[@name='%(mrp.act_mrp_block_workcenter_wo)d']" position="attributes">
+                <attribute name="context">{'default_workcenter_id': workcenter_id,
+                                           'default_block_workorder_id': id}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="workcenter_line_kanban" model="ir.ui.view">
+        <field name="name">aznut_mrp.mrp.production.work.order.kanban</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.workcenter_line_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_record_top')]/.." position="attributes">
+                <attribute name="t-attf-style">
+                    border-color:#{ (record.mrp_color.raw_value == '1'
+                            ? '#cdb832'
+                            : (record.mrp_color.raw_value == '2'
+                                ? '#C4A484'
+                                : (record.mrp_color.raw_value == '3'
+                                    ? 'red'
+                                    : (record.mrp_color.raw_value == '4'
+                                        ? '#000000'
+                                        : 'none')))) };border-width: 3px;margin-bottom:3px;
+                </attribute>
+            </xpath>
+            <field name="production_id" position="after">
+                <field name="mrp_color"/>
+            </field>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="internal_layout_cleaning" inherit_id="web.internal_layout" primary="True">
+        <xpath expr="//div[hasclass('text-center')]" position="replace"/>
+        <xpath expr="//div[hasclass('col-3')]" position="replace">
+            <t t-call="aznut_mrp.header_company_block">
+                <t t-set="target" t-value="company.partner_id"/>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('text-right')]" position="replace">
+            <div class="col-4 offset-4 text-right">
+                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                     style="height: 140px;"
+                     alt="Logo"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('article')]" position="after">
+            <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+                <div>
+                    <span>
+                        Responsible: <t t-if="o.user_id" t-esc="o.user_id.name"/>
+                    </span>
+                    <img t-if="o.user_id.sign_signature"
+                         t-attf-src="data:image/jpg;base64,{{ o.user_id.sign_signature }}"
+                         style="max-height: 6rem;max-width: 50%"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="aznut_report_mrp_order_cleaning">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="aznut_mrp.internal_layout_cleaning">
+                    <div class="page">
+                        <t t-set="cleaning_wo" t-value="o.workorder_ids[0]"/>
+                        <div>
+                            <h2 t-esc="time.strftime('%B %d, %Y')" style="font-size: 48px;font-weight: 600;"/>
+                        </div>
+                        <h2 style="text-align:center;font-weight: 600;"><t t-esc="o.name"/><br/>Cleaning Report</h2>
+                        <ul style="list-style: none;padding-left: 0;font-size: 18px;margin-top: 20px;">
+                            <li><strong>Product Name: <t t-esc="o.product_id.name"/></strong></li>
+                            <li>Date of Manufacturing: <t t-if="o.date_finished" t-esc="o.date_finished.strftime('%m-%d-%Y')"/></li>
+                        </ul>
+                        <table t-if="cleaning_wo" class="table table-bordered" style="width: 100%;font-size: 18px;text-align: center;margin-top: 30px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid black;">
+                                    <th>Date</th>
+                                    <th>Operator</th>
+                                    <th>Title</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-if="cleaning_wo" t-foreach="cleaning_wo.check_ids" t-as="check">
+                                    <tr>
+                                        <td style="white-space: nowrap; "><t t-esc="check.control_date.strftime('%m-%d-%Y %H:%M')"/></td>
+                                        <td><t t-esc="check.user_id.name"/></td>
+                                        <td><t t-esc="check.title"/></td>
+                                        <td>
+                                            <t t-if="check.test_type == 'register_consumed_materials'"
+                                               t-esc="'%s - %s %s' % (check.component_id.name,check.move_id.quantity_done or check.move_line_id.qty_done,check.move_id.product_uom.name or check.move_line_id.product_uom_id.name) "/>
+                                            <t t-elif="check.test_type == 'picture' and check.picture">
+                                                <img t-attf-src="data:image/jpg;base64,{{ check.picture }}"
+                                                     style="max-height: 10rem;max-width: 60%;"/>
+                                            </t>
+                                            <t t-elif="check.test_type == 'worksheet' and o._get_check_worksheet_images(check)">
+                                                <t t-set="vals" t-value="o._get_check_worksheet_images(check)"/>
+                                                <t t-foreach="vals" t-as="key">
+                                                    <div t-attf-style="{{'margin-bottom:30px;border-bottom:1px solid black;padding-bottom:15px' if list(vals.keys()).index(key) != len(vals)-1 else ''}}">
+                                                        <p t-esc="key" class="mb-2"
+                                                           style="font-size: 18px !important;"/>
+                                                        <img t-attf-src="data:image/jpg;base64,{{ vals[key] }}"
+                                                             style="max-height: 10rem;max-width:60%"/>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                            <t t-else="" t-esc="check.result"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

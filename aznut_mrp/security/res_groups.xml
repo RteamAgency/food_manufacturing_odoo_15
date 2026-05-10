@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="group_workcenter_operator" model="res.groups">
+            <field name="name">Workcenter Operator</field>
+            <field name="implied_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="category_id" ref="base.module_category_manufacturing_manufacturing"/>
+        </record>
+
+        <record id="mrp.group_mrp_user" model="res.groups">
+            <field name="implied_ids"
+                   eval="[(6, 0, [ref('aznut_mrp.group_workcenter_operator')])]"/>
+        </record>
+    </data>
+</odoo>

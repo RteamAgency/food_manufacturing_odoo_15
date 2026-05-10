@@ -1,0 +1,262 @@
+@import url(https://fonts.googleapis.com/css?family=Fjalla+One);
+
+$bg: #000;
+$red: rgb(232, 4, 21);
+$white: #fff;
+$grey: rgb(162, 162, 162);
+$cont-size: 170px;
+$outer-size: $cont-size - 40;
+$inner-size: $outer-size - 30;
+$cont-size-mobile: 80px;
+$outer-size-mobile: $cont-size-mobile - 30;
+$inner-size-mobile: $cont-size-mobile - 30;
+$border-size: 6px;
+$sec: 1s;
+$bezier: cubic-bezier(.4, -.9, .9, 1);
+
+@mixin animation($name) {
+    @-webkit-keyframes #{$name} {@content;}
+    @-moz-keyframes #{$name} {@content;}
+    @-o-keyframes #{$name} {@content;}
+    @keyframes #{$name} {@content;}
+}
+
+@mixin animation-use($name, $time, $easing) {
+    -webkit-animation: $name $time infinite $easing;
+    -moz-animation: $name $time infinite $easing;
+    -o-animation: $name $time infinite $easing;
+    animation: $name $time infinite $easing;
+}
+
+@mixin animate($val, $colon) {
+    @include animation(to_ + $val) {
+        @for $i from 1 to $val {
+            #{100/$val*$i}% {
+                @if ($i < 10) {
+                    content: $colon + '0' + $i;
+                } @else {
+                    content: $colon + '' + $i;
+                }
+            }
+        } 
+    }
+}
+
+@mixin pseudo($content) {
+    position: relative;
+    content: $content;
+}
+
+@mixin center($val) {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: $val;
+    height: $val;
+    transform: translate(-50%, -50%);
+}
+
+@mixin delay($time) {
+    -webkit-animation-delay: $time;
+    animation-delay: $time;
+}
+
+@mixin once() {
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@include animate(24, '');
+@include animate(60, ':');
+@include animate(100, ':');
+
+@include animation(time) {
+    to {
+        top: 100%;
+        opacity: 1;
+    }
+}
+
+@include animation(stop) {
+    70% {
+        border-radius: 6px;
+        @include center($inner-size - 40);
+    } 100% {
+        border-radius: 6px;
+        @include center($inner-size - 36);
+    }
+}
+
+@include animation(stop-mobile) {
+    70% {
+      border-radius: 4px;
+      @include center($inner-size-mobile - 15);
+    }
+    100% {
+      border-radius: 4px;
+      @include center($inner-size-mobile - 10);
+    }
+}
+
+@keyframes click-scale-a {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(0.8); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+  
+@keyframes click-scale-b {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(0.8); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+body {
+    overflow: hidden;
+    background: $bg;
+    
+    .record_btn {
+        @include center($cont-size);
+      
+        #start_stop_recording {
+            display: none;
+            
+            & + label:before {
+                @include center($outer-size);
+                content: '';
+                -webkit-transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                border: $border-size solid #D3D3D3;
+                cursor: pointer;
+            }
+            
+            & + label:after {
+                @include center($inner-size);
+                content: '';
+                border-radius: $inner-size/2;
+                background: $red;
+                cursor: pointer;
+            }
+            
+            &:checked {
+                & + label:after {
+                    @include animation-use(stop, 0.5*$sec, $bezier);
+                    @include once();
+                }
+                
+                & ~ .time {
+                    @include animation-use(time, 0.3*$sec, linear);
+                    @include once();
+                    animation-delay: 0.3*$sec;
+                }
+                
+                & ~ .time .h_m:after {
+                    @include animation-use(to_24, 86400*$sec, linear);
+                    @include delay(1800*$sec);
+                }
+                
+                & ~ .time .h_m:before {
+                    @include animation-use(to_60, 3600*$sec, linear);
+                    @include delay(30*$sec);
+                }
+                
+                & ~ .time .s_ms:before {
+                    @include animation-use(to_60, 60*$sec, linear);
+                    @include delay(.5*$sec);
+                }
+                
+                & ~ .time .s_ms:after {
+                    @include animation-use(to_100, $sec, linear);
+                }
+            }
+        }
+        .time {
+            position: absolute;
+            width: 100%;
+            top: 110%;
+            opacity: 0;
+        
+            & > * {
+                display: inline-block;
+                width: 50%;
+                margin: -2px;
+                color: $grey;
+                font-family: 'Fjalla One', sans-serif; 
+                font-size: 1.3em;
+            }
+        
+            .h_m:after {
+                float: right;
+                @include pseudo('00');
+            }
+
+            .h_m:before {
+                float: right;
+                @include pseudo(':00');
+            }
+            
+            .s_ms:before {
+                float: left;
+                @include pseudo(':00');
+            }
+            
+            .s_ms:after {
+                float: left;
+                @include pseudo(':00');
+            }
+        }
+    }
+    .record_btn.no-record {
+        #start_stop_recording:checked {
+          & + label:after {
+            animation: none;
+          }
+      
+          & ~ .time {
+            animation: none;
+            opacity: 0 !important;
+          }
+      
+          & ~ .time .h_m:after,
+          & ~ .time .h_m:before,
+          & ~ .time .s_ms:before,
+          & ~ .time .s_ms:after {
+            animation: none;
+          }
+        }
+    }
+    .record_btn.no-record #start_stop_recording:not(:checked) + label:after {
+        animation: click-scale-a 0.3s ease;
+    }
+      
+    .record_btn.no-record #start_stop_recording:checked + label:after {
+        animation: click-scale-b 0.3s ease;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        .record_btn {
+            @include center($cont-size-mobile);
+            #start_stop_recording {
+                & + label:before {
+                    @include center($cont-size-mobile);
+                }
+                
+                & + label:after {
+                    @include center($inner-size-mobile);
+                    border-radius: $inner-size-mobile/2;
+                }
+            }
+            #start_stop_recording:checked + label:after {
+                @include animation-use(stop-mobile, 0.5s, $bezier);
+                @include once();
+            }
+            & > * {
+                font-size: 0.8em;
+            }
+        }
+    }
+}

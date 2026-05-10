@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_form" model="ir.ui.view">
+        <field name="name">aznut_sale.crm.lead.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_sale_quotations_new']" position="attributes">
+                <attribute name="string">New Invoice</attribute>
+                <attribute name="name">action_account_move_new</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sale_quotation']" position="before">
+                <button class="oe_stat_button" type="object" context="{'open_invoices':True}"
+                        name="action_account_move_new" icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('type', '=', 'lead')]}">
+                    <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

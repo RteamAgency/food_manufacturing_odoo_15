@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">aznut_purchase.product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_removed_from_premix_availability']" position="after">
+                <field name="is_ingredients_reordering_rule" widget="boolean_toggle"/>
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_activate_ingredients_reordering_rule"
+                            attrs="{'invisible':[('is_ingredients_reordering_rule','=',True)]}" type="object"
+                            string="Activate Ingredients Reordering Rule" class="btn-secondary"/>
+                    <button name="action_deactivate_ingredients_reordering_rule" type="object"
+                            attrs="{'invisible':[('is_ingredients_reordering_rule','=',False)]}"
+                            string="Deactivate Ingredients Reordering Rule" class="btn-secondary"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

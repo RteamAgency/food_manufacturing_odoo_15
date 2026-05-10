@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_quotation_tree_inherit" model="ir.ui.view">
+        <field name="name">aznut_sale.view.quotation.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="azn_sale_order" separator=" "/>
+            </xpath>
+            <field name="user_id" position="after">
+                <field name="ordered_qty" sum="Sum Ordered"/>
+                <field name="free_qty"/>
+                <field name="manufactured_qty" sum="Sum Manufactured" optional="hide"/>
+                <field name="real_manufactured_qty" sum="Sum Actual Manufactured"/>
+                <field name="delivered_qty"/>
+                <field name="remaining_qty"/>
+                <field name="payment_status" invisible="1"/>
+                <field name="margin" sum="Total Margin" optional="hide"/>
+                <field name="margin_percent" groups="aznut_sale_margin.group_margin_access" optional="hide"
+                       widget="percentage"/>
+                <field name="manufacture_scheduled_date" widget="remaining_days"/>
+            </field>
+            <xpath expr="///tree" position="attributes">
+                <attribute name="decoration-info">payment_status=='paid'</attribute>
+                <attribute name="decoration-warning">payment_status in ['waiting', 'partially_paid']</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_order_tree_inherit" model="ir.ui.view">
+        <field name="name">aznut_sale.sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="class" add="azn_sale_order" separator=" "/>
+            </xpath>
+            <field name="user_id" position="after">
+                <field name="ordered_qty" sum="Sum Ordered"/>
+                <field name="free_qty"/>
+                <field name="manufactured_qty" sum="Sum Manufactured"/>
+                <field name="delivered_qty"/>
+                <field name="remaining_qty"/>
+                <field name="payment_status" invisible="1"/>
+                <field name="margin" sum="Total Margin"/>
+                <field name="margin_percent" groups="aznut_sale_margin.group_margin_access" widget="percentage"/>
+                <field name="manufacture_scheduled_date" widget="remaining_days"/>
+            </field>
+            <xpath expr="///tree" position="attributes">
+                <attribute name="decoration-info">payment_status=='paid'</attribute>
+                <attribute name="decoration-warning">payment_status in ['waiting', 'partially_paid']</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">aznut_sale.sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="after">
+                <widget name="web_ribbon" title="Order Released"
+                        attrs="{'invisible':[('payment_status','!=','paid')]}"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_uom_qty']" position="after">
+                <field name="batch" invisible="1"/>
+                <field name="number_of_batches"
+                       attrs="{'invisible':[('batch','&lt;=',1)]}"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="free_qty"/>
+                <field name="reserved_qty"/>
+                <button name="action_reserve" type="object" string="Reserve" class="btn btn-primary mx-2 my-1"
+                        attrs="{'column_invisible':[('parent.show_lines_reserve_button','=',False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='show_update_pricelist']" position="after">
+                <field name="payment_status" widget="selection_badge" decoration-info="payment_status == 'paid'"
+                       decoration-warning="payment_status in ['waiting', 'partially_paid']"/>
+                <field name="show_lines_reserve_button"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="after">
+                <button name="action_send_report_to_customer" type="object" class="btn-secondary"
+                        attrs="{'invisible':[('payment_status','!=','paid')]}" string="Send Report To Customer"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_view_search_quotation_inherited" model="ir.ui.view">
+        <field name="name">sale.order.view.search.quotation.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='sales']" position="after">
+                <filter string="Manufactured" name="manufactured" domain="[('manufactured_qty','>', 0)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_view_search_order_inherited" model="ir.ui.view">
+        <field name="name">sale.order.view.search.order.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='upselling']" position="after">
+                <filter string="Manufactured" name="manufactured" domain="[('manufactured_qty','>', 0)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

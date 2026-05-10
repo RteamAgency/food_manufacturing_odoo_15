@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="quality_check_tree" model="ir.ui.view">
+        <field name="name">aznut_mrp.quality.check.tree</field>
+        <field name="model">quality.check</field>
+        <field name="arch" type="xml">
+            <tree delete="0" create="0" edit="0">
+                <header>
+                    <button name="action_return_to_the_production_workorder" type="object"
+                            string="Return To The Production" class="btn-primary"
+                            attrs="{'header_visible_button': True}"/>
+                </header>
+                <field name="name"/>
+                <field name="lot_id"/>
+                <field name="product_id"/>
+                <field name="finished_lot_id"/>
+                <field name="quality_state"/>
+                <field name="control_date"/>
+                <button name="do_fail" type="object" class="btn-danger"
+                        string="Fail"
+                        attrs="{'invisible':[('quality_state','!=','none')]}"/>
+                <button name="do_production_quality_check_pass" type="object" class="btn-success"
+                        string="Pass"
+                        attrs="{'invisible':[('quality_state','!=','none')]}"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

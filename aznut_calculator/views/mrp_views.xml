@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_workcenter_view_inherit" model="ir.ui.view">
+        <field name="name">aznut_calculator.mrp.workcenter.form</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='time_start']//../.." position="inside">
+                <field name="sample_test_station"/>
+                <field name="not_allowed_test_types_ids" invisible="1"/>
+                <field name="quality_points_ids" widget="many2many_tags"
+                       domain="[('id','not in',not_allowed_test_types_ids),('product_ids','=',False)]"
+                       options="{'no_create_edit':True,'no_create':True}"
+                       attrs="{'invisible':[('sample_test_station','!=',True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_view_form_tablet_inherit" model="ir.ui.view">
+        <field name="name">aznut_calcualtor.mrp.workorder.view.form.inherit.quality.tablet.new</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp_workorder.mrp_workorder_view_form_tablet"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="sample_test_station" invisible="1"/>
+                <field name="show_sample_test_workorder_lines" invisible="1"/>
+            </field>
+            <field name="finished_product_check_ids" position="after">
+                <div attrs="{'invisible': ['|', '|','|', ('current_quality_check_id', '!=', False), ('check_ids', '=', []),('qty_producing', '=', 0),('sample_test_station','=',False)]}">
+                    <div class="workorder_tree" style="width: 100%!important; margin-top: 0!important;"
+                         attrs="{'invisible':[('show_sample_test_workorder_lines','=',False)]}">
+                        <h2>BoM</h2>
+                        <field name="sample_test_workorder_line_ids" class="workorder_tree_new">
+                            <tree editable="top" create="0" delete="0">
+                                <field name="product_id" options="{'no_open':True}"/>
+                                <field name="locations"/>
+                                <field name="lots"/>
+                                <field name="quantities"/>
+                                <field name="uoms_ids" widget="many2many_tags"/>
+                                <button name="action_change" type="object" string="Change" class="btn btn-primary"
+                                        style="padding: 0.4em 1.5em;!important;"/>
+                            </tree>
+                        </field>
+                    </div>
+                </div>
+            </field>
+            <field name="finished_product_check_ids" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '|', '|', ('current_quality_check_id', '!=', False),
+                                   ('check_ids', '=', []),
+                                   ('qty_producing', '=', 0), ('packaging_station', '=', True),
+                                   ('sample_test_station', '=', True)]}
+                </attribute>
+            </field>
+            <xpath expr="//h3" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '|', '|', ('current_quality_check_id', '!=', False),
+                                   ('check_ids', '=', []),
+                                   ('qty_producing', '=', 0), ('packaging_station', '=', True),
+                                   ('sample_test_station', '=', True)]}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_form_view_inherit_sample" model="ir.ui.view">
+        <field name="name">mrp.production.form.view.inherit.sample</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="sample_test_lead_id" invisible="1"/>
+                <button name="button_open_crm_lead"
+                        type="object" 
+                        icon="fa-handshake-o" 
+                        string="Sample Test Opporunity" 
+                        attrs="{'invisible': [('sample_test_lead_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+	
+</odoo>
