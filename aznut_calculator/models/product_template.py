@@ -29,7 +29,7 @@ class ProductTemplate(models.Model):
     calculator_uom_id = fields.Many2one(
         'uom.uom',
         string='Calculator UoM',
-        default=lambda rec: rec.env.ref('aznut_calculator.product_uom_mg')
+        default=lambda rec: rec.env.ref('aznut_calculator.product_uom_mg', raise_if_not_found=False)
     )
     flavour_quantity = fields.Float(
         string='Flavour Quantity',
